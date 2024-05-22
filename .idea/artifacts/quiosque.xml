@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="quiosque">
+    <output-path>$PROJECT_DIR$/out/artifacts/quiosque</output-path>
+    <root id="archive" name="quiosque.jar" />
+  </artifact>
+</component>
