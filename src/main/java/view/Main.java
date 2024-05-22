@@ -2,9 +2,12 @@ package view;
 
 import controller.ClientesController;
 import controller.FuncionarioController;
+import controller.QuiosqueController;
 import model.entities.ClientesEntity;
 import model.entities.FuncionariosEntity;
-import model.service.FuncionariosService;
+import model.entities.QuiosqueEntity;
+import model.repositories.QuiosqueRepository;
+
 
 import java.util.Scanner;
 
@@ -59,7 +62,7 @@ public class Main {
                 exibirOpcoesCliente();
                 break;
             case 3:
-               exibirOpcoesQuiosque() ;
+                exibirOpcoesQuiosque();
                 break;
             case 0:
                 System.out.println("Saindo...");
@@ -357,44 +360,150 @@ public class Main {
         System.out.println("Escolha uma opção:");
 
         int opcao = sc.nextInt();
-        sc.nextLine(); // Limpa o buffer do scanner
+        sc.nextLine();
         switch (opcao) {
             case 1:
-                System.out.println("Digite o ID do cliente:");
-                Long clienteId = sc.nextLong();
+                System.out.println("Digite o ID do quiosque:");
+                Long quiosqueId = sc.nextLong();
                 sc.nextLine();
-                ExibirDados.ShowClientesById(clienteId);
+                ExibirDados.ShowQuiosqueById(quiosqueId);
+                aguardarEnter();
+                exibirOpcoesQuiosque();
                 break;
             case 2:
-               /* editarCliente();
+                editarQuiosque();
                 aguardarEnter();
-                exibirOpcoesCliente();*/
+                exibirOpcoesQuiosque();
                 break;
             case 3:
-               /* criarNovoClientes();
+                criarNovoQuiosque();
                 aguardarEnter();
-                exibirOpcoesCliente();*/
+                exibirOpcoesQuiosque();
 
                 break;
             case 4:
                 System.out.println("Digite o ID do quiosque a ser excluído:");
                 long deleteId = sc.nextLong();
-                ClientesController clienteController = new ClientesController();
-                clienteController.deleteClienteById(deleteId);
+
+                QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
+                QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+
+                quiosqueController.deleteQuiosque(deleteId);
                 System.out.println("quiosque excluído.");
                 aguardarEnter();
-                exibirOpcoesCliente(); // Volta para o submenu
+                exibirOpcoesCliente();
                 break;
             case 0:
                 exibirMenu();
                 break;
             default:
                 System.out.println("Opção inválida.");
-                exibirOpcoesFuncionario(); // Volta para o submenu
+                exibirOpcoesQuiosque();// Volta para o submenu
                 break;
         }
 
     }
+
+    // ->editar dados do Quiosque
+    private static void editarQuiosque() {
+        System.out.println("Digite o ID do Quiosque a ser editado:");
+        long id = sc.nextLong();
+        sc.nextLine(); // Limpa o buffer do scanner
+        QuiosqueRepository quiosqueRepository = new QuiosqueRepository(); // Criar uma instância de QuiosqueRepository
+        QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+
+        QuiosqueEntity quiosque = quiosqueController.findQuiosqueById(id);
+        
+        if (quiosque == null) {
+            System.out.println("Quiosque não encontrado.");
+            return;
+        }
+
+        System.out.println("Digite o novo numero (ou pressione Enter para manter o atual: " + quiosque.getNumero() + "):");
+        String novoNumInput = sc.nextLine(); // Ler entrada como String
+
+        if (!novoNumInput.isEmpty()) {
+            int novoNum = Integer.parseInt(novoNumInput); // Converter String para int
+            quiosque.setNumero(novoNum);
+        }
+
+        System.out.println("Digite a nova localidade (ou pressione Enter para manter a atual:"+ quiosque.getLocalidade() +"):");
+        String novalocalidade = sc.nextLine();
+        if (!novalocalidade.isEmpty()) {
+            quiosque.setLocalidade(novalocalidade);
+        }
+
+
+        System.out.println("Digite o novo telefone (ou pressione Enter para manter o atual: " + quiosque.getCapacidade() + "):");
+        String novaCapaciInput = sc.nextLine(); // Ler entrada como String
+
+        if (!novaCapaciInput.isEmpty()) {
+            int novaCapaci = Integer.parseInt(novaCapaciInput); // Converter String para int
+            quiosque.setCapacidade(novaCapaci);
+        }
+
+
+        System.out.println("Digite o novo Status (ou pressione Enter para manter o atual: " + quiosque.getDispoStatus() + "):");
+        String novoStatusInput = sc.nextLine(); // Ler entrada como String
+
+        if (!novoStatusInput.isEmpty()) {
+            boolean novoStatus = Boolean.parseBoolean(novoStatusInput); // Converter String para boolean
+            quiosque.setDispoStatus(novoStatus);
+        }
+
+
+        quiosqueController.updateQuiosque(quiosque);
+        System.out.println("Quiosque atualizado com sucesso.");
+    }
+
+    private static void criarNovoQuiosque() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Digite o número do novo Quiosque:");
+        int numero = sc.nextInt();
+        sc.nextLine(); // Consumir a quebra de linha após a leitura do número
+
+        System.out.println("Digite a localidade do novo Quiosque:");
+        String localidade = sc.nextLine();
+
+        System.out.println("Digite a capacidade do novo Quiosque:");
+        int capacidade = sc.nextInt();
+        sc.nextLine(); // Consumir a quebra de linha após a leitura da capacidade
+
+        System.out.println("Digite o status de disponibilidade do novo Quiosque (true/false):");
+        boolean disponibilidadeStatus = sc.nextBoolean();
+        sc.nextLine(); // Consumir a quebra de linha após a leitura do status de disponibilidade
+
+        // Criar o objeto QuiosqueEntity com os dados fornecidos
+        QuiosqueEntity novoQuiosque = new QuiosqueEntity();
+        novoQuiosque.setNumero(numero);
+        novoQuiosque.setLocalidade(localidade);
+        novoQuiosque.setCapacidade(capacidade);
+        novoQuiosque.setDispoStatus(disponibilidadeStatus);
+
+        QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
+
+        // Cria uma instância do QuiosqueController
+        QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+
+        // Chamar o método createQuiosque do QuiosqueController para criar um novo quiosque
+        QuiosqueEntity criadoQuiosque = quiosqueController.createQuiosque(novoQuiosque);
+
+        if (criadoQuiosque != null) {
+            System.out.println("Novo Quiosque criado com sucesso.");
+            System.out.println("ID: " + criadoQuiosque.getId());
+            System.out.println("Número: " + criadoQuiosque.getNumero());
+            System.out.println("Localidade: " + criadoQuiosque.getLocalidade());
+            System.out.println("Capacidade: " + criadoQuiosque.getCapacidade());
+            System.out.println("Status de Disponibilidade: " + criadoQuiosque.getDispoStatus());
+        } else {
+            System.out.println("Falha ao criar novo Quiosque.");
+        }
+    }
+
+
+
+
 
     private static void aguardarEnter() {
         System.out.println("Pressione Enter para continuar...");

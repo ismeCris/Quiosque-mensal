@@ -2,12 +2,20 @@ package view;
 
 import controller.ClientesController;
 import controller.FuncionarioController;
+import controller.QuiosqueController;
 import model.entities.ClientesEntity;
 import model.entities.FuncionariosEntity;
+import model.entities.QuiosqueEntity;
+import model.repositories.QuiosqueRepository;
+
+import java.util.Optional;
 
 public class ExibirDados {
     private static FuncionarioController funcionarioController = new FuncionarioController();
     private static ClientesController clientesController = new ClientesController();
+    private static QuiosqueRepository quiosqueRepository = new QuiosqueRepository(); // Instantiate QuiosqueRepository
+    private static QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+
 
     public static void ShowFucionarioById(Long id){
         FuncionariosEntity funcionario = funcionarioController.findFuncionarioById( id);
@@ -38,6 +46,25 @@ public class ExibirDados {
                 System.out.println("Nenhum cliente encontrado com o ID fornecido.");
             }
         }
+
+    public static void ShowQuiosqueById(Long id) {
+        Optional<QuiosqueEntity> quiosque = Optional.ofNullable(quiosqueController.findQuiosqueById(id));
+
+        if (quiosque.isPresent()) {
+            System.out.println("Detalhes do Quiosque:");
+            System.out.println("ID: " + quiosque.get().getId());
+            System.out.println("Número: " + quiosque.get().getNumero());
+            System.out.println("Localidade: " + quiosque.get().getLocalidade());
+            System.out.println("Capacidade: " + quiosque.get().getCapacidade());
+            System.out.println("Status de Disponibilidade: " + (quiosque.get().getDispoStatus() ? "Disponível" : "Indisponível"));
+        } else {
+            System.out.println("Nenhum quiosque encontrado com o ID fornecido.");
+
+        }
+    }
+
+
+
 
 
 

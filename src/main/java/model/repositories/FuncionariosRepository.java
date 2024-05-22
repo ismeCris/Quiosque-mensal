@@ -18,10 +18,9 @@ public class FuncionariosRepository implements BasicCrud{
                     .setParameter("nome", nome)
                     .setParameter("senha", senha)
                     .getSingleResult();
-           // System.out.println("Usuário autenticado: " + funcionario.getNome());
             return funcionario;
         } catch (Exception e) {
-           // System.out.println("Autenticação falhou para o usuário: " + nome);
+           ;
             return null;
         }
     }

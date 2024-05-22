@@ -14,35 +14,47 @@ public class QuiosqueRepository implements  BasicCrud{
 
     @Override
     public Object create(Object object) {
-        QuiosqueEntity quiosque1 = (QuiosqueEntity) object;
-        em.getTransaction().begin();
-        em.persist(quiosque1);
-        em.getTransaction().commit();
-        return findById(quiosque1.getId());
+        try {
+            QuiosqueEntity quiosque = (QuiosqueEntity) object;
+            em.getTransaction().begin();
+            em.persist(quiosque);
+            em.getTransaction().commit();
+            return quiosque; // Retorna o próprio objeto persistido
+        } catch (Exception ex) {
+            // Em caso de exceção, reverta a transação
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            // Lança uma exceção ou trata conforme necessário
+            throw new RuntimeException("Erro ao criar o quiosque: " + ex.getMessage(), ex);
+        }
     }
 
     @Override
     public Object update(Object object) {
-        ClientesEntity clientesUpdade = (ClientesEntity) object;
+        QuiosqueEntity quiosqueUpdate = (QuiosqueEntity) object;
         em.getTransaction().begin();
-        em.merge(clientesUpdade);
+        em.merge(quiosqueUpdate);
         em.getTransaction().commit();
-        return null;
+        return quiosqueUpdate;
     }
+
 
     @Override
     public void delete(Long id) {
         em.getTransaction().begin();
-        var quiosque = (ClientesEntity) findById(id);
-        em.remove(quiosque);
+        QuiosqueEntity quiosque = em.find(QuiosqueEntity.class, id); // Encontrar o QuiosqueEntity pelo ID
+        if (quiosque != null) { // Verificar se o QuiosqueEntity foi encontrado
+            em.remove(quiosque); // Remover o QuiosqueEntity encontrado
+        } else {
+            System.out.println("Quiosque não encontrado com o ID fornecido."); // Mensagem de erro se o QuiosqueEntity não for encontrado
+        }
         em.getTransaction().commit();
-
     }
 
+
     public List<QuiosqueEntity> findAll(){
-        System.out.println("teste");
-        return new ArrayList<QuiosqueEntity>();
-        //return em.createQuery("aa",FuncionariosEntity.class).getResultList();
+        return em.createQuery("SELECT f FROM QuiosqueEntity",QuiosqueEntity.class).getResultList();
     }
 
     @Override

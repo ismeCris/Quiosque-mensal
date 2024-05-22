@@ -1,6 +1,5 @@
 package controller;
 
-import model.entities.ClientesEntity;
 import model.entities.FuncionariosEntity;
 import model.service.FuncionariosService;
 

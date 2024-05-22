@@ -1,6 +1,7 @@
 package model.entities;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity //Indica que esta classe é uma entidade
 @Table(name =  "componentes")//Especifica o nome da tabela no banco de dados à qual esta entidade será mapeada
@@ -28,6 +29,11 @@ public class ComponetesEntity {
 
     @Column
     private Boolean lixeira;
+
+
+    @ManyToMany(mappedBy = "componentes")
+    private Set<QuiosqueEntity> quiosques;
+
 
     public ComponetesEntity(){
 

@@ -1,6 +1,9 @@
 package model.entities;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
+import javax.persistence.JoinColumn;
 
 @Entity //Indica que esta classe é uma entidade
 @Table(name =  "quiosques")//Especifica o nome da tabela no banco de dados à qual esta entidade será mapeada
@@ -22,16 +25,30 @@ public class QuiosqueEntity {
     @Column(name = "dispo_status")
     private Boolean dispoStatus;
 
-    public QuiosqueEntity(){
+    @ManyToMany
+    @JoinTable(
+            name = "componentes_has_qiosques",
+            joinColumns = @JoinColumn(name = "quiosque_id_fk"),
+            inverseJoinColumns = @JoinColumn(name = "componentes_fk")
+    )
+    private List<ComponetesEntity> componentes;
+
+    public QuiosqueEntity(List<ComponetesEntity> componentes){
+
+        this.componentes = componentes;
+    }
+
+    public QuiosqueEntity() {
 
     }
 
-    public QuiosqueEntity(Long id, int numero, String localidade, int capacidade, boolean disponibilidadeStatus) {
+    public QuiosqueEntity(Long id, int numero, String localidade, int capacidade, boolean disponibilidadeStatus, Set<ComponetesEntity> componentes) {
         this.id = id;
         this.numero = numero;
         this.localidade = localidade;
         this.capacidade = capacidade;
         this.dispoStatus = disponibilidadeStatus;
+        this.componentes = (List<ComponetesEntity>) componentes;
     }
 
     public Long getId() {
