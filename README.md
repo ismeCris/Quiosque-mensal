@@ -1,4 +1,4 @@
-Proijeto desenvolvido com Java e Mysql
+Projeto desenvolvido com Java e Mysql
 #
 Status: em Andamento
 #
