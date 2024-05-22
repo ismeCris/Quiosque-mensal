@@ -58,6 +58,9 @@ public class Main {
             case 2:
                 exibirOpcoesCliente();
                 break;
+            case 3:
+               exibirOpcoesQuiosque() ;
+                break;
             case 0:
                 System.out.println("Saindo...");
                 break;
@@ -343,6 +346,54 @@ public class Main {
         } else {
             System.out.println("Falha ao criar novo cliente.");
         }
+    }
+
+    private static void exibirOpcoesQuiosque() {
+        System.out.println("1 - Buscar Quiosque pelo ID");
+        System.out.println("2 - Editar dados do quiosque");
+        System.out.println("3 - Novo quiosque");
+        System.out.println("4 - Excluir quiosque");
+        System.out.println("0 - Voltar ao menu principal");
+        System.out.println("Escolha uma opção:");
+
+        int opcao = sc.nextInt();
+        sc.nextLine(); // Limpa o buffer do scanner
+        switch (opcao) {
+            case 1:
+                System.out.println("Digite o ID do cliente:");
+                Long clienteId = sc.nextLong();
+                sc.nextLine();
+                ExibirDados.ShowClientesById(clienteId);
+                break;
+            case 2:
+               /* editarCliente();
+                aguardarEnter();
+                exibirOpcoesCliente();*/
+                break;
+            case 3:
+               /* criarNovoClientes();
+                aguardarEnter();
+                exibirOpcoesCliente();*/
+
+                break;
+            case 4:
+                System.out.println("Digite o ID do quiosque a ser excluído:");
+                long deleteId = sc.nextLong();
+                ClientesController clienteController = new ClientesController();
+                clienteController.deleteClienteById(deleteId);
+                System.out.println("quiosque excluído.");
+                aguardarEnter();
+                exibirOpcoesCliente(); // Volta para o submenu
+                break;
+            case 0:
+                exibirMenu();
+                break;
+            default:
+                System.out.println("Opção inválida.");
+                exibirOpcoesFuncionario(); // Volta para o submenu
+                break;
+        }
+
     }
 
     private static void aguardarEnter() {
