@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FuncionariosRepository implements BasicCrud{
@@ -38,7 +37,7 @@ public class FuncionariosRepository implements BasicCrud{
         if (!funcionariosComMesmaSenha.isEmpty()) {
             System.out.println("Já existe um funcionário com a mesma senha. Por favor, escolha outra senha.");
 
-            return null; // ou lançar uma exceção
+            return null;
         }
 
         em.getTransaction().begin();

@@ -1,11 +1,11 @@
 package model.repositories;
 
-import model.entities.ClientesEntity;
 import model.entities.QuiosqueEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import java.util.ArrayList;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class QuiosqueRepository implements  BasicCrud{
@@ -14,20 +14,23 @@ public class QuiosqueRepository implements  BasicCrud{
 
     @Override
     public Object create(Object object) {
-        try {
-            QuiosqueEntity quiosque = (QuiosqueEntity) object;
+        QuiosqueEntity quiosque = (QuiosqueEntity) object;
+
+        Query query = em.createQuery("SELECT q FROM QuiosqueEntity q WHERE q.numero = :numero");
+        query.setParameter("numero", quiosque.getNumero());
+        List<QuiosqueEntity> quiosquesWithSameNumber = query.getResultList();
+
+        if (!quiosquesWithSameNumber.isEmpty()) {
+            System.out.println("Já existe um quiosque com o mesmo número. Por favor, escolha outro.");
+            return null;
+        }
+
             em.getTransaction().begin();
             em.persist(quiosque);
             em.getTransaction().commit();
-            return quiosque; // Retorna o próprio objeto persistido
-        } catch (Exception ex) {
-            // Em caso de exceção, reverta a transação
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            // Lança uma exceção ou trata conforme necessário
-            throw new RuntimeException("Erro ao criar o quiosque: " + ex.getMessage(), ex);
-        }
+
+            return quiosque;
+
     }
 
     @Override
@@ -54,11 +57,11 @@ public class QuiosqueRepository implements  BasicCrud{
 
 
     public List<QuiosqueEntity> findAll(){
-        return em.createQuery("SELECT f FROM QuiosqueEntity",QuiosqueEntity.class).getResultList();
+        return em.createQuery("SELECT q FROM QuiosqueEntity q",QuiosqueEntity.class).getResultList();
     }
 
     @Override
-    public Object findById(Object id) {
+    public QuiosqueEntity findById(Object id) {
         try {
             QuiosqueEntity quiosqueInBD = em.find(QuiosqueEntity.class, id);
             return quiosqueInBD;
@@ -66,5 +69,11 @@ public class QuiosqueRepository implements  BasicCrud{
 
         }
         return null;
+    }
+    
+    public List<QuiosqueEntity> buscarQuiosquesDisponiveis() {
+        String jpql = "SELECT q FROM QuiosqueEntity q WHERE q.dispoStatus = true";
+        TypedQuery<QuiosqueEntity> query = em.createQuery(jpql, QuiosqueEntity.class);
+        return query.getResultList();
     }
 }

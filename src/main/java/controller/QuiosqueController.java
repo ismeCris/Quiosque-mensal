@@ -4,7 +4,8 @@ import model.entities.QuiosqueEntity;
 import model.repositories.QuiosqueRepository;
 import model.service.QuiosqueService;
 
-import java.util.Optional;
+import java.util.List;
+
 
 public class QuiosqueController {
     private QuiosqueService quiosqueService;
@@ -27,5 +28,8 @@ public class QuiosqueController {
 
     public QuiosqueEntity createQuiosque(QuiosqueEntity quiosque) {
         return quiosqueService.createQuiosque(quiosque);
+    }
+    public List<QuiosqueEntity> findAll() {
+        return quiosqueService.findAll();
     }
 }

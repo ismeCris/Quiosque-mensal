@@ -30,7 +30,7 @@ public class ClientesService {
         clientesRepository.delete(id);
     }
 
-    public List<ClientesEntity> getAllClientes() {
+    public List<ClientesEntity> findAll() {
         return clientesRepository.findAll();
     }
 

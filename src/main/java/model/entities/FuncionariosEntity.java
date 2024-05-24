@@ -2,11 +2,11 @@ package model.entities;
 
 import javax.persistence.*;
 
-@Entity //Indica que esta classe é uma entidade
-@Table(name =  "funcionarios")//Especifica o nome da tabela no banco de dados à qual esta entidade será mapeada
+@Entity
+@Table(name =  "funcionarios")
 public class FuncionariosEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//Especifica que o valor do campo id será gerado automaticamente usando a estratégia de identidade do banco de dados
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
