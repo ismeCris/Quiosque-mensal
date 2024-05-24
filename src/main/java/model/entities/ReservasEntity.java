@@ -1,6 +1,7 @@
 package model.entities;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity //Indica que esta classe é uma entidade
@@ -11,18 +12,40 @@ public class ReservasEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//Especifica que o valor do campo id será gerado automaticamente usando a estratégia de identidade do banco de dados
     private long id;
-    @Column(name = "data_reserva")
-    private LocalDateTime dataReserva;
 
+    @Column(name = "data_reserva")
+    private LocalDate dataInicio;
+
+    @Column(name = "data_fim")
+    private LocalDate dataFim;
+
+    @Column(name = "detalhes")
+    private String detalhes;
+
+    @ManyToOne
+    @JoinColumn(name = "quiosque_id_fk")
+    private QuiosqueEntity quiosque;
+
+    @ManyToOne
+    @JoinColumn(name = "clientes_id_fk")
+    private ClientesEntity cliente;
+
+    @ManyToOne
+    @JoinColumn(name = "contratos_id_fk")
+    private ContratosEntity contrato;
 
     public ReservasEntity(){
 
     }
-    public ReservasEntity(long id, LocalDateTime dataReserva) {
+    // Construtor com parâmetros
+    public ReservasEntity(long id, LocalDate dataInicio, LocalDate dataFim, String detalhes) {
         this.id = id;
-        this.dataReserva = dataReserva;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.detalhes = detalhes;
     }
 
+    // Getters e Setters
     public long getId() {
         return id;
     }
@@ -31,11 +54,36 @@ public class ReservasEntity {
         this.id = id;
     }
 
-    public LocalDateTime getDataReserva() {
-        return dataReserva;
+    public LocalDate getDataInicio() {
+        return dataInicio;
     }
 
-    public void setDataReserva(LocalDateTime dataReserva) {
-        this.dataReserva = dataReserva;
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public LocalDate getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    public String getDetalhes() {
+        return detalhes;
+    }
+
+    public void setDetalhes(String detalhes) {
+        this.detalhes = detalhes;
+    }
+
+
+    public QuiosqueEntity getQuiosque() {
+        return quiosque;
+    }
+
+    public void setQuiosque(QuiosqueEntity quiosque) {
+        this.quiosque = quiosque;
     }
 }

@@ -3,12 +3,15 @@ package model.repositories;
 import model.entities.FuncionariosEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FuncionariosRepository implements BasicCrud{
     EntityManager em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
+
 
 
     public FuncionariosEntity login(String nome, String senha){
@@ -20,7 +23,6 @@ public class FuncionariosRepository implements BasicCrud{
                     .getSingleResult();
             return funcionario;
         } catch (Exception e) {
-           ;
             return null;
         }
     }
@@ -28,6 +30,17 @@ public class FuncionariosRepository implements BasicCrud{
     @Override
     public Object create(Object object) {
         FuncionariosEntity funcionarios1 = (FuncionariosEntity) object;
+
+        Query query = em.createQuery("SELECT f FROM FuncionariosEntity f WHERE f.senha = :senha");
+        query.setParameter("senha", funcionarios1.getSenha());
+        List<FuncionariosEntity> funcionariosComMesmaSenha = query.getResultList();
+
+        if (!funcionariosComMesmaSenha.isEmpty()) {
+            System.out.println("Já existe um funcionário com a mesma senha. Por favor, escolha outra senha.");
+
+            return null; // ou lançar uma exceção
+        }
+
         em.getTransaction().begin();
         em.persist(funcionarios1);
         em.getTransaction().commit();
@@ -52,8 +65,6 @@ public class FuncionariosRepository implements BasicCrud{
     }
 
     public List<FuncionariosEntity> findAll(){
-       // System.out.println("teste");
-       // return new ArrayList<FuncionariosEntity>();
         return em.createQuery("SELECT f FROM FuncionariosEntity f", FuncionariosEntity.class).getResultList();
     }
 
@@ -66,6 +77,15 @@ public class FuncionariosRepository implements BasicCrud{
 
         }
         return null;
+    }
+    public FuncionariosEntity findBySenha(String senha) {
+        try {
+            return em.createQuery("SELECT f FROM FuncionariosEntity f WHERE f.senha = :senha", FuncionariosEntity.class)
+                    .setParameter("senha", senha)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
 

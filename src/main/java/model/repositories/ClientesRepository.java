@@ -45,9 +45,10 @@ public class ClientesRepository implements  BasicCrud{
         em.remove(cliente);
         em.getTransaction().commit();
     }
-    public List<ClientesEntity> findAll(){
-        return em.createQuery("SELECT f FROM ClientesEntity f",ClientesEntity.class).getResultList();
+    public List<ClientesEntity> findAll() {
+        return em.createQuery("SELECT c FROM ClientesEntity c", ClientesEntity.class).getResultList();
     }
+
 
     // código para excluir um cliente do seu sistema
     @Override

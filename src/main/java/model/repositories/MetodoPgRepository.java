@@ -7,7 +7,7 @@ import javax.persistence.Persistence;
 public class MetodoPgRepository {
     EntityManager em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
 
-    public void salvar(Object objeto) {
+    public void salvarPag(Object objeto) {
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
@@ -20,7 +20,7 @@ public class MetodoPgRepository {
             e.printStackTrace();
         }
     }
-    public void atualizar(Object objeto) {
+    public void atualizarPag(Object objeto) {
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
@@ -34,7 +34,7 @@ public class MetodoPgRepository {
         }
     }
 
-    public void excluir(Object objeto) {
+    public void excluirPag(Object objeto) {
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
@@ -47,7 +47,6 @@ public class MetodoPgRepository {
             e.printStackTrace();
         }
     }
-
 
 
 

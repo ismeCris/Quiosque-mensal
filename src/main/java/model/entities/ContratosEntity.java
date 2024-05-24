@@ -22,17 +22,29 @@ public class ContratosEntity {
     @Column(name = "status_pag")
     private Boolean statusPag;
 
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id_fk") // Supondo que o nome da coluna na tabela seja cliente_id_fk
+    private ClientesEntity cliente;
+
+    @ManyToOne
+    @JoinColumn(name = "quiosque_id_fk") // Supondo que o nome da coluna na tabela seja quiosque_id_fk
+    private QuiosqueEntity quiosque;
+
     public ContratosEntity(){
 
     }
 
-    public ContratosEntity(long id, LocalDateTime dataInicio, LocalDateTime dataFim, float valorAluguel, boolean statusPag) {
+    public ContratosEntity(long id, LocalDateTime dataInicio, LocalDateTime dataFim, float valorAluguel, Boolean statusPag, ClientesEntity cliente, QuiosqueEntity quiosque) {
         this.id = id;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.valorAluguel = valorAluguel;
         this.statusPag = statusPag;
+        this.cliente = cliente;
+        this.quiosque = quiosque;
     }
+
     public long getId() {
         return id;
     }

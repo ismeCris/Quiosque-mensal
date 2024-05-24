@@ -3,12 +3,20 @@ package view;
 import controller.ClientesController;
 import controller.FuncionarioController;
 import controller.QuiosqueController;
+import controller.ReservasController;
 import model.entities.ClientesEntity;
 import model.entities.FuncionariosEntity;
 import model.entities.QuiosqueEntity;
+import model.entities.ReservasEntity;
+import model.repositories.ClientesRepository;
+import model.repositories.FuncionariosRepository;
 import model.repositories.QuiosqueRepository;
+import model.repositories.ResevasRepository;
+import model.service.ReservaService;
 
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -64,6 +72,9 @@ public class Main {
             case 3:
                 exibirOpcoesQuiosque();
                 break;
+            case 5:
+                exibirOpcoesReservas();
+                break;
             case 0:
                 System.out.println("Saindo...");
                 break;
@@ -75,10 +86,12 @@ public class Main {
     }
 
     private static void exibirOpcoesFuncionario() {
+        System.out.println("=======- Gestao de funcionarios -=======");
         System.out.println("1 - Buscar funcionário pelo ID");
         System.out.println("2 - Editar funcionário");
         System.out.println("3 - Novo funcionário");
         System.out.println("4 - Excluir funcionário");
+        System.out.println("5 - Lista de funcionarios");
         System.out.println("0 - Voltar ao menu principal");
         System.out.println("Escolha uma opção:");
 
@@ -91,7 +104,7 @@ public class Main {
                 long id = sc.nextLong();
                 ExibirDados.ShowFucionarioById(id);
                 aguardarEnter();
-                exibirOpcoesFuncionario(); // Volta para o submenu
+                exibirOpcoesFuncionario();
                 break;
             case 2:
                 editarFuncionario();
@@ -110,14 +123,19 @@ public class Main {
                funcionarioController.deleteFuncionarioById(deleteId);
                 System.out.println("Funcionário excluído.");
                 aguardarEnter();
-                exibirOpcoesFuncionario(); // Volta para o submenu
+                exibirOpcoesFuncionario();
+                break;
+            case 5:
+                ListarTodosFuncionarios();
+                aguardarEnter();
+                exibirOpcoesFuncionario();
                 break;
             case 0:
                 exibirMenu();
                 break;
             default:
                 System.out.println("Opção inválida.");
-                exibirOpcoesFuncionario(); // Volta para o submenu
+                exibirOpcoesFuncionario();
                 break;
         }
     }
@@ -126,7 +144,7 @@ public class Main {
     private static void editarFuncionario() {
         System.out.println("Digite o ID do funcionário a ser editado:");
         long id = sc.nextLong();
-        sc.nextLine(); // Limpa o buffer do scanner
+        sc.nextLine();
 
         FuncionariosEntity funcionario = funcionarioController.findFuncionarioById(id);
         if (funcionario == null) {
@@ -168,33 +186,41 @@ public class Main {
         System.out.println("Funcionário atualizado com sucesso.");
     }
 
+
     private static void criarNovoFuncionario() {
+        FuncionariosRepository funcionariosRepository = new FuncionariosRepository();
+        FuncionariosEntity novoFuncionario = new FuncionariosEntity();
+
         System.out.println("Digite o nome do novo funcionário:");
         String nome = sc.nextLine();
+        novoFuncionario.setNome(nome);
 
         System.out.println("Digite a senha do novo funcionário:");
         String senha = sc.nextLine();
 
+        // Check if the password is already in use
+        FuncionariosEntity funcionarioExistente = funcionariosRepository.findBySenha(senha);
+        if (funcionarioExistente != null) {
+            System.out.println("Já existe um funcionário com a mesma senha. Por favor, escolha outra senha.");
+            return; // Return to the main menu
+        }
+
+        novoFuncionario.setSenha(senha);
+
         System.out.println("Digite o email do novo funcionário:");
         String email = sc.nextLine();
+        if (email.length() > 255) {
+            System.out.println("O email excede o limite de 255 caracteres. Por favor, insira um email mais curto.");
+            return; // Return to the main menu
+        }
+        novoFuncionario.setEmail(email);
 
         System.out.println("Digite o telefone do novo funcionário:");
         String telefone = sc.nextLine();
-
-        String cargo;
-        do {
-            System.out.println("Digite o cargo do novo funcionário:");
-            cargo = sc.nextLine();
-            if (cargo.isEmpty()) {
-                System.out.println("O campo 'cargo' não pode ficar vazio. Por favor, digite o cargo.");
-            }
-        } while (cargo.isEmpty());
-
-        FuncionariosEntity novoFuncionario = new FuncionariosEntity();
-        novoFuncionario.setNome(nome);
-        novoFuncionario.setSenha(senha);
-        novoFuncionario.setEmail(email);
         novoFuncionario.setTelefone(telefone);
+
+        System.out.println("Digite o cargo do novo funcionário:");
+        String cargo = sc.nextLine();
         novoFuncionario.setCargo(cargo);
 
         FuncionariosEntity criadoFuncionario = funcionarioController.createFuncionario(novoFuncionario);
@@ -203,7 +229,7 @@ public class Main {
             System.out.println("Novo funcionário criado com sucesso.");
             System.out.println("ID: " + criadoFuncionario.getId());
             System.out.println("Nome: " + criadoFuncionario.getNome());
-            System.out.println("Senha: " + criadoFuncionario.getSenha());
+            System.out.println("Senha: " + senha);
             System.out.println("Email: " + criadoFuncionario.getEmail());
             System.out.println("Telefone: " + criadoFuncionario.getTelefone());
             System.out.println("Cargo: " + criadoFuncionario.getCargo());
@@ -212,7 +238,23 @@ public class Main {
         }
     }
 
+    private static void ListarTodosFuncionarios(){
+        FuncionariosRepository funcionariosRepository = new FuncionariosRepository();
+        List<FuncionariosEntity> funcionarios = funcionariosRepository.findAll();
+
+        if (funcionarios.isEmpty()) {
+            System.out.println("Não há funcionários cadastrados no sistema.");
+        } else {
+            System.out.println("Lista de funcionários cadastrados:");
+            for (FuncionariosEntity funcionario : funcionarios) {
+                System.out.println("ID: " + funcionario.getId() + ", Nome: " + funcionario.getNome() + ", Cargo: " + funcionario.getCargo());
+            }
+    }
+    }
+
+// =====================================================================================================================
     private static void exibirOpcoesCliente() {
+        System.out.println("=======- Gestao de clientes -=======");
         System.out.println("1 - Buscar cliente pelo ID");
         System.out.println("2 - Editar dados do cliente");
         System.out.println("3 - Novo cliente");
@@ -221,7 +263,7 @@ public class Main {
         System.out.println("Escolha uma opção:");
 
         int opcao = sc.nextInt();
-        sc.nextLine(); // Limpa o buffer do scanner
+        sc.nextLine();
         switch (opcao) {
             case 1:
                 System.out.println("Digite o ID do cliente:");
@@ -247,14 +289,19 @@ public class Main {
                 clienteController.deleteClienteById(deleteId);
                 System.out.println("Cliente excluído.");
                 aguardarEnter();
-                exibirOpcoesCliente(); // Volta para o submenu
+                exibirOpcoesCliente();
+                break;
+            case 5:
+                ListarTodosClientes();
+                aguardarEnter();
+                exibirOpcoesCliente();
                 break;
             case 0:
                 exibirMenu();
                 break;
             default:
                 System.out.println("Opção inválida.");
-                exibirOpcoesFuncionario(); // Volta para o submenu
+                exibirOpcoesFuncionario();
                 break;
         }
 
@@ -351,11 +398,26 @@ public class Main {
         }
     }
 
+    private static void ListarTodosClientes(){
+        ClientesRepository clientesRepository = new ClientesRepository();
+        List<ClientesEntity> clientes = clientesRepository.findAll();
+
+        if (clientes.isEmpty()) {
+            System.out.println("Não há clientes cadastrados no sistema.");
+        } else {
+            System.out.println("Lista de clientes cadastrados:");
+            for (ClientesEntity cliente : clientes) {
+                System.out.println("ID: " + cliente.getId() + ", Nome: " + cliente.getNome() + ", status: " + cliente.getUserStatus());
+            }
+        }
+    }
+//======================================================================================================================
     private static void exibirOpcoesQuiosque() {
-        System.out.println("1 - Buscar Quiosque pelo ID");
-        System.out.println("2 - Editar dados do quiosque");
-        System.out.println("3 - Novo quiosque");
-        System.out.println("4 - Excluir quiosque");
+        System.out.println("=======- Gestao de reservas -=======");
+        System.out.println("1 - Buscar reseva pelo data");
+        System.out.println("2 - Editar dados da reserva");
+        System.out.println("3 - nova reserva");
+        System.out.println("4 - ");
         System.out.println("0 - Voltar ao menu principal");
         System.out.println("Escolha uma opção:");
 
@@ -379,7 +441,6 @@ public class Main {
                 criarNovoQuiosque();
                 aguardarEnter();
                 exibirOpcoesQuiosque();
-
                 break;
             case 4:
                 System.out.println("Digite o ID do quiosque a ser excluído:");
@@ -391,7 +452,7 @@ public class Main {
                 quiosqueController.deleteQuiosque(deleteId);
                 System.out.println("quiosque excluído.");
                 aguardarEnter();
-                exibirOpcoesCliente();
+                exibirOpcoesQuiosque();
                 break;
             case 0:
                 exibirMenu();
@@ -468,13 +529,12 @@ public class Main {
 
         System.out.println("Digite a capacidade do novo Quiosque:");
         int capacidade = sc.nextInt();
-        sc.nextLine(); // Consumir a quebra de linha após a leitura da capacidade
+        sc.nextLine();
 
         System.out.println("Digite o status de disponibilidade do novo Quiosque (true/false):");
         boolean disponibilidadeStatus = sc.nextBoolean();
-        sc.nextLine(); // Consumir a quebra de linha após a leitura do status de disponibilidade
+        sc.nextLine();
 
-        // Criar o objeto QuiosqueEntity com os dados fornecidos
         QuiosqueEntity novoQuiosque = new QuiosqueEntity();
         novoQuiosque.setNumero(numero);
         novoQuiosque.setLocalidade(localidade);
@@ -483,10 +543,8 @@ public class Main {
 
         QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
 
-        // Cria uma instância do QuiosqueController
         QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
 
-        // Chamar o método createQuiosque do QuiosqueController para criar um novo quiosque
         QuiosqueEntity criadoQuiosque = quiosqueController.createQuiosque(novoQuiosque);
 
         if (criadoQuiosque != null) {
@@ -501,10 +559,96 @@ public class Main {
         }
     }
 
+    private static void exibirOpcoesReservas() {
+        System.out.println("=======- Gestao de Reservas -=======");
+        System.out.println("1 - Buscar reserva por data");
+        System.out.println("2 - Editar dados da reserva");
+        System.out.println("3 - Nova reserva");
+        System.out.println("4 - Excluir reserva");
+        System.out.println("0 - Voltar ao menu principal");
+        System.out.println("Escolha uma opção:");
+
+        int opcao = sc.nextInt();
+        sc.nextLine();
+        switch (opcao) {
+            case 1:
+                System.out.println("Digite a data da reserva (no formato YYYY-MM-DD):");
+                String dataReservaStr = sc.nextLine();
+                LocalDate dataReserva = LocalDate.parse(dataReservaStr);
+                ExibirDados.mostrarReservasPorData(dataReserva);
+                aguardarEnter();
+                exibirOpcoesReservas();
+                break;
+            case 2:
+                //editarQuiosque();
+                aguardarEnter();
+                exibirOpcoesReservas();
+                break;
+            case 3:
+                criarnovaReserva();
+                aguardarEnter();
+                exibirOpcoesReservas();
+                break;
+            case 4:
+                System.out.println("Digite o ID do quiosque a ser excluído:");
+                long deleteId = sc.nextLong();
+
+                QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
+                QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+
+                quiosqueController.deleteQuiosque(deleteId);
+                System.out.println("quiosque excluído.");
+                aguardarEnter();
+                exibirOpcoesReservas();
+                break;
+            case 0:
+                exibirMenu();
+                break;
+            default:
+                System.out.println("Opção inválida.");
+                exibirOpcoesReservas();
+                break;
+        }
+
+    }
+
+
+    private static void criarnovaReserva()  {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Digite a data de início da reserva (no formato YYYY-MM-DD):");
+        String dataInicioStr = sc.nextLine();
+        LocalDate dataInicio = LocalDate.parse(dataInicioStr);
+
+        System.out.println("Digite a data de fim da reserva (no formato YYYY-MM-DD):");
+        String dataFimStr = sc.nextLine();
+        LocalDate dataFim = LocalDate.parse(dataFimStr);
+
+        ReservasEntity novaReserva = new ReservasEntity();
+        novaReserva.setDataInicio(dataInicio);
+        novaReserva.setDataFim(dataFim);
 
 
 
+        ResevasRepository reservaRepository = new ResevasRepository();
 
+        ReservasController reservaController = new ReservasController(new ReservaService());
+
+        ReservasEntity criadaReserva = reservaController.criarReserva(novaReserva);
+
+        if (criadaReserva != null) {
+            System.out.println("Nova reserva criada com sucesso.");
+            System.out.println("ID: " + criadaReserva.getId());
+            System.out.println("Data de Início: " + criadaReserva.getDataInicio());
+            System.out.println("Data de Fim: " + criadaReserva.getDataFim());
+        } else {
+            System.out.println("Falha ao criar nova reserva.");
+        }
+    }
+
+
+
+// ===========================================================================
     private static void aguardarEnter() {
         System.out.println("Pressione Enter para continuar...");
         sc.nextLine();

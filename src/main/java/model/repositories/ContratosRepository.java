@@ -16,13 +16,14 @@ public class ContratosRepository implements BasicCrud {
 
 
     @Override
-    public Object create(Object object) {
+    public ContratosEntity create(Object object) {
         ContratosEntity contratos1 = (ContratosEntity) object;
         em.getTransaction().begin();
         em.persist(contratos1);
         em.getTransaction().commit();
-        return findById(contratos1.getId());
+        return contratos1;
     }
+
 
     @Override
     public Object update(Object object) {
@@ -41,9 +42,7 @@ public class ContratosRepository implements BasicCrud {
         em.getTransaction().commit();
     }
     public List<ContratosEntity> findAll(){
-        System.out.println("teste");
-        return new ArrayList<ContratosEntity>();
-        //return em.createQuery("aa",FuncionariosEntity.class).getResultList();
+        return em.createQuery("SELECT c FROM ContratosEntity c",ContratosEntity.class).getResultList();
     }
 
     @Override

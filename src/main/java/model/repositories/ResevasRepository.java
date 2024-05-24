@@ -6,20 +6,22 @@ import model.entities.ReservasEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResevasRepository implements BasicCrud {
     EntityManager em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
 
+
     // ---------------------------------
     @Override
-    public Object create(Object object) {
+    public ReservasEntity create(Object object) {
         ReservasEntity reservas1 = (ReservasEntity) object;
         em.getTransaction().begin();
         em.persist(reservas1);
         em.getTransaction().commit();
-        return findById(reservas1.getId());
+        return reservas1; // Retorna a própria entidade inserida
     }
 
     @Override
@@ -39,9 +41,8 @@ public class ResevasRepository implements BasicCrud {
         em.getTransaction().commit();
     }
     public List<ReservasEntity> findAll(){
-        System.out.println("teste");
-        return new ArrayList<ReservasEntity>();
-        //return em.createQuery("aa",FuncionariosEntity.class).getResultList();
+
+        return em.createQuery("SELECT r FROM ReservasEntity r",ReservasEntity.class).getResultList();
     }
 
 
@@ -55,6 +56,19 @@ public class ResevasRepository implements BasicCrud {
         }
         return null;
     }
+
+
+    public List<ReservasEntity> findByDate(LocalDate date) {
+        try {
+            return em.createQuery("SELECT r FROM ReservasEntity r WHERE :date BETWEEN r.dataInicio AND r.dataFim", ReservasEntity.class)
+                    .setParameter("date", date)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }
 
 
