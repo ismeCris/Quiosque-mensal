@@ -5,11 +5,7 @@ import controller.FuncionarioController;
 import controller.QuiosqueController;
 import controller.ReservasController;
 import model.entities.*;
-import model.repositories.ClientesRepository;
-import model.repositories.FuncionariosRepository;
-import model.repositories.QuiosqueRepository;
-import model.repositories.ResevasRepository;
-import model.service.ClientesService;
+import model.repositories.*;
 import model.service.ReservaService;
 
 
@@ -335,7 +331,7 @@ public class Main {
         if (!novoTelefone.isEmpty()) {
             clientes.setTelefone(novoTelefone);
         }
-        System.out.println("Digite o novo telefone (ou pressione Enter para manter o atual: " + clientes.getIdade() + "):");
+        System.out.println("Digite o nova idade (ou pressione Enter para manter o atual: " + clientes.getIdade() + "):");
         String novaIdade = sc.nextLine();
         if (!novaIdade.isEmpty()) {
             clientes.setTelefone(novaIdade);
@@ -717,7 +713,15 @@ public class Main {
                 novaReserva.setValorTotal(BigDecimal.valueOf(valorTotal));
 
                 // Criação do contrato
-                ContratosEntity contrato = new ContratosEntity(novaReserva);
+                ContratosEntity novoContrato  = new ContratosEntity(novaReserva);
+                ContratosRepository contratoRepository = new ContratosRepository();
+                contratoRepository.create(novoContrato);
+
+                novaReserva.setContrato(novoContrato);
+
+                ResevasRepository reservasRepository = new ResevasRepository();
+                reservasRepository.create(novaReserva);
+
 
                 // Salvando reserva e contrato no banco de dados
                 ReservasController reservasController = new ReservasController(new ReservaService());
@@ -732,7 +736,7 @@ public class Main {
                     System.out.println("Cliente: " + criadaReserva.getCliente().getNome());
                     System.out.println("Valor Total: R$" + criadaReserva.getValorTotal());
 
-                    contrato.imprimirContrato();
+                    novoContrato.imprimirContrato();
 
                     criadaReserva.getContrato().imprimirContrato();
                 } else {
@@ -748,10 +752,10 @@ public class Main {
 
 
 
-
     // ===========================================================================
     private static void aguardarEnter() {
         System.out.println("Pressione Enter para continuar...");
         sc.nextLine();
     }
+
 }

@@ -10,7 +10,7 @@ public class ContratoController {
         this.aluguelService = aluguelService;
     }
 
-    public ContratosEntity criarContrato(ContratosEntity contrato) {
+  /*  public ContratosEntity criarContrato(ContratosEntity contrato) {
         return aluguelService.criarNovoContrato(contrato);
-    }
+    }*/
 }

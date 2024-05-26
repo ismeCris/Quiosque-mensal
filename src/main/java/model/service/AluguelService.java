@@ -11,7 +11,7 @@ public class AluguelService {
     private ContratosRepository contratosRepository = new ContratosRepository();
     private MetodoPgRepository pagamentosRepository = new MetodoPgRepository();
 
-    public AluguelService(ResevasRepository reservasRepository, ContratosRepository contratosRepository, MetodoPgRepository pagamentosRepository) {
+   /* public AluguelService(ResevasRepository reservasRepository, ContratosRepository contratosRepository, MetodoPgRepository pagamentosRepository) {
         this.reservasRepository = reservasRepository;
         this.contratosRepository = contratosRepository;
         this.pagamentosRepository = pagamentosRepository;
@@ -24,5 +24,5 @@ public class AluguelService {
     public ContratosEntity criarNovoContrato(ContratosEntity contrato) {
         return contratosRepository.create(contrato);
     }
-
+*/
 }

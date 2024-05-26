@@ -1,7 +1,6 @@
 package model.repositories;
 
-import model.entities.ClientesEntity;
-import model.entities.FuncionariosEntity;
+
 import model.entities.ReservasEntity;
 
 import javax.persistence.EntityManager;
@@ -57,12 +56,20 @@ public class ResevasRepository implements BasicCrud {
         return null;
     }
 
-
     public List<ReservasEntity> findByDate(LocalDate date) {
         try {
-            return em.createQuery("SELECT r FROM ReservasEntity r WHERE :date BETWEEN r.dataInicio AND r.dataFim", ReservasEntity.class)
+            String queryString = "SELECT r FROM ReservasEntity r WHERE :date BETWEEN r.dataInicio AND r.dataFim";
+            System.out.println("Query String: " + queryString); // Imprime a consulta SQL
+
+            List<ReservasEntity> result = em.createQuery(queryString, ReservasEntity.class)
                     .setParameter("date", date)
                     .getResultList();
+
+            // Imprime os parâmetros da consulta
+            System.out.println("Parâmetros da consulta:");
+            System.out.println("Date: " + date);
+
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -72,8 +79,8 @@ public class ResevasRepository implements BasicCrud {
 
 
 
-}
 
+}
 
 
 

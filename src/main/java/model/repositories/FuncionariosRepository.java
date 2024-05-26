@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 public class FuncionariosRepository implements BasicCrud{
-    EntityManager em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
+    EntityManager em = Persistence.   createEntityManagerFactory("bancoQuiosque").createEntityManager();
 
 
 

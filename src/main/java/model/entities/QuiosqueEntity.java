@@ -46,13 +46,13 @@ public class QuiosqueEntity {
 
     }
 
-    public QuiosqueEntity(Long id, int numero, String localidade, int capacidade, boolean disponibilidadeStatus, Set<ComponetesEntity> componentes) {
+    public QuiosqueEntity(Long id, int numero, String localidade, int capacidade, boolean disponibilidadeStatus/*, Set<ComponetesEntity> componentes*/) {
         this.id = id;
         this.numero = numero;
         this.localidade = localidade;
         this.capacidade = capacidade;
         this.dispoStatus = disponibilidadeStatus;
-        this.componentes = (List<ComponetesEntity>) componentes;
+       //this.componentes = (List<ComponetesEntity>) componentes;
     }
 
     public Long getId() {

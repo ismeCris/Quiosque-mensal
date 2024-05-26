@@ -12,7 +12,7 @@ public class ContratosEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "inio_date")
+    @Column(name = "inicio_date")
     private LocalDateTime dataInicio;
 
     @Column(name = "fim_date")
@@ -24,20 +24,24 @@ public class ContratosEntity {
     @Column(name = "status_pag")
     private Boolean statusPag;
 
-   /* @OneToOne
+    @OneToOne
     @JoinColumn(name = "cliente_id_fk")
-    private ClientesEntity cliente;*/
+    private ClientesEntity cliente;
 
     @ManyToOne
     @JoinColumn(name = "quiosque_id_fk")
     private QuiosqueEntity quiosque;
-
-
+/*
+    @ManyToMany
+    @JoinColumn(name = "metodoPag_id_fk")
+    private QuiosqueEntity mtdPagamento;
+*/
+/*
     @Column(name = "preco_diaria")
     private BigDecimal valorDiaria = BigDecimal.valueOf(80.00);
 
     @Column(name = "valor_total")
-    private BigDecimal valorTotal;
+    private BigDecimal valorTotal;*/
     public ContratosEntity() {
 
     }
@@ -48,7 +52,7 @@ public class ContratosEntity {
         this.dataFim = dataFim;
         this.valorAluguel = valorAluguel;
         this.statusPag = statusPag;
-        this.valorDiaria = BigDecimal.ZERO;
+       // this.valorDiaria = BigDecimal.ZERO;
         this.quiosque = quiosque;
     }
     public ContratosEntity(ReservasEntity reservas){
@@ -94,6 +98,9 @@ public class ContratosEntity {
     public void setStatusPag(Boolean statusPag) {
         this.statusPag = statusPag;
     }
+    public ClientesEntity getCliente() {
+        return cliente;
+    }
 
     public void imprimirContrato() {
         System.out.println("Contrato:");
@@ -103,5 +110,4 @@ public class ContratosEntity {
         System.out.println("Valor do Aluguel: " + this.getValorAluguel());
         // Imprimir outros detalhes do contrato, se necessário
     }
-
 }
