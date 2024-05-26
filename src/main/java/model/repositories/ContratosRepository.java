@@ -1,13 +1,8 @@
 package model.repositories;
 
-import model.entities.ClientesEntity;
 import model.entities.ContratosEntity;
-import model.entities.FuncionariosEntity;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContratosRepository implements BasicCrud {
@@ -55,4 +50,6 @@ public class ContratosRepository implements BasicCrud {
         }
         return null;
     }
+
+
 }

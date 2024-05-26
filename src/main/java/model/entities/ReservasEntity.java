@@ -1,16 +1,15 @@
 package model.entities;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-@Entity //Indica que esta classe é uma entidade
-@Table(name =  "reservas")//Especifica o nome da tabela no banco de dados à qual esta entidade será mapeada
-
-
+@Entity
+@Table(name =  "reservas")
 public class ReservasEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//Especifica que o valor do campo id será gerado automaticamente usando a estratégia de identidade do banco de dados
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "data_reserva")
@@ -30,11 +29,17 @@ public class ReservasEntity {
     @JoinColumn(name = "clientes_id_fk")
     private ClientesEntity cliente;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "contratos_id_fk")
     private ContratosEntity contrato;
 
-    public ReservasEntity(){
+    @Column(name = "preco_diaria")
+    private BigDecimal valorDiaria = BigDecimal.valueOf(80.00);
+
+    @Column(name = "valor_total")
+    private BigDecimal valorTotal;
+
+    public ReservasEntity() {
 
     }
     // Construtor com parâmetros
@@ -46,6 +51,7 @@ public class ReservasEntity {
     }
 
     // Getters e Setters
+
     public long getId() {
         return id;
     }
@@ -78,7 +84,6 @@ public class ReservasEntity {
         this.detalhes = detalhes;
     }
 
-
     public QuiosqueEntity getQuiosque() {
         return quiosque;
     }
@@ -86,4 +91,39 @@ public class ReservasEntity {
     public void setQuiosque(QuiosqueEntity quiosque) {
         this.quiosque = quiosque;
     }
+
+    public ClientesEntity getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(ClientesEntity cliente) {
+        this.cliente = cliente;
+    }
+
+    public ContratosEntity getContrato() {
+        return contrato;
+    }
+
+    public void setContrato(ContratosEntity contrato) {
+        this.contrato = contrato;
+    }
+
+    public BigDecimal getPrecoDiaria() {
+        return valorDiaria;
+    }
+
+    public void setPrecoDiaria(BigDecimal precoDiaria) {
+        this.valorDiaria = precoDiaria;
+    }
+
+    public BigDecimal getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
 }
+
+

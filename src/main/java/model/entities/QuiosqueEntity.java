@@ -1,16 +1,17 @@
 package model.entities;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.JoinColumn;
 
-@Entity //Indica que esta classe é uma entidade
-@Table(name =  "quiosques")//Especifica o nome da tabela no banco de dados à qual esta entidade será mapeada
+@Entity
+@Table(name =  "quiosques")
 
 public class QuiosqueEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//Especifica que o valor do campo id será gerado automaticamente usando a estratégia de identidade do banco de dados
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -25,6 +26,14 @@ public class QuiosqueEntity {
     @Column(name = "dispo_status")
     private Boolean dispoStatus;
 
+    @Column(name = "preco_diaria")
+    private BigDecimal valorDiaria = BigDecimal.valueOf(80.00);
+
+
+
+    // Outros métodos e atributos
+
+
     @ManyToMany
     @JoinTable(
             name = "componentes_has_qiosques",
@@ -32,11 +41,6 @@ public class QuiosqueEntity {
             inverseJoinColumns = @JoinColumn(name = "componentes_fk")
     )
     private List<ComponetesEntity> componentes;
-
-    public QuiosqueEntity(List<ComponetesEntity> componentes){
-
-        this.componentes = componentes;
-    }
 
     public QuiosqueEntity() {
 
@@ -90,4 +94,12 @@ public class QuiosqueEntity {
     public void setDispoStatus(Boolean dispoStatus) {
         this.dispoStatus = dispoStatus;
     }
+    public BigDecimal getValorDiaria() {
+        return valorDiaria;
+    }
+
+    public void setValorDiaria(BigDecimal valorDiaria) {
+        this.valorDiaria = valorDiaria;
+    }
+
 }

@@ -4,18 +4,18 @@ import controller.ClientesController;
 import controller.FuncionarioController;
 import controller.QuiosqueController;
 import controller.ReservasController;
-import model.entities.ClientesEntity;
-import model.entities.FuncionariosEntity;
-import model.entities.QuiosqueEntity;
-import model.entities.ReservasEntity;
+import model.entities.*;
 import model.repositories.ClientesRepository;
 import model.repositories.FuncionariosRepository;
 import model.repositories.QuiosqueRepository;
 import model.repositories.ResevasRepository;
+import model.service.ClientesService;
 import model.service.ReservaService;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Scanner;
 
@@ -655,8 +655,7 @@ public class Main {
 
     }
 
-
-    private static void criarnovaReserva()  {
+    private static void  criarnovaReserva() {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Digite a data de início da reserva (no formato YYYY-MM-DD):");
@@ -670,35 +669,77 @@ public class Main {
         QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
         List<QuiosqueEntity> quiosquesDisponiveis = quiosqueRepository.buscarQuiosquesDisponiveis();
 
-        System.out.println("quiosque disponiveis:");
-        for(int i = 0; i< quiosquesDisponiveis.size(); i++){
+        System.out.println("Quiosques disponíveis:");
+        for (int i = 0; i < quiosquesDisponiveis.size(); i++) {
             QuiosqueEntity quiosque = quiosquesDisponiveis.get(i);
-            System.out.println((i +1)+  ". ID: " + quiosque.getId() + ", Número: " + quiosque.getNumero() + ", Localidade: " + quiosque.getLocalidade());
+            System.out.println((i + 1) + ". ID: " + quiosque.getId() + ", Número: " + quiosque.getNumero() + ", Localidade: " + quiosque.getLocalidade());
         }
 
-        System.out.println("selecione o quiosque desejado:");
+        System.out.println("Selecione o quiosque desejado:");
         int escolha = sc.nextInt();
+        sc.nextLine();
 
-        if(escolha > 0 && escolha <= quiosquesDisponiveis.size()){
+        if (escolha > 0 && escolha <= quiosquesDisponiveis.size()) {
             QuiosqueEntity quiosqueSelecionado = quiosquesDisponiveis.get(escolha - 1);
 
-            ReservasEntity novaReserva = new ReservasEntity();
-            novaReserva.setDataInicio(dataInicio);
-            novaReserva.setDataFim(dataFim);
-            novaReserva.setQuiosque(quiosqueSelecionado);
+            ClientesRepository clienteRepository = new ClientesRepository();
+            List<ClientesEntity> clientesCadastrados = clienteRepository.findAll();
 
-            ResevasRepository resevasRepository = new ResevasRepository();
-            ReservasController reservasController = new ReservasController(new ReservaService());
-            ReservasEntity criadaReserva = reservasController.criarReserva(novaReserva);
+            System.out.println("Lista de Clientes Cadastrados:");
+            for (int i = 0; i < clientesCadastrados.size(); i++) {
+                ClientesEntity cliente = clientesCadastrados.get(i);
+                System.out.println((i + 1) + ". ID: " + cliente.getId() + ", Nome: " + cliente.getNome());
+            }
 
-            if (criadaReserva != null) {
-                System.out.println("Nova reserva criada com sucesso.");
-                System.out.println("ID: " + criadaReserva.getId());
-                System.out.println("Data de Início: " + criadaReserva.getDataInicio());
-                System.out.println("Data de Fim: " + criadaReserva.getDataFim());
-                System.out.println("Quiosque: " + criadaReserva.getQuiosque().getNumero() + ", Localidade: " + criadaReserva.getQuiosque().getLocalidade());
+            System.out.println("Digite o número do cliente desejado:");
+            int escolhaCliente = sc.nextInt();
+            sc.nextLine();
+
+            if (escolhaCliente > 0 && escolhaCliente <= clientesCadastrados.size()) {
+                ClientesEntity clienteSelecionado = clientesCadastrados.get(escolhaCliente - 1);
+
+                BigDecimal valorDiaria = quiosqueSelecionado.getValorDiaria();
+                if (valorDiaria == null) {
+                    System.out.println("Erro: O quiosque selecionado não possui um valor de diária definido.");
+                    return;
+                }
+
+                long numeroDias = ChronoUnit.DAYS.between(dataInicio, dataFim) + 1;
+                double valorDiariaDouble = valorDiaria.doubleValue();
+                double valorTotal = numeroDias * valorDiariaDouble;
+
+                ReservasEntity novaReserva = new ReservasEntity();
+                novaReserva.setDataInicio(dataInicio);
+                novaReserva.setDataFim(dataFim);
+                novaReserva.setQuiosque(quiosqueSelecionado);
+                novaReserva.setCliente(clienteSelecionado);
+                novaReserva.setPrecoDiaria(valorDiaria);
+                novaReserva.setValorTotal(BigDecimal.valueOf(valorTotal));
+
+                // Criação do contrato
+                ContratosEntity contrato = new ContratosEntity(novaReserva);
+
+                // Salvando reserva e contrato no banco de dados
+                ReservasController reservasController = new ReservasController(new ReservaService());
+                ReservasEntity criadaReserva = reservasController.criarReserva(novaReserva);
+
+                if (criadaReserva != null) {
+                    System.out.println("Nova reserva criada com sucesso.");
+                    System.out.println("ID: " + criadaReserva.getId());
+                    System.out.println("Data de Início: " + criadaReserva.getDataInicio());
+                    System.out.println("Data de Fim: " + criadaReserva.getDataFim());
+                    System.out.println("Quiosque: " + criadaReserva.getQuiosque().getNumero() + ", Localidade: " + criadaReserva.getQuiosque().getLocalidade());
+                    System.out.println("Cliente: " + criadaReserva.getCliente().getNome());
+                    System.out.println("Valor Total: R$" + criadaReserva.getValorTotal());
+
+                    contrato.imprimirContrato();
+
+                    criadaReserva.getContrato().imprimirContrato();
+                } else {
+                    System.out.println("Falha ao criar nova reserva.");
+                }
             } else {
-                System.out.println("Falha ao criar nova reserva.");
+                System.out.println("Escolha inválida. Tente novamente.");
             }
         } else {
             System.out.println("Escolha inválida. Tente novamente.");
@@ -707,7 +748,8 @@ public class Main {
 
 
 
-// ===========================================================================
+
+    // ===========================================================================
     private static void aguardarEnter() {
         System.out.println("Pressione Enter para continuar...");
         sc.nextLine();
