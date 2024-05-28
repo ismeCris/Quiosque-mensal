@@ -3,7 +3,6 @@ package model.entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -30,10 +29,6 @@ public class QuiosqueEntity {
     private BigDecimal valorDiaria = BigDecimal.valueOf(80.00);
 
 
-
-    // Outros métodos e atributos
-
-
     @ManyToMany
     @JoinTable(
             name = "componentes_has_qiosques",
@@ -46,13 +41,12 @@ public class QuiosqueEntity {
 
     }
 
-    public QuiosqueEntity(Long id, int numero, String localidade, int capacidade, boolean disponibilidadeStatus/*, Set<ComponetesEntity> componentes*/) {
+    public QuiosqueEntity(Long id, int numero, String localidade, int capacidade, boolean disponibilidadeStatus) {
         this.id = id;
         this.numero = numero;
         this.localidade = localidade;
         this.capacidade = capacidade;
         this.dispoStatus = disponibilidadeStatus;
-       //this.componentes = (List<ComponetesEntity>) componentes;
     }
 
     public Long getId() {
@@ -101,5 +95,7 @@ public class QuiosqueEntity {
     public void setValorDiaria(BigDecimal valorDiaria) {
         this.valorDiaria = valorDiaria;
     }
+
+
 
 }

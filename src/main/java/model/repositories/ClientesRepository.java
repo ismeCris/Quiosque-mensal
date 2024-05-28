@@ -2,13 +2,9 @@ package model.repositories;
 
 
 import model.entities.ClientesEntity;
-import model.entities.FuncionariosEntity;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,8 +12,6 @@ public class ClientesRepository implements  BasicCrud{
 
     EntityManager em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
 
-    // --------------------------------->
-    //  criar um cliente no seu sistema
     @Override
     public Object create(Object object) {
         ClientesEntity clientes1 = (ClientesEntity) object;
@@ -39,7 +33,6 @@ public class ClientesRepository implements  BasicCrud{
     }
 
 
-    // código para ler um cliente do seu sistema
     @Override
     public Object update(Object object) {
         ClientesEntity clientesUpdade = (ClientesEntity) object;

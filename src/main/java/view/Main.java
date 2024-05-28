@@ -8,7 +8,6 @@ import model.entities.*;
 import model.repositories.*;
 import model.service.ReservaService;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -19,20 +18,20 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
     private static FuncionarioController funcionarioController = new FuncionarioController();
     private static ClientesController clientesController = new ClientesController();
+    QuiosqueController quiosqueController = new QuiosqueController();
 
     public static void main(String[] args) {
         exibirMenuPrincipal();
     }
 
     private static void exibirMenuPrincipal() {
-        // Solicitar nome de usuário e senha
+
         System.out.print("Nome de usuário: ");
         String nome = sc.nextLine();
 
         System.out.print("Senha: ");
         String senha = sc.nextLine();
 
-        // Autenticar
         FuncionariosEntity funcionarioAutenticado = funcionarioController.login(nome, senha);
 
         if (funcionarioAutenticado != null) {
@@ -41,7 +40,7 @@ public class Main {
             exibirMenu();
         } else {
             System.out.println("Nome de usuário ou senha incorretos. Por favor, tente novamente.");
-            exibirMenuPrincipal(); // Chama recursivamente para tentar novamente
+            exibirMenuPrincipal();
         }
     }
 
@@ -49,8 +48,7 @@ public class Main {
         System.out.println("1 - Gestão de funcionarios");
         System.out.println("2 - Gestão de Clientes");
         System.out.println("3 - Gestão de Quiosques");
-        System.out.println("4 - Gestão de Contratos");
-        System.out.println("5 - Gestão de Reservas");
+        System.out.println("4 - Gestão de Reservas");
         System.out.println("0 - sair");
         System.out.println("Escolha uma opção");
 
@@ -67,7 +65,7 @@ public class Main {
             case 3:
                 exibirOpcoesQuiosque();
                 break;
-            case 5:
+            case 4:
                 exibirOpcoesReservas();
                 break;
             case 0:
@@ -91,7 +89,7 @@ public class Main {
         System.out.println("Escolha uma opção:");
 
         int opcao = sc.nextInt();
-        sc.nextLine(); // Limpa o buffer do scanner
+        sc.nextLine();
 
         switch (opcao) {
             case 1:
@@ -135,7 +133,6 @@ public class Main {
         }
     }
 
-    // ->editar dados do funcionario
     private static void editarFuncionario() {
         System.out.println("Digite o ID do funcionário a ser editado:");
         long id = sc.nextLong();
@@ -181,7 +178,6 @@ public class Main {
         System.out.println("Funcionário atualizado com sucesso.");
     }
 
-
     private static void criarNovoFuncionario() {
         FuncionariosRepository funcionariosRepository = new FuncionariosRepository();
         FuncionariosEntity novoFuncionario = new FuncionariosEntity();
@@ -193,11 +189,10 @@ public class Main {
         System.out.println("Digite a senha do novo funcionário:");
         String senha = sc.nextLine();
 
-        // Check if the password is already in use
         FuncionariosEntity funcionarioExistente = funcionariosRepository.findBySenha(senha);
         if (funcionarioExistente != null) {
             System.out.println("Já existe um funcionário com a mesma senha. Por favor, escolha outra senha.");
-            return; // Return to the main menu
+            return;
         }
 
         novoFuncionario.setSenha(senha);
@@ -206,7 +201,7 @@ public class Main {
         String email = sc.nextLine();
         if (email.length() > 255) {
             System.out.println("O email excede o limite de 255 caracteres. Por favor, insira um email mais curto.");
-            return; // Return to the main menu
+            return;
         }
         novoFuncionario.setEmail(email);
 
@@ -308,44 +303,47 @@ public class Main {
         long id = sc.nextLong();
         sc.nextLine();
 
-        ClientesEntity clientes = ClientesController.findClienteById(id);
-        if (clientes == null) {
+        ClientesEntity cliente = ClientesController.findClienteById(id);
+        if (cliente == null) {
             System.out.println("Cliente não encontrado.");
             return;
         }
 
-        System.out.println("Digite o novo nome (ou pressione Enter para manter o atual: " + clientes.getNome() + "):");
+        System.out.println("Digite o novo nome (ou pressione Enter para manter o atual: " + cliente.getNome() + "):");
         String novoNome = sc.nextLine();
         if (!novoNome.isEmpty()) {
-            clientes.setNome(novoNome);
+            cliente.setNome(novoNome);
         }
 
-        System.out.println("Digite o novo email (ou pressione Enter para manter o atual: " + clientes.getEmail() + "):");
+        System.out.println("Digite o novo email (ou pressione Enter para manter o atual: " + cliente.getEmail() + "):");
         String novoEmail = sc.nextLine();
         if (!novoEmail.isEmpty()) {
-            clientes.setEmail(novoEmail);
+            cliente.setEmail(novoEmail);
         }
 
-        System.out.println("Digite o novo telefone (ou pressione Enter para manter o atual: " + clientes.getTelefone() + "):");
+        System.out.println("Digite o novo telefone (ou pressione Enter para manter o atual: " + cliente.getTelefone() + "):");
         String novoTelefone = sc.nextLine();
         if (!novoTelefone.isEmpty()) {
-            clientes.setTelefone(novoTelefone);
-        }
-        System.out.println("Digite o nova idade (ou pressione Enter para manter o atual: " + clientes.getIdade() + "):");
-        String novaIdade = sc.nextLine();
-        if (!novaIdade.isEmpty()) {
-            clientes.setTelefone(novaIdade);
+            cliente.setTelefone(novoTelefone);
         }
 
-        System.out.println("Digite o novo CPF (ou pressione Enter para manter o atual: " + clientes.getCpf() + "):");
+        System.out.println("Digite a nova idade (ou pressione Enter para manter a atual: " + cliente.getIdade() + "):");
+        String novaIdade = sc.nextLine();
+        if (!novaIdade.isEmpty()) {
+            cliente.setIdade(Integer.parseInt(novaIdade));
+        }
+
+        System.out.println("Digite o novo CPF (ou pressione Enter para manter o atual: " + cliente.getCpf() + "):");
         String novoCpf = sc.nextLine();
         if (!novoCpf.isEmpty()) {
-            clientes.setCpf(novoCpf);
+            cliente.setCpf(novoCpf);
         }
+
+        // Atualizar o cliente no banco de dados
+        clientesController.updateCliente(cliente);
 
         System.out.println("Cliente atualizado com sucesso.");
     }
-
 
     private static void criarNovoCliente() {
 
@@ -361,7 +359,6 @@ public class Main {
         System.out.print("Digite o CPF do novo Cliente: ");
         String cpf = sc.nextLine();
 
-        // Verifica se o CPF já existe no banco de dados
         ClientesEntity clienteExistente = (ClientesEntity) clientesRepository.findById(cpf);
         if (clienteExistente != null) {
             System.out.println("Já existe um cliente cadastrado com o CPF informado.");
@@ -389,15 +386,12 @@ public class Main {
         novocliente.setUserStatus(status);
 
         try {
-            // Cria o novo cliente
             ClientesEntity criadoCliente = clientesController.createCliente(novocliente);
             if (criadoCliente != null) {
-                // Exibe as informações do cliente criado com sucesso
                 System.out.println("Novo cliente criado com sucesso.");
                 System.out.println("ID: " + criadoCliente.getId());
                 System.out.println("Nome: " + criadoCliente.getNome());
                 System.out.println("CPF: " + criadoCliente.getCpf());
-                // Exibe outras informações do cliente (não incluídas aqui por simplicidade)
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -420,6 +414,8 @@ public class Main {
     }
 //======================================================================================================================
     private static void exibirOpcoesQuiosque() {
+        QuiosqueController quiosqueController = new QuiosqueController();
+
         System.out.println("=======- Gestao de Quiosques -=======");
         System.out.println("1 - Buscar quiosque pelo numero");
         System.out.println("2 - Editar dados da quiosque");
@@ -454,9 +450,6 @@ public class Main {
                 System.out.println("Digite o ID do quiosque a ser excluído:");
                 long deleteId = sc.nextLong();
 
-                QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
-                QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
-
                 quiosqueController.deleteQuiosque(deleteId);
                 System.out.println("quiosque excluído.");
                 aguardarEnter();
@@ -472,19 +465,18 @@ public class Main {
                 break;
             default:
                 System.out.println("Opção inválida.");
-                exibirOpcoesQuiosque();// Volta para o submenu
+                exibirOpcoesQuiosque();
                 break;
         }
 
     }
 
-    // ->editar dados do Quiosque
+
     private static void editarQuiosque() {
         System.out.println("Digite o ID do Quiosque a ser editado:");
         long id = sc.nextLong();
-        sc.nextLine(); // Limpa o buffer do scanner
-        QuiosqueRepository quiosqueRepository = new QuiosqueRepository(); // Criar uma instância de QuiosqueRepository
-        QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+        sc.nextLine();
+        QuiosqueController quiosqueController = new QuiosqueController();
 
         QuiosqueEntity quiosque = quiosqueController.findQuiosqueById(id);
         
@@ -494,10 +486,10 @@ public class Main {
         }
 
         System.out.println("Digite o novo numero (ou pressione Enter para manter o atual: " + quiosque.getNumero() + "):");
-        String novoNumInput = sc.nextLine(); // Ler entrada como String
+        String novoNumInput = sc.nextLine();
 
         if (!novoNumInput.isEmpty()) {
-            int novoNum = Integer.parseInt(novoNumInput); // Converter String para int
+            int novoNum = Integer.parseInt(novoNumInput);
             quiosque.setNumero(novoNum);
         }
 
@@ -509,19 +501,19 @@ public class Main {
 
 
         System.out.println("Digite o novo telefone (ou pressione Enter para manter o atual: " + quiosque.getCapacidade() + "):");
-        String novaCapaciInput = sc.nextLine(); // Ler entrada como String
+        String novaCapaciInput = sc.nextLine();
 
         if (!novaCapaciInput.isEmpty()) {
-            int novaCapaci = Integer.parseInt(novaCapaciInput); // Converter String para int
+            int novaCapaci = Integer.parseInt(novaCapaciInput);
             quiosque.setCapacidade(novaCapaci);
         }
 
 
         System.out.println("Digite o novo Status (ou pressione Enter para manter o atual: " + quiosque.getDispoStatus() + "):");
-        String novoStatusInput = sc.nextLine(); // Ler entrada como String
+        String novoStatusInput = sc.nextLine();
 
         if (!novoStatusInput.isEmpty()) {
-            boolean novoStatus = Boolean.parseBoolean(novoStatusInput); // Converter String para boolean
+            boolean novoStatus = Boolean.parseBoolean(novoStatusInput);
             quiosque.setDispoStatus(novoStatus);
         }
 
@@ -537,9 +529,8 @@ public class Main {
 
         System.out.println("Digite o número do novo Quiosque:");
         int numero = sc.nextInt();
-        sc.nextLine(); // Consumir a quebra de linha após a leitura do número
+        sc.nextLine();
 
-        // Verificar se já existe um quiosque com o mesmo número
         QuiosqueEntity quiosqueExistente = quiosqueRepository.findById(numero);
         if (quiosqueExistente != null) {
             System.out.println("Já existe um quiosque com o mesmo número. Por favor, escolha outro.");
@@ -565,9 +556,8 @@ public class Main {
         novoQuiosque.setDispoStatus(disponibilidadeStatus);
 
 
-        QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+        QuiosqueController quiosqueController = new QuiosqueController();
 
-        // Create the new quiosque using the controller
         QuiosqueEntity criadoQuiosque = quiosqueController.createQuiosque(novoQuiosque);
 
         if (criadoQuiosque != null) {
@@ -598,6 +588,7 @@ public class Main {
 
 //======================================================================================================================
     private static void exibirOpcoesReservas() {
+
         System.out.println("=======- Gestao de Reservas -=======");
         System.out.println("1 - Buscar reserva por data");
         System.out.println("2 - Editar dados da reserva");
@@ -619,24 +610,31 @@ public class Main {
                 exibirOpcoesReservas();
                 break;
             case 2:
-                //editarQuiosque();
+                editarReserva();
                 aguardarEnter();
                 exibirOpcoesReservas();
                 break;
             case 3:
-                criarnovaReserva();
+                criarNovaReserva();
                 aguardarEnter();
                 exibirOpcoesReservas();
                 break;
             case 4:
-                System.out.println("Digite o ID do quiosque a ser excluído:");
+                System.out.println("Digite o ID da reserva a ser excluida:");
                 long deleteId = sc.nextLong();
 
-                QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
-                QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+                ReservaService reservaService = new ReservaService();
+                ReservasController reservasController = new ReservasController(reservaService);
 
-                quiosqueController.deleteQuiosque(deleteId);
-                System.out.println("quiosque excluído.");
+
+
+                reservasController.excluirReserva(deleteId);
+                System.out.println("reserva excluida.");
+                aguardarEnter();
+                exibirOpcoesReservas();
+                break;
+            case 5:
+                listarTodasReservas();
                 aguardarEnter();
                 exibirOpcoesReservas();
                 break;
@@ -650,9 +648,70 @@ public class Main {
         }
 
     }
+    private static void editarReserva() {
+        System.out.println("Digite o ID da reserva a ser editada:");
+        long id = sc.nextLong();
+        sc.nextLine();
 
-    private static void  criarnovaReserva() {
-        Scanner sc = new Scanner(System.in);
+
+        ResevasRepository reservaRepository = new ResevasRepository();
+        ReservaService reservaService = new ReservaService(reservaRepository);
+        ReservasController reservaController = new ReservasController(reservaService);
+        ReservasEntity reserva = reservaController.encontrarReservaPorId(id);
+
+        if (reserva == null) {
+            System.out.println("Reserva não encontrada.");
+            return;
+        }
+
+        System.out.println("Digite a nova data de início (ou pressione Enter para manter a atual: " + reserva.getDataInicio() + "):");
+        String novaDataInicioStr = sc.nextLine();
+        if (!novaDataInicioStr.isEmpty()) {
+            LocalDate novaDataInicio = LocalDate.parse(novaDataInicioStr);
+            reserva.setDataInicio(novaDataInicio);
+        }
+
+        System.out.println("Digite a nova data de fim (ou pressione Enter para manter a atual: " + reserva.getDataFim() + "):");
+        String novaDataFimStr = sc.nextLine();
+        if (!novaDataFimStr.isEmpty()) {
+            LocalDate novaDataFim = LocalDate.parse(novaDataFimStr);
+            reserva.setDataFim(novaDataFim);
+        }
+        System.out.println("Digite o novo ID do Quiosque (ou pressione Enter para manter o atual: " + reserva.getQuiosque().getId() + "):");
+        String novoIdQuiosqueStr = sc.nextLine();
+        if (!novoIdQuiosqueStr.isEmpty()) {
+            long novoIdQuiosque = Long.parseLong(novoIdQuiosqueStr);
+            QuiosqueEntity novoQuiosque = new QuiosqueEntity();
+            novoQuiosque.setId(novoIdQuiosque);
+            reserva.setQuiosque(novoQuiosque);
+        }
+
+        System.out.println("Digite o novo ID do Cliente (ou pressione Enter para manter o atual: " + reserva.getCliente().getId() + "):");
+        String novoIdClienteStr = sc.nextLine();
+        if (!novoIdClienteStr.isEmpty()) {
+            long novoIdCliente = Long.parseLong(novoIdClienteStr);
+            ClientesEntity novoCliente = new ClientesEntity();
+            novoCliente.setId(novoIdCliente);
+            reserva.setCliente(novoCliente);
+        }
+
+        System.out.println("Digite o novo valor da diária (ou pressione Enter para manter o atual: " + reserva.getPrecoDiaria() + "):");
+        String novoValorDiariaStr = sc.nextLine();
+        if (!novoValorDiariaStr.isEmpty()) {
+            BigDecimal novoValorDiaria = new BigDecimal(novoValorDiariaStr);
+            reserva.setPrecoDiaria(novoValorDiaria);
+        }
+
+
+        reservaController.atualizarReserva(reserva);
+        System.out.println("Reserva atualizada com sucesso.");
+    }
+
+    private static void criarNovaReserva() {
+        ResevasRepository resevasRepository = new ResevasRepository();
+        ReservaService reservaService = new ReservaService();
+        ReservasController reservaController = new ReservasController(reservaService);
+        ReservasEntity novaReserva = new ReservasEntity();
 
         System.out.println("Digite a data de início da reserva (no formato YYYY-MM-DD):");
         String dataInicioStr = sc.nextLine();
@@ -662,91 +721,74 @@ public class Main {
         String dataFimStr = sc.nextLine();
         LocalDate dataFim = LocalDate.parse(dataFimStr);
 
-        QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
-        List<QuiosqueEntity> quiosquesDisponiveis = quiosqueRepository.buscarQuiosquesDisponiveis();
 
-        System.out.println("Quiosques disponíveis:");
-        for (int i = 0; i < quiosquesDisponiveis.size(); i++) {
-            QuiosqueEntity quiosque = quiosquesDisponiveis.get(i);
-            System.out.println((i + 1) + ". ID: " + quiosque.getId() + ", Número: " + quiosque.getNumero() + ", Localidade: " + quiosque.getLocalidade());
+        System.out.println("Lista de Quiosques Ativos:");
+        List<QuiosqueEntity> quiosquesAtivos = resevasRepository.getQuiosquesAtivos();
+        for (QuiosqueEntity quiosque : quiosquesAtivos) {
+            System.out.println("ID: " + quiosque.getId() + ", Número: " + quiosque.getNumero() + ", Localidade: " + quiosque.getLocalidade());
         }
 
         System.out.println("Selecione o quiosque desejado:");
-        int escolha = sc.nextInt();
+        Long escolhaQui = sc.nextLong();
         sc.nextLine();
 
-        if (escolha > 0 && escolha <= quiosquesDisponiveis.size()) {
-            QuiosqueEntity quiosqueSelecionado = quiosquesDisponiveis.get(escolha - 1);
+        QuiosqueController quiosqueController = new QuiosqueController();
+        QuiosqueEntity quiosqueEscolha = quiosqueController.findQuiosqueById(escolhaQui);
 
-            ClientesRepository clienteRepository = new ClientesRepository();
-            List<ClientesEntity> clientesCadastrados = clienteRepository.findAll();
+        System.out.println("Lista de Clientes Ativos:");
+        List<ClientesEntity> clientesAtivos = resevasRepository.getClientesAtivos();
+        for (ClientesEntity cliente : clientesAtivos) {
+            System.out.println("ID: " + cliente.getId() + ", Nome: " + cliente.getNome());
+        }
+        System.out.println("Digite o número do cliente desejado:");
+        Long escolhaCli = sc.nextLong();
+        sc.nextLine();
 
-            System.out.println("Lista de Clientes Cadastrados:");
-            for (int i = 0; i < clientesCadastrados.size(); i++) {
-                ClientesEntity cliente = clientesCadastrados.get(i);
-                System.out.println((i + 1) + ". ID: " + cliente.getId() + ", Nome: " + cliente.getNome());
-            }
+        ClientesEntity clienteEscolha = clientesController.findClienteById(escolhaCli);
 
-            System.out.println("Digite o número do cliente desejado:");
-            int escolhaCliente = sc.nextInt();
-            sc.nextLine();
+        System.out.println("Entre com o valor da diária:");
+        BigDecimal precoDiaria = sc.nextBigDecimal();
+        sc.nextLine();
 
-            if (escolhaCliente > 0 && escolhaCliente <= clientesCadastrados.size()) {
-                ClientesEntity clienteSelecionado = clientesCadastrados.get(escolhaCliente - 1);
-
-                BigDecimal valorDiaria = quiosqueSelecionado.getValorDiaria();
-                if (valorDiaria == null) {
-                    System.out.println("Erro: O quiosque selecionado não possui um valor de diária definido.");
-                    return;
-                }
-
-                long numeroDias = ChronoUnit.DAYS.between(dataInicio, dataFim) + 1;
-                double valorDiariaDouble = valorDiaria.doubleValue();
-                double valorTotal = numeroDias * valorDiariaDouble;
-
-                ReservasEntity novaReserva = new ReservasEntity();
-                novaReserva.setDataInicio(dataInicio);
-                novaReserva.setDataFim(dataFim);
-                novaReserva.setQuiosque(quiosqueSelecionado);
-                novaReserva.setCliente(clienteSelecionado);
-                novaReserva.setPrecoDiaria(valorDiaria);
-                novaReserva.setValorTotal(BigDecimal.valueOf(valorTotal));
-
-                // Criação do contrato
-                ContratosEntity novoContrato  = new ContratosEntity(novaReserva);
-                ContratosRepository contratoRepository = new ContratosRepository();
-                contratoRepository.create(novoContrato);
-
-                novaReserva.setContrato(novoContrato);
-
-                ResevasRepository reservasRepository = new ResevasRepository();
-                reservasRepository.create(novaReserva);
+        long numeroDias = ChronoUnit.DAYS.between(dataInicio, dataFim) + 1;
 
 
-                // Salvando reserva e contrato no banco de dados
-                ReservasController reservasController = new ReservasController(new ReservaService());
-                ReservasEntity criadaReserva = reservasController.criarReserva(novaReserva);
+        BigDecimal valorTotal = precoDiaria.multiply(BigDecimal.valueOf(numeroDias));
 
-                if (criadaReserva != null) {
-                    System.out.println("Nova reserva criada com sucesso.");
-                    System.out.println("ID: " + criadaReserva.getId());
-                    System.out.println("Data de Início: " + criadaReserva.getDataInicio());
-                    System.out.println("Data de Fim: " + criadaReserva.getDataFim());
-                    System.out.println("Quiosque: " + criadaReserva.getQuiosque().getNumero() + ", Localidade: " + criadaReserva.getQuiosque().getLocalidade());
-                    System.out.println("Cliente: " + criadaReserva.getCliente().getNome());
-                    System.out.println("Valor Total: R$" + criadaReserva.getValorTotal());
+        novaReserva.setDataInicio(dataInicio);
+        novaReserva.setDataFim(dataFim);
+        novaReserva.setQuiosque(quiosqueEscolha);
+        novaReserva.setCliente(clienteEscolha);
+        novaReserva.setPrecoDiaria(precoDiaria);
+        novaReserva.setValorTotal(valorTotal);
 
-                    novoContrato.imprimirContrato();
+        ReservasEntity criadoReserva =  reservaController.criarReserva(novaReserva);
 
-                    criadaReserva.getContrato().imprimirContrato();
-                } else {
-                    System.out.println("Falha ao criar nova reserva.");
-                }
-            } else {
-                System.out.println("Escolha inválida. Tente novamente.");
-            }
+        if (criadoReserva != null) {
+            System.out.println("Nova reserva criada com sucesso.");
+            System.out.println("ID: " + criadoReserva.getId());
+            System.out.println("Data de Início: " + criadoReserva.getDataInicio());
+            System.out.println("Data de Fim: " + criadoReserva.getDataFim());
+            System.out.println("Quiosque: " + criadoReserva.getQuiosque().getNumero() + ", Localidade: " + criadoReserva.getQuiosque().getLocalidade());
+            System.out.println("Cliente: " + criadoReserva.getCliente().getNome());
+            System.out.println("Valor Total: R$" + criadoReserva.getValorTotal());
         } else {
-            System.out.println("Escolha inválida. Tente novamente.");
+            System.out.println("Falha ao criar novo funcionário.");
+        }
+    }
+
+
+    private static void listarTodasReservas() {
+        ResevasRepository reservasRepository = new ResevasRepository();
+        List<ReservasEntity> reservas = reservasRepository.findAll();
+
+        if (reservas.isEmpty()) {
+            System.out.println("Não há reservas cadastradas no sistema.");
+        } else {
+            System.out.println("Lista de reservas cadastradas:");
+            for (ReservasEntity reserva : reservas) {
+                System.out.println("ID: " + reserva.getId() + ", Data de Início: " + reserva.getDataInicio() + ", Data de Fim: " + reserva.getDataFim() + ", Valor Total: " + reserva.getValorTotal());
+            }
         }
     }
 

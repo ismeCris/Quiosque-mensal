@@ -2,12 +2,13 @@ package model.entities;
 
 
 import javax.persistence.*;
+import java.util.List;
 
-@Entity //Indica que esta classe é uma entidade
-@Table(name =  "clientes")//Especifica o nome da tabela no banco de dados à qual esta entidade será mapeada
+@Entity
+@Table(name =  "clientes")
 public class ClientesEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//Especifica que o valor do campo id será gerado automaticamente usando a estratégia de identidade do banco de dados
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -27,6 +28,9 @@ public class ClientesEntity {
 
     @Column(name = "user_status")
     private Boolean UserStatus;
+
+    @OneToMany(mappedBy = "cliente", cascade =  CascadeType.ALL)
+    List<ReservasEntity> reservas;
 
     public ClientesEntity() {
 

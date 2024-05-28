@@ -8,11 +8,11 @@ public class ClientesController {
     private static ClientesService clientesService = new ClientesService();
 
     public ClientesController() {
-        this.clientesService = new ClientesService(); // ou injete o serviço conforme necessário
+        this.clientesService = new ClientesService();
     }
 
     public static ClientesEntity findClienteById(Long id) {
-        return clientesService.findClienteById(id); // Corrigido para findClienteById
+        return clientesService.findClienteById(id);
     }
 
     public ClientesEntity createCliente(ClientesEntity cliente) {
@@ -20,7 +20,7 @@ public class ClientesController {
     }
 
     public void updateCliente(ClientesEntity cliente) {
-        clientesService.updateCliente(cliente); // Corrigido para updateCliente
+        clientesService.updateCliente(cliente);
     }
 
     public void deleteClienteById(Long id) { // Corrigido para deleteClienteById

@@ -1,7 +1,6 @@
 package model.repositories;
 
 import model.entities.QuiosqueEntity;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -46,11 +45,11 @@ public class QuiosqueRepository implements  BasicCrud{
     @Override
     public void delete(Long id) {
         em.getTransaction().begin();
-        QuiosqueEntity quiosque = em.find(QuiosqueEntity.class, id); // Encontrar o QuiosqueEntity pelo ID
-        if (quiosque != null) { // Verificar se o QuiosqueEntity foi encontrado
-            em.remove(quiosque); // Remover o QuiosqueEntity encontrado
+        QuiosqueEntity quiosque = em.find(QuiosqueEntity.class, id);
+        if (quiosque != null) {
+            em.remove(quiosque);
         } else {
-            System.out.println("Quiosque não encontrado com o ID fornecido."); // Mensagem de erro se o QuiosqueEntity não for encontrado
+            System.out.println("Quiosque não encontrado com o ID fornecido.");
         }
         em.getTransaction().commit();
     }

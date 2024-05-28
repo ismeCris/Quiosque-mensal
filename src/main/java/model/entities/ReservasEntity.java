@@ -18,8 +18,6 @@ public class ReservasEntity {
     @Column(name = "data_fim")
     private LocalDate dataFim;
 
-    @Column(name = "detalhes")
-    private String detalhes;
 
     @ManyToOne
     @JoinColumn(name = "quiosque_id_fk")
@@ -29,12 +27,8 @@ public class ReservasEntity {
     @JoinColumn(name = "clientes_id_fk")
     private ClientesEntity cliente;
 
-    @OneToOne
-    @JoinColumn(name = "contratos_id_fk")
-    private ContratosEntity contrato;
-
     @Column(name = "preco_diaria")
-    private BigDecimal valorDiaria = BigDecimal.valueOf(80.00);
+    private BigDecimal valorDiaria;
 
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
@@ -43,11 +37,10 @@ public class ReservasEntity {
 
     }
     // Construtor com parâmetros
-    public ReservasEntity(long id, LocalDate dataInicio, LocalDate dataFim, String detalhes) {
+    public ReservasEntity(long id, LocalDate dataInicio, LocalDate dataFim) {
         this.id = id;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
-        this.detalhes = detalhes;
     }
 
     // Getters e Setters
@@ -76,14 +69,6 @@ public class ReservasEntity {
         this.dataFim = dataFim;
     }
 
-    public String getDetalhes() {
-        return detalhes;
-    }
-
-    public void setDetalhes(String detalhes) {
-        this.detalhes = detalhes;
-    }
-
     public QuiosqueEntity getQuiosque() {
         return quiosque;
     }
@@ -100,13 +85,6 @@ public class ReservasEntity {
         this.cliente = cliente;
     }
 
-    public ContratosEntity getContrato() {
-        return contrato;
-    }
-
-    public void setContrato(ContratosEntity contrato) {
-        this.contrato = contrato;
-    }
 
     public BigDecimal getPrecoDiaria() {
         return valorDiaria;

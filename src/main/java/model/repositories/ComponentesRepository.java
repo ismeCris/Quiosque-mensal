@@ -1,8 +1,6 @@
 package model.repositories;
 
 import model.entities.ComponetesEntity;
-import model.entities.FuncionariosEntity;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import java.util.ArrayList;
@@ -41,9 +39,7 @@ public class ComponentesRepository implements BasicCrud{
     public List<ComponetesEntity> findAll(){
         System.out.println("teste");
         return new ArrayList<ComponetesEntity>();
-        //return em.createQuery("aa",FuncionariosEntity.class).getResultList();
     }
-
 
     @Override
     public Object findById(Object id) {

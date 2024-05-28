@@ -3,15 +3,22 @@ package model.service;
 import model.entities.QuiosqueEntity;
 import model.repositories.QuiosqueRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 
 public class QuiosqueService {
 
-    private QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public QuiosqueService(QuiosqueRepository quiosqueRepository) {
+    private QuiosqueRepository quiosqueRepository;
+
+    public QuiosqueService() {
+        this.quiosqueRepository = new QuiosqueRepository();
     }
+
 
     public QuiosqueEntity findQuiosqueById(Long id) {
         return (QuiosqueEntity) quiosqueRepository.findById(id);
@@ -31,5 +38,9 @@ public class QuiosqueService {
 
     public QuiosqueEntity createQuiosque(QuiosqueEntity quiosque) {
         return (QuiosqueEntity) quiosqueRepository.create(quiosque);
+    }
+    public List<QuiosqueEntity> findQuiosquesAtivos() {
+        String hql = "SELECT q FROM QuiosqueEntity q WHERE q.dispoStatus = true";
+        return entityManager.createQuery(hql, QuiosqueEntity.class).getResultList();
     }
 }

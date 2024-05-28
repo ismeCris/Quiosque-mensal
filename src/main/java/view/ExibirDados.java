@@ -20,7 +20,7 @@ public class ExibirDados {
     private static FuncionarioController funcionarioController = new FuncionarioController();
     private static ClientesController clientesController = new ClientesController();
     private static QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
-    private static QuiosqueController quiosqueController = new QuiosqueController(quiosqueRepository);
+    private static QuiosqueController quiosqueController = new QuiosqueController();
     private static ReservasController reservasController = new ReservasController(new ReservaService(new ResevasRepository()));
 
 
@@ -84,7 +84,6 @@ public class ExibirDados {
                 System.out.println("ID: " + reserva.getId());
                 System.out.println("Data de Início: " + reserva.getDataInicio());
                 System.out.println("Data de Fim: " + reserva.getDataFim());
-                System.out.println("Detalhes: " + reserva.getDetalhes());
                 System.out.println();
             }
         } else {

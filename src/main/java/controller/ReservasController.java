@@ -1,11 +1,9 @@
 package controller;
 
 import model.entities.ReservasEntity;
-import model.service.AluguelService;
 import model.service.ReservaService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ReservasController {
@@ -36,6 +34,9 @@ public class ReservasController {
         return reservaService.encontrarReservasPorData(data);
     }
 
+    public ReservasEntity encontrarReservaPorId(Long id) {
+        return reservaService.encontrarReservaPorId(id);
+    }
 
 
 }

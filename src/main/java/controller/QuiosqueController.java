@@ -10,8 +10,8 @@ import java.util.List;
 public class QuiosqueController {
     private QuiosqueService quiosqueService;
 
-    public QuiosqueController(QuiosqueRepository quiosqueRepository) {
-        this.quiosqueService = new QuiosqueService(quiosqueRepository);
+    public QuiosqueController() {
+        this.quiosqueService = new QuiosqueService();
     }
 
     public QuiosqueEntity findQuiosqueById(Long id) {

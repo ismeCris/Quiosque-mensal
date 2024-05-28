@@ -1,0 +1,12 @@
+2024-05-27 19:12:18,854 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
+2024-05-27 19:18:04,165 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
+2024-05-27 19:19:48,429 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
+2024-05-27 19:34:07,755 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown column 'reservasen0_.data_fim' in 'field list'
+2024-05-27 19:37:49,352 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown column 'reservasen0_.data_fim' in 'field list'
+2024-05-27 19:45:53,815 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown column 'reservasen0_.detalhes' in 'field list'
+2024-05-27 19:49:05,450 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
+2024-05-27 19:57:17,610 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'telefone' at row 1
+2024-05-27 19:58:07,094 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
+2024-05-27 20:07:39,431 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
+2024-05-27 20:15:25,715 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
+2024-05-27 20:56:50,645 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Field 'contratos_id_fk' doesn't have a default value

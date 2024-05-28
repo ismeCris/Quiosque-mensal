@@ -1,9 +1,7 @@
 package model.service;
 
-import controller.ReservasController;
 import model.entities.ReservasEntity;
 import model.repositories.ResevasRepository;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,7 +15,6 @@ public class ReservaService {
     public ReservaService() {
         this.reservaRepository = new ResevasRepository();
     }
-
 
     public ReservasEntity atualizarReserva(ReservasEntity reserva) {
         return (ReservasEntity) reservaRepository.update(reserva);
@@ -57,12 +54,15 @@ public class ReservaService {
             }
         }
 
-        // Quiosque está disponível
         return true;
     }
 
     private boolean isOverlapping(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
         return start1.isBefore(end2) && start2.isBefore(end1);
+    }
+
+    public ReservasEntity encontrarReservaPorId(Long id) {
+        return (ReservasEntity) reservaRepository.findById(id);
     }
 
 

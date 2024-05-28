@@ -34,14 +34,12 @@ public class ClientesService {
         return clientesRepository.findAll();
     }
 
-    // Método para verificar se o cliente tem mais de 18 anos
     public boolean VerficaIdade(LocalDate dataNasc) {
         LocalDate dataAtual = LocalDate.now();
         LocalDate dezoitoAnosAtras = dataAtual.minusYears(18);
         return dataNasc.isBefore(dezoitoAnosAtras);
     }
 
-    // Método para verificar o status do cliente
     public boolean verificaStatusCliente(boolean isClienteAtivo) {
         return isClienteAtivo;
     }
