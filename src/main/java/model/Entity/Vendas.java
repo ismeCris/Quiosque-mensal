@@ -1,4 +1,4 @@
-package intregrador.entidades;
+package model.Entity;
 
 import java.time.LocalDateTime;
 
@@ -18,5 +18,36 @@ public class Vendas {
 		this.dataVenda = data;
 		this.nfe = nfe;
 	}
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
+	}
+
+	public LocalDateTime getDataVenda() {
+		return dataVenda;
+	}
+
+	public void setDataVenda(LocalDateTime dataVenda) {
+		this.dataVenda = dataVenda;
+	}
+
+	public Long getNfe() {
+		return nfe;
+	}
+
+	public void setNfe(Long nfe) {
+		this.nfe = nfe;
+	}
 }

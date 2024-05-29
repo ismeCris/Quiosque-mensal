@@ -1,4 +1,4 @@
-package intregrador.entidades;
+package model.Entity;
 
 public class Produtos {
 	Long id;
@@ -17,4 +17,27 @@ public class Produtos {
 		this.preco = preco;
 	}
 
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public float getPreco() {
+		return preco;
+	}
+
+	public void setPreco(float preco) {
+		this.preco = preco;
+	}
 }
