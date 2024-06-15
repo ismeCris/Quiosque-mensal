@@ -10,3 +10,5 @@
 2024-05-27 20:07:39,431 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
 2024-05-27 20:15:25,715 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null
 2024-05-27 20:56:50,645 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Field 'contratos_id_fk' doesn't have a default value
+2024-06-07 15:18:39,918 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown database 'projetoquiosque'
+2024-06-07 15:23:35,462 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'email' at row 1

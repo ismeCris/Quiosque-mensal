@@ -12,7 +12,6 @@ public class FuncionariosRepository implements BasicCrud{
     EntityManager em = Persistence.   createEntityManagerFactory("bancoQuiosque").createEntityManager();
 
 
-
     public FuncionariosEntity login(String nome, String senha){
         try {
             System.out.println("Tentando autenticar usuário: " + nome);
@@ -25,6 +24,7 @@ public class FuncionariosRepository implements BasicCrud{
             return null;
         }
     }
+
 
     @Override
     public Object create(Object object) {
