@@ -265,7 +265,6 @@ public class MenuPrincipal extends JFrame {
 
         RoundButton btnSalvar = new RoundButton("Salvar", 20); 
         btnSalvar.setBackground(new Color(196, 225, 225));
-        //btnSalvar.setForeground(Color.BLACK);
         btnSalvar.setBounds(454, 423, 100, 30); 
         criarUsuarioPanel.add(btnSalvar);
         btnSalvar.addActionListener(new ActionListener() {
@@ -278,7 +277,6 @@ public class MenuPrincipal extends JFrame {
         
         RoundButton btnLimparCampos = new RoundButton("Limpar Campos", 20);
         btnLimparCampos.setBackground(new Color(196, 225, 255));
-        //btnLimparCampos.setForeground(Color.BLACK);
         btnLimparCampos.setBounds(300, 423, 100, 30); 
         criarUsuarioPanel.add(btnLimparCampos);
         btnLimparCampos.addActionListener(new ActionListener() {
@@ -316,7 +314,7 @@ public class MenuPrincipal extends JFrame {
         tableModel.addColumn("Nome");
 
         // Preencher a tabela com os dados dos usuários
-        List<FuncionariosEntity> usuarios = funcionarioController.findAll(); // Utiliza o controlador para obter os usuários
+        List<FuncionariosEntity> usuarios = funcionarioController.findAll();
         if (usuarios != null) {
             for (FuncionariosEntity usuario : usuarios) {
                 Object[] rowData = {usuario.getId(), usuario.getNome()};
@@ -329,10 +327,9 @@ public class MenuPrincipal extends JFrame {
 
         // Configurar tamanho e posição da tabela dentro do JScrollPane
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(50, 85, 880, 300); // Ajuste conforme necessário
+        scrollPane.setBounds(50, 85, 880, 300);
         listarUsuarioPanel.add(scrollPane);
 
-        // Campo de texto para inserir o ID
         JTextField txtId = new JTextField();
         txtId.setBounds(50, 50, 620, 23);
         listarUsuarioPanel.add(txtId);
@@ -368,14 +365,12 @@ public class MenuPrincipal extends JFrame {
             }
         });
 
-        // Botão para listar todos os usuários novamente
+
         JButton btnListarTodos = new JButton("Listar Todos");
         btnListarTodos.setBounds(810, 50, 120, 23);
         listarUsuarioPanel.add(btnListarTodos);
         btnListarTodos.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Ação ao clicar no botão "Listar Todos"
-                // Limpar a tabela antes de adicionar os usuários novamente
                 tableModel.setRowCount(0);
                 List<FuncionariosEntity> usuarios = funcionarioController.findAll();
                 if (usuarios != null) {
@@ -400,8 +395,6 @@ public class MenuPrincipal extends JFrame {
         lblExcluirUsuario.setBounds(289, 57, 200, 14);
         excluirUsuarioPanel.add(lblExcluirUsuario);
 
-        // Implement your deleting logic here
-
         contentPane.add(excluirUsuarioPanel, "excluirUsuarioPanel");
     }
 
@@ -412,8 +405,6 @@ public class MenuPrincipal extends JFrame {
         JLabel lblEditarUsuario = new JLabel("Editar Usuario");
         lblEditarUsuario.setBounds(289, 57, 200, 14);
         editarUsuarioPanel.add(lblEditarUsuario);
-
-        // Implement your editing logic here
 
         contentPane.add(editarUsuarioPanel, "editarUsuarioPanel");
     }
@@ -426,8 +417,6 @@ public class MenuPrincipal extends JFrame {
         lblCriarQuiosque.setBounds(289, 57, 200, 14);
         criarQuiosquePanel.add(lblCriarQuiosque);
 
-        // Implement your create logic here
-
         contentPane.add(criarQuiosquePanel, "criarQuiosquePanel");
     }
 
@@ -438,8 +427,6 @@ public class MenuPrincipal extends JFrame {
         JLabel lblEditarQuiosque = new JLabel("Editar Quiosque");
         lblEditarQuiosque.setBounds(289, 57, 200, 14);
         editarQuiosquePanel.add(lblEditarQuiosque);
-
-        // Implement your editing logic here
 
         contentPane.add(editarQuiosquePanel, "editarQuiosquePanel");
     }
@@ -452,7 +439,6 @@ public class MenuPrincipal extends JFrame {
         lblBuscarQuiosque.setBounds(289, 57, 200, 14);
         buscarQuiosquePanel.add(lblBuscarQuiosque);
 
-        // Implement your search logic here
 
         contentPane.add(buscarQuiosquePanel, "buscarQuiosquePanel");
     }
@@ -465,7 +451,6 @@ public class MenuPrincipal extends JFrame {
         lblExcluirQuiosque.setBounds(289, 57, 200, 14);
         excluirQuiosquePanel.add(lblExcluirQuiosque);
 
-        // Implement your deleting logic here
 
         contentPane.add(excluirQuiosquePanel, "excluirQuiosquePanel");
     }
@@ -478,8 +463,6 @@ public class MenuPrincipal extends JFrame {
         lblFazerReserva.setBounds(289, 57, 200, 14);
         fazerReservaPanel.add(lblFazerReserva);
 
-        // Implement your reservation logic here
-
         contentPane.add(fazerReservaPanel, "fazerReservaPanel");
     }
 
@@ -491,13 +474,12 @@ public class MenuPrincipal extends JFrame {
         lblListarReserva.setBounds(289, 57, 200, 14);
         listarReservaPanel.add(lblListarReserva);
 
-        // Implement your listing logic here
 
         contentPane.add(listarReservaPanel, "listarReservaPanel");
     }
 
     /**
-     * Method to save the user.
+     * savar usuario
      */
     protected void salvarUsuario() {
         String nome = txtNome.getText();
