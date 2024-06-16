@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import model.entities.FuncionariosEntity;
 import model.service.FuncionariosService;
 
@@ -25,5 +27,9 @@ public class FuncionarioController {
         return funcionariosService.createFuncionario(funcionario);
     }
 
+    // Método para buscar todos os funcionários
+    public List<FuncionariosEntity> findAll() {
+        return funcionariosService.findAll();
+    }
 
 }
