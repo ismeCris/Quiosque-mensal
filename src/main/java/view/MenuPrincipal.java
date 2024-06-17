@@ -801,7 +801,7 @@ public class MenuPrincipal extends JFrame {
         lblExcluirQuiosque.setBounds(289, 57, 200, 14);
         excluirQuiosquePanel.add(lblExcluirQuiosque);
 
-
+ 
         contentPane.add(excluirQuiosquePanel, "excluirQuiosquePanel");
     }
   //============================ RESERVAS   =====================================================================================================
