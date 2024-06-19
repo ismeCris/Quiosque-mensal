@@ -149,7 +149,25 @@ public class MenuPrincipal extends JFrame {
             }
         });
 
-     
+        JMenu mnClientes = new JMenu("Gerenciar Clientes");
+        menuBar.add(mnClientes);
+
+        JMenuItem miCriarCliente = new JMenuItem("Criar");
+        mnClientes.add(miCriarCliente);
+        miCriarCliente.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mostrarPainel("criarClientePanel");
+            }
+        });
+
+        JMenuItem miEditarCliente = new JMenuItem("Gerenciar");
+        mnClientes.add(miEditarCliente);
+        miEditarCliente.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mostrarPainel("gerenciarClientePanel");
+            }
+        });
+
 
         JMenu mnReservas = new JMenu("Gerenciar Reservas");
         menuBar.add(mnReservas);
@@ -183,6 +201,8 @@ public class MenuPrincipal extends JFrame {
         listarUsuarioPanel();  
         criarQuiosquePanel();
         gerenciarQuiosquePanel();
+        criarClientePanel();
+        gerenciarClientePanel();
         fazerReservaPanel();
         listarReservaPanel();
 
@@ -932,7 +952,13 @@ public class MenuPrincipal extends JFrame {
 
 
   
-
+    private void criarClientePanel() {
+    	
+    }
+    
+    private void gerenciarClientePanel() {
+    	
+    }
   
   //============================ RESERVAS   =====================================================================================================
     private void fazerReservaPanel() {
