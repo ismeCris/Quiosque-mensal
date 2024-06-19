@@ -64,7 +64,7 @@ public class ExibirDados {
             System.out.println("Número: " + quiosque.get().getNumero());
             System.out.println("Localidade: " + quiosque.get().getLocalidade());
             System.out.println("Capacidade: " + quiosque.get().getCapacidade());
-            System.out.println("Status de Disponibilidade: " + (quiosque.get().getDispoStatus() ? "Disponível" : "Indisponível"));
+            System.out.println("Status de Disponibilidade: " + (quiosque.get().getDisponibilidadeStatus() ? "Disponível" : "Indisponível"));
         } else {
             System.out.println("Nenhum quiosque encontrado com o ID fornecido.");
 

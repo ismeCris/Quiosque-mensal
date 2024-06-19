@@ -509,12 +509,12 @@ public class Main {
         }
 
 
-        System.out.println("Digite o novo Status (ou pressione Enter para manter o atual: " + quiosque.getDispoStatus() + "):");
+        System.out.println("Digite o novo Status (ou pressione Enter para manter o atual: " + quiosque.getDisponibilidadeStatus() + "):");
         String novoStatusInput = sc.nextLine();
 
         if (!novoStatusInput.isEmpty()) {
             boolean novoStatus = Boolean.parseBoolean(novoStatusInput);
-            quiosque.setDispoStatus(novoStatus);
+            quiosque.setDisponibilidadeStatus(null);
         }
 
 
@@ -553,7 +553,7 @@ public class Main {
         novoQuiosque.setNumero(numero);
         novoQuiosque.setLocalidade(localidade);
         novoQuiosque.setCapacidade(capacidade);
-        novoQuiosque.setDispoStatus(disponibilidadeStatus);
+        novoQuiosque.setDisponibilidadeStatus(disponibilidadeStatus);
 
 
         QuiosqueController quiosqueController = new QuiosqueController();
@@ -566,7 +566,7 @@ public class Main {
             System.out.println("Número: " + criadoQuiosque.getNumero());
             System.out.println("Localidade: " + criadoQuiosque.getLocalidade());
             System.out.println("Capacidade: " + criadoQuiosque.getCapacidade());
-            System.out.println("Status de Disponibilidade: " + criadoQuiosque.getDispoStatus());
+            System.out.println("Status de Disponibilidade: " + criadoQuiosque.getDisponibilidadeStatus());
         } else {
             System.out.println("Falha ao criar novo Quiosque.");
         }
@@ -581,7 +581,7 @@ public class Main {
         } else {
             System.out.println("Lista de quiosques cadastrados:");
             for (QuiosqueEntity quiosque : quiosques) {
-                System.out.println("ID: " + quiosque.getId() + ", Nome: " + quiosque.getNumero() + ", Cargo: " + quiosque.getCapacidade() + ", Cargo: " + quiosque.getDispoStatus());
+                System.out.println("ID: " + quiosque.getId() + ", Nome: " + quiosque.getNumero() + ", Cargo: " + quiosque.getCapacidade() + ", Cargo: " + quiosque.getDisponibilidadeStatus());
             }
         }
     }
