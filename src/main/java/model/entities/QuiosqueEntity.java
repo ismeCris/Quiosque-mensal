@@ -1,17 +1,15 @@
 package model.entities;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.List;
-import javax.persistence.JoinColumn;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name =  "quiosques")
-
+@Table(name = "quiosques")
 public class QuiosqueEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column
     private int numero;
@@ -23,37 +21,32 @@ public class QuiosqueEntity {
     private int capacidade;
 
     @Column(name = "dispo_status")
-    private Boolean dispoStatus;
+    private Boolean disponibilidadeStatus;
 
-    @Column(name = "preco_diaria")
-    private BigDecimal valorDiaria = BigDecimal.valueOf(80.00);
+    @Column(name = "preco_diaria", nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 80.00")
+    private double precoDiaria;
 
-
-    @ManyToMany
-    @JoinTable(
-            name = "componentes_has_qiosques",
-            joinColumns = @JoinColumn(name = "quiosque_id_fk"),
-            inverseJoinColumns = @JoinColumn(name = "componentes_fk")
-    )
-    private List<ComponetesEntity> componentes;
+    @ManyToMany(mappedBy = "quiosques")
+    private Set<ComponetesEntity> componentes;
 
     public QuiosqueEntity() {
-
     }
 
-    public QuiosqueEntity(Long id, int numero, String localidade, int capacidade, boolean disponibilidadeStatus) {
-        this.id = id;
+    public QuiosqueEntity(int numero, String localidade, int capacidade, Boolean disponibilidadeStatus, double precoDiaria) {
         this.numero = numero;
         this.localidade = localidade;
         this.capacidade = capacidade;
-        this.dispoStatus = disponibilidadeStatus;
+        this.disponibilidadeStatus = disponibilidadeStatus;
+        this.precoDiaria = precoDiaria;
     }
 
-    public Long getId() {
+    // Getters e setters
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -81,21 +74,37 @@ public class QuiosqueEntity {
         this.capacidade = capacidade;
     }
 
-    public Boolean getDispoStatus() {
-        return dispoStatus;
+    public Boolean getDisponibilidadeStatus() {
+        return disponibilidadeStatus;
     }
 
-    public void setDispoStatus(Boolean dispoStatus) {
-        this.dispoStatus = dispoStatus;
-    }
-    public BigDecimal getValorDiaria() {
-        return valorDiaria;
+    public void setDisponibilidadeStatus(Boolean disponibilidadeStatus) {
+        this.disponibilidadeStatus = disponibilidadeStatus;
     }
 
-    public void setValorDiaria(BigDecimal valorDiaria) {
-        this.valorDiaria = valorDiaria;
+    public double getPrecoDiaria() {
+        return precoDiaria;
     }
 
+    public void setPrecoDiaria(double precoDiaria) {
+        this.precoDiaria = precoDiaria;
+    }
 
+    public Set<ComponetesEntity> getComponentes() {
+        return componentes;
+    }
 
+    public void setComponentes(Set<ComponetesEntity> componentes) {
+        this.componentes = componentes;
+    }
+
+    public void addComponente(ComponetesEntity componente) {
+        this.componentes.add(componente);
+        componente.getQuiosques().add(this);
+    }
+
+    public void removeComponente(ComponetesEntity componente) {
+        this.componentes.remove(componente);
+        componente.getQuiosques().remove(this);
+    }
 }

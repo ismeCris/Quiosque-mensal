@@ -12,3 +12,21 @@
 2024-05-27 20:56:50,645 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Field 'contratos_id_fk' doesn't have a default value
 2024-06-07 15:18:39,918 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown database 'projetoquiosque'
 2024-06-07 15:23:35,462 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Data truncation: Data too long for column 'email' at row 1
+2024-06-18 08:37:12,064 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'dispo_status' cannot be null
+2024-06-18 08:39:26,498 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'dispo_status' cannot be null
+2024-06-18 08:43:26,484 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'dispo_status' cannot be null
+2024-06-18 20:12:09,519 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:20:30,234 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:21:29,538 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:26:10,042 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:27:04,055 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:28:49,012 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:30:02,415 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:37:26,704 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:38:16,209 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:40:04,340 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:43:43,791 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:53:39,047 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 20:58:06,204 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 21:04:59,798 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-18 21:12:55,014 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist

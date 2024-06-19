@@ -1,14 +1,17 @@
 package model.entities;
 
 import javax.persistence.*;
+
+import java.util.HashSet;
 import java.util.Set;
 
-@Entity //Indica que esta classe é uma entidade
-@Table(name =  "componentes")//Especifica o nome da tabela no banco de dados à qual esta entidade será mapeada
+@Entity
+@Table(name = "componentes")
 public class ComponetesEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//Especifica que o valor do campo id será gerado automaticamente usando a estratégia de identidade do banco de dados
-    long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     @Column
     private Boolean pia;
 
@@ -16,38 +19,51 @@ public class ComponetesEntity {
     private Boolean churrasqueira;
 
     @Column
-    private Boolean mesa_madeira;
+    private Boolean mesaMadeira;
 
     @Column
-    private Boolean mesa_plastico;
+    private Boolean mesaPlastico;
 
     @Column
     private Boolean bancos;
 
     @Column
-    private Boolean corbertura;
+    private Boolean cobertura;
 
     @Column
     private Boolean lixeira;
 
-
-    @ManyToMany(mappedBy = "componentes")
+    @ManyToMany
+    @JoinTable(
+        name = "componentes_has_qiosques",
+        joinColumns = @JoinColumn(name = "componente_id"),
+        inverseJoinColumns = @JoinColumn(name = "quiosque_id")
+    )
     private Set<QuiosqueEntity> quiosques;
 
-
-    public ComponetesEntity(){
-
+    public ComponetesEntity() {
     }
-    public ComponetesEntity(long id, boolean pia, boolean churrasqueira, boolean mesaMa,
-                      boolean mesaPla, boolean bancos, boolean cobertura, boolean lixeira) {
+
+    public ComponetesEntity(long id, Boolean pia, Boolean churrasqueira, Boolean mesaMadeira,
+                             Boolean mesaPlastico, Boolean bancos, Boolean cobertura, Boolean lixeira) {
         this.id = id;
         this.pia = pia;
         this.churrasqueira = churrasqueira;
-        this.mesa_madeira= mesaMa;
-        this.mesa_plastico = mesaPla;
+        this.mesaMadeira = mesaMadeira;
+        this.mesaPlastico = mesaPlastico;
         this.bancos = bancos;
-        this.corbertura = cobertura;
+        this.cobertura = cobertura;
         this.lixeira = lixeira;
+    }
+
+    // Getters e setters
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Boolean getPia() {
@@ -58,14 +74,6 @@ public class ComponetesEntity {
         this.pia = pia;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Boolean getChurrasqueira() {
         return churrasqueira;
     }
@@ -74,20 +82,20 @@ public class ComponetesEntity {
         this.churrasqueira = churrasqueira;
     }
 
-    public Boolean getMesa_madeira() {
-        return mesa_madeira;
+    public Boolean getMesaMadeira() {
+        return mesaMadeira;
     }
 
-    public void setMesa_madeira(Boolean mesa_madeira) {
-        this.mesa_madeira = mesa_madeira;
+    public void setMesaMadeira(Boolean mesaMadeira) {
+        this.mesaMadeira = mesaMadeira;
     }
 
-    public Boolean getMesa_plastico() {
-        return mesa_plastico;
+    public Boolean getMesaPlastico() {
+        return mesaPlastico;
     }
 
-    public void setMesa_plastico(Boolean mesa_plastico) {
-        this.mesa_plastico = mesa_plastico;
+    public void setMesaPlastico(Boolean mesaPlastico) {
+        this.mesaPlastico = mesaPlastico;
     }
 
     public Boolean getBancos() {
@@ -98,12 +106,12 @@ public class ComponetesEntity {
         this.bancos = bancos;
     }
 
-    public Boolean getCorbertura() {
-        return corbertura;
+    public Boolean getCobertura() {
+        return cobertura;
     }
 
-    public void setCorbertura(Boolean corbertura) {
-        this.corbertura = corbertura;
+    public void setCobertura(Boolean cobertura) {
+        this.cobertura = cobertura;
     }
 
     public Boolean getLixeira() {
@@ -112,5 +120,13 @@ public class ComponetesEntity {
 
     public void setLixeira(Boolean lixeira) {
         this.lixeira = lixeira;
+    }
+
+    public Set<QuiosqueEntity> getQuiosques() {
+        return quiosques;
+    }
+
+    public void setQuiosques(Set<QuiosqueEntity> quiosques) {
+        this.quiosques = quiosques;
     }
 }

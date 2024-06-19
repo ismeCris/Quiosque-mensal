@@ -36,6 +36,7 @@ public class QuiosqueService {
         quiosqueRepository.delete(id);
     }
 
+  
     public QuiosqueEntity createQuiosque(QuiosqueEntity quiosque) {
         return (QuiosqueEntity) quiosqueRepository.create(quiosque);
     }
