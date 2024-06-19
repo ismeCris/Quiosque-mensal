@@ -1,9 +1,9 @@
-Projeto Academico desenvolvido com Poo Java e Mysql
+Projeto Academico desenvolvido com Poo Java, Java Swing eMysql
 #
 Status: em Andamento
 #
 sobre:
-Sistema de gerenciamento de aluguel de quiosques é  para ajudar resorts a organizar e controlar as datas e quiosques disponíveis para aluguel.
+Sistema de gerenciamento de aluguel de quiosques, para ajudar resorts a organizar e controlar as datas e quiosques disponíveis para aluguel.
 #
 Objetivos:
 * Facilitar o controle das datas de reserva e disponibilidade dos quiosques.
