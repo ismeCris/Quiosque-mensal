@@ -30,3 +30,5 @@
 2024-06-18 20:58:06,204 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
 2024-06-18 21:04:59,798 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
 2024-06-18 21:12:55,014 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
+2024-06-19 09:55:55,201 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'user_status' cannot be null
+2024-06-19 09:58:24,350 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'user_status' cannot be null

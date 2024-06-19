@@ -1,14 +1,20 @@
 package view;
 
-import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 import model.entities.FuncionariosEntity;
 import model.repositories.FuncionariosRepository;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JButton;
@@ -27,16 +33,18 @@ public class Login extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Login frame = new Login();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    	 try {
+             UIManager.setLookAndFeel(new FlatLightLaf());
+         } catch (UnsupportedLookAndFeelException ex) {
+             ex.printStackTrace();
+         }
+
+         // Executar a aplicação
+         SwingUtilities.invokeLater(new Runnable() {
+             public void run() {
+                 new Login().setVisible(true);
+             }
+         });
     }
 
     /**
@@ -49,62 +57,63 @@ public class Login extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1050, 624);
         contentPane = new JPanel();
-        contentPane.setBackground(new Color(255, 255, 255));
+        contentPane.setBackground(new Color(179, 217, 255));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         setContentPane(contentPane);
         contentPane.setLayout(null);
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(255, 255, 255));
+        panel.setBounds(266, 57, 414, 448);
+        contentPane.add(panel);
+        panel.setLayout(null);
+        
+                JLabel lblNewLabel = new JLabel("");
+                lblNewLabel.setBounds(123, 0, 138, 142);
+                panel.add(lblNewLabel);
+                lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\recorrer (3).png"));
+                
+                        textField = new JTextField();
+                        textField.setBounds(67, 189, 268, 34);
+                        panel.add(textField);
+                        textField.setBackground(new Color(119, 187, 255));
+                        textField.setColumns(10);
+                        
+                                JLabel lblNewLabel_1 = new JLabel("Nome:");
+                                lblNewLabel_1.setBounds(67, 160, 46, 14);
+                                panel.add(lblNewLabel_1);
+                                
+                                        textField_1 = new JTextField();
+                                        textField_1.setBounds(67, 275, 268, 34);
+                                        panel.add(textField_1);
+                                        textField_1.setColumns(10);
+                                        textField_1.setBackground(new Color(119, 187, 255));
+                                        
+                                                JLabel lblNewLabel_1_1 = new JLabel("Senha");
+                                                lblNewLabel_1_1.setBounds(67, 250, 46, 14);
+                                                panel.add(lblNewLabel_1_1);
+                                                
+                                                        JButton btnNewButton = new JButton("Entrar");
+                                                        btnNewButton.setBounds(138, 377, 157, 34);
+                                                        panel.add(btnNewButton);
+                                                        btnNewButton.addActionListener(new ActionListener() {
+                                                            public void actionPerformed(ActionEvent e) {
+                                                                String nome = textField.getText();
+                                                                String senha = textField_1.getText(); // Corrected to get text from textField_1
 
-        JLabel lblSenha_1 = new JLabel(",");
-        lblSenha_1.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\ac4d5ef6eb4cb1d27665bc206d8d43e3.jpg"));
-        lblSenha_1.setBounds(512, -63, 539, 685);
-        contentPane.add(lblSenha_1);
+                                                                FuncionariosEntity funcionario = funcionariosRepository.login(nome, senha);
 
-        textField = new JTextField();
-        textField.setBackground(new Color(119, 187, 255));
-        textField.setBounds(88, 216, 268, 34);
-        contentPane.add(textField);
-        textField.setColumns(10);
-
-        JLabel lblNewLabel = new JLabel("");
-        lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\image-removebg-preview (46) (4).png"));
-        lblNewLabel.setBounds(168, 11, 138, 142);
-        contentPane.add(lblNewLabel);
-
-        textField_1 = new JTextField();
-        textField_1.setColumns(10);
-        textField_1.setBackground(new Color(119, 187, 255));
-        textField_1.setBounds(88, 295, 268, 34);
-        contentPane.add(textField_1);
-
-        JLabel lblNewLabel_1 = new JLabel("Nome:");
-        lblNewLabel_1.setBounds(87, 196, 46, 14);
-        contentPane.add(lblNewLabel_1);
-
-        JLabel lblNewLabel_1_1 = new JLabel("Senha");
-        lblNewLabel_1_1.setBounds(88, 272, 46, 14);
-        contentPane.add(lblNewLabel_1_1);
-
-        JButton btnNewButton = new JButton("Entrar");
-        btnNewButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String nome = textField.getText();
-                String senha = textField_1.getText(); // Corrected to get text from textField_1
-
-                FuncionariosEntity funcionario = funcionariosRepository.login(nome, senha);
-
-                if (funcionario != null) {
-                    new MenuPrincipal().setVisible(true);
-                    dispose(); // fecha o login 
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nome ou senha Invalidos.");
-                    limparCampos();
-                }
-            }
-        });
-        btnNewButton.setBackground(new Color(248, 208, 73));
-        btnNewButton.setBounds(138, 415, 157, 34);
-        contentPane.add(btnNewButton);
+                                                                if (funcionario != null) {
+                                                                    new MenuPrincipal().setVisible(true);
+                                                                    dispose(); // fecha o login 
+                                                                } else {
+                                                                    JOptionPane.showMessageDialog(null, "Nome ou senha Invalidos.");
+                                                                    limparCampos();
+                                                                }
+                                                            }
+                                                        });
+                                                        btnNewButton.setBackground(new Color(248, 208, 73));
     }
     
     private void limparCampos() {

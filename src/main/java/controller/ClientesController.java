@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import model.entities.ClientesEntity;
 import model.service.ClientesService;
 
@@ -25,6 +27,10 @@ public class ClientesController {
 
     public void deleteClienteById(Long id) { // Corrigido para deleteClienteById
         clientesService.deleteCliente(id);
+    }
+
+    public List<ClientesEntity> findAll() {
+        return clientesService.findAll();
     }
 
 }
