@@ -9,7 +9,6 @@ import java.util.List;
 public class ReservasController {
     private final ReservaService reservaService;
 
-
     public ReservasController(ReservaService reservaService) {
         this.reservaService = reservaService;
     }
@@ -38,5 +37,11 @@ public class ReservasController {
         return reservaService.encontrarReservaPorId(id);
     }
 
+    public List<ReservasEntity> findReservasExpiradas(LocalDate data) {
+        return reservaService.findReservasExpiradas(data);
+    }
 
+    public void removerReserva(ReservasEntity reserva) {
+        reservaService.removerReserva(reserva);
+    }
 }

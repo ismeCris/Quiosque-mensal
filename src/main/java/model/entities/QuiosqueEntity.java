@@ -21,7 +21,8 @@ public class QuiosqueEntity {
     private int capacidade;
 
     @Column(name = "dispo_status")
-    private Boolean disponibilidadeStatus;
+    private boolean disponibilidadeStatus;
+
 
     @Column(name = "preco_diaria", nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 80.00")
     private double precoDiaria;
@@ -79,9 +80,14 @@ public class QuiosqueEntity {
     }
 
     public void setDisponibilidadeStatus(Boolean disponibilidadeStatus) {
-        this.disponibilidadeStatus = disponibilidadeStatus;
+        if (disponibilidadeStatus != null) {
+            this.disponibilidadeStatus = disponibilidadeStatus.booleanValue();
+        } else {
+            // Decida o que fazer se disponibilidadeStatus for null.
+            // Aqui, podemos assumir um valor padrão, como false.
+            this.disponibilidadeStatus = false;
+        }
     }
-
     public double getPrecoDiaria() {
         return precoDiaria;
     }
@@ -107,4 +113,6 @@ public class QuiosqueEntity {
         this.componentes.remove(componente);
         componente.getQuiosques().remove(this);
     }
+    
+    
 }

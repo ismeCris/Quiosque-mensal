@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ExibirDados {
-    private static FuncionarioController funcionarioController = new FuncionarioController();
+/*    private static FuncionarioController funcionarioController = new FuncionarioController();
     private static ClientesController clientesController = new ClientesController();
     private static QuiosqueRepository quiosqueRepository = new QuiosqueRepository();
     private static QuiosqueController quiosqueController = new QuiosqueController();
@@ -89,5 +89,5 @@ public class ExibirDados {
         } else {
             System.out.println("Nenhuma reserva encontrada para a data fornecida.");
         }
-    }
+    }*/
 }

@@ -1,6 +1,5 @@
 package model.entities;
 
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -27,24 +26,26 @@ public class ClientesEntity {
     private int idade;
 
     @Column(name = "user_status")
-    private Boolean UserStatus;
+    private Boolean userStatus;
 
-    @OneToMany(mappedBy = "cliente", cascade =  CascadeType.ALL)
-    List<ReservasEntity> reservas;
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<ReservasEntity> reservas;
 
+    // Construtor vazio e construtor com parâmetros
     public ClientesEntity() {
-
     }
-    public ClientesEntity(Long id, String nome, String telefone, String email,Boolean Status, int idade,String cpf) {
+
+    public ClientesEntity(Long id, String nome, String telefone, String email, String cpf, int idade, Boolean userStatus) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
         this.cpf = cpf;
         this.idade = idade;
-        this.UserStatus = Status;
+        this.userStatus = userStatus;
     }
 
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -94,12 +95,10 @@ public class ClientesEntity {
     }
 
     public Boolean getUserStatus() {
-        return UserStatus;
+        return userStatus;
     }
 
     public void setUserStatus(Boolean userStatus) {
-        UserStatus = userStatus;
+        this.userStatus = userStatus;
     }
-
-
 }

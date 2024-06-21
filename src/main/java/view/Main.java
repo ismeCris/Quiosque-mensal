@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static Scanner sc = new Scanner(System.in);
+/*    private static Scanner sc = new Scanner(System.in);
     private static FuncionarioController funcionarioController = new FuncionarioController();
     private static ClientesController clientesController = new ClientesController();
     QuiosqueController quiosqueController = new QuiosqueController();
@@ -798,6 +798,6 @@ public class Main {
     private static void aguardarEnter() {
         System.out.println("Pressione Enter para continuar...");
         sc.nextLine();
-    }
+    }*/
 
 }

@@ -5,20 +5,36 @@ import java.awt.Color;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.toedter.calendar.JDateChooser;
 
 import controller.ClientesController;
 import controller.FuncionarioController;
 import controller.QuiosqueController;
+import controller.ReservasController;
 import model.entities.ClientesEntity;
 import model.entities.FuncionariosEntity;
 import model.entities.QuiosqueEntity;
+import model.entities.ReservasEntity;
+import model.service.ReservaService;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -35,6 +51,7 @@ import javax.swing.JDialog;
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -43,11 +60,19 @@ import javax.swing.JSpinner;
 
 
 public class MenuPrincipal extends JFrame {
-	EntityManager em = Persistence.   createEntityManagerFactory("bancoQuiosque").createEntityManager();
-
+	EntityManagerFactory emf = Persistence.createEntityManagerFactory("bancoQuiosque");
+	EntityManager em = emf.createEntityManager();
+	
+	 private ReservasController reservaController;
 	 private FuncionarioController funcionarioController;
-	 private QuiosqueController quiosqueController;
-	 private ClientesController clientesController;
+	 ClientesController clientesController = new ClientesController(em);
+	 QuiosqueController quiosqueController = new QuiosqueController(em);
+	 
+	 
+	 
+	 
+	private JComboBox<String> comboBoxQuiosque;
+	private JComboBox<String> comboBoxCliente;
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -58,7 +83,9 @@ public class MenuPrincipal extends JFrame {
     private JTextField txtTelefone;
     private JTextField num;
     private JTextField local;
-  
+    private JTextField txtDiaria;
+    private JTextField txtTotal;
+    private Connection conn;
     
  
 
@@ -86,11 +113,9 @@ public class MenuPrincipal extends JFrame {
      */
     public MenuPrincipal() {
     	funcionarioController = new FuncionarioController();
-        quiosqueController = new QuiosqueController(); 
-        clientesController = new ClientesController();
-    	
-    	
-    	
+        quiosqueController = new QuiosqueController(em); 
+        clientesController = new ClientesController(em);
+    
     	setBackground(new Color(255, 255, 255));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 995, 586);
@@ -145,7 +170,7 @@ public class MenuPrincipal extends JFrame {
         mnQuiosque.add(miEditarQuiosque);
         miEditarQuiosque.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                mostrarPainel("gerenciarClientePanel");
+                mostrarPainel("gerenciarQuiosquePanel");
             }
         });
 
@@ -185,7 +210,7 @@ public class MenuPrincipal extends JFrame {
         miListarReserva.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	 listarUsuarioPanel();
-            	  cardLayout.show(contentPane, "listarUsuarioPanel");
+            	  cardLayout.show(contentPane, "listarReservaPanel");
             }
         });
 
@@ -234,7 +259,7 @@ public class MenuPrincipal extends JFrame {
   //============================ FUNCIONARIO   =====================================================================================================
     private void criarUsuarioPanel() {
         JPanel criarUsuarioPanel = new JPanel();
-        criarUsuarioPanel.setBackground(new Color(255, 255, 255));
+        criarUsuarioPanel.setBackground(new Color(31, 61, 61));
         criarUsuarioPanel.setLayout(null);
 
         JLabel lblNome = new JLabel("Nome:");
@@ -283,7 +308,7 @@ public class MenuPrincipal extends JFrame {
         criarUsuarioPanel.add(cbCargo);
 
         JButton btnSalvar = new JButton("Salvar"); 
-        btnSalvar.setBackground(new Color(255, 242, 168));
+        btnSalvar.setBackground(new Color(49, 98, 98));
         btnSalvar.setBounds(454, 423, 100, 30); 
         criarUsuarioPanel.add(btnSalvar);
         btnSalvar.addActionListener(new ActionListener() {
@@ -322,7 +347,7 @@ public class MenuPrincipal extends JFrame {
         contentPane.add(criarUsuarioPanel, "criarUsuarioPanel");
         
         JButton btnLimparCampos = new JButton("Limpar Campos");
-        btnLimparCampos.setBackground(new Color(196, 225, 255));
+        btnLimparCampos.setBackground(new Color(49, 98, 98));
         btnLimparCampos.setBounds(300, 423, 100, 30); 
         criarUsuarioPanel.add(btnLimparCampos);
         btnLimparCampos.addActionListener(new ActionListener() {
@@ -401,7 +426,7 @@ public class MenuPrincipal extends JFrame {
                             // Limpar a tabela antes de adicionar o resultado da busca
                             tableModel.setRowCount(0);
                             // Adicionar o usuário encontrado à tabela
-                            Object[] rowData = {usuario.getId(), usuario.getNome()};
+                            Object[] rowData = {usuario.getId(), usuario.getNome(), usuario.getCargo(), usuario.getTelefone()};
                             tableModel.addRow(rowData);
                         } else {
                             JOptionPane.showMessageDialog(null, "Nenhum usuário encontrado com o ID informado.");
@@ -416,7 +441,7 @@ public class MenuPrincipal extends JFrame {
         });
 
 
-        JButton btnListarTodos = new JButton("Listar Todos");
+        JButton btnListarTodos = new JButton("Atualizar");
         btnListarTodos.setBackground(new Color(183, 219, 219));
         btnListarTodos.setBounds(810, 50, 120, 23);
         listarUsuarioPanel.add(btnListarTodos);
@@ -426,7 +451,7 @@ public class MenuPrincipal extends JFrame {
                 List<FuncionariosEntity> usuarios = funcionarioController.findAll();
                 if (usuarios != null) {
                     for (FuncionariosEntity usuario : usuarios) {
-                        Object[] rowData = {usuario.getId(), usuario.getNome()};
+                        Object[] rowData = {usuario.getId(), usuario.getNome(), usuario.getCargo(), usuario.getTelefone()};
                         tableModel.addRow(rowData);
                     }
                 }
@@ -649,19 +674,26 @@ public class MenuPrincipal extends JFrame {
                 String numero = num.getText();
                 String localidade = local.getText();
                 int capacidadeValor = (Integer) capacidade.getValue();
-                //String status = (String) cbStatus.getSelectedItem();
+                String status = (String) cbStatus.getSelectedItem();
 
-                QuiosqueEntity novoquiosque = new QuiosqueEntity();
-                novoquiosque.setNumero(Integer.parseInt(numero));
-                novoquiosque.setLocalidade(localidade);
-                novoquiosque.setCapacidade(capacidadeValor);
-                novoquiosque.setDisponibilidadeStatus(null);
+                Boolean disponibilidadeStatus = null;
+                if (status.equals("livre")) {
+                    disponibilidadeStatus = true;
+                } else if (status.equals("ocupado")) {
+                    disponibilidadeStatus = false;
+                }
+
+                QuiosqueEntity novoQuiosque = new QuiosqueEntity();
+                novoQuiosque.setNumero(Integer.parseInt(numero));
+                novoQuiosque.setLocalidade(localidade);
+                novoQuiosque.setCapacidade(capacidadeValor);
+                novoQuiosque.setDisponibilidadeStatus(disponibilidadeStatus);
 
                 try {
                     if (!em.getTransaction().isActive()) {
                         em.getTransaction().begin();
                     }
-                    quiosqueController.createQuiosque(novoquiosque);
+                    quiosqueController.createQuiosque(novoQuiosque);
                     em.getTransaction().commit();
                     JOptionPane.showMessageDialog(null, "Novo Quiosque criado com sucesso.");
                     limparCamposquiosque();
@@ -680,11 +712,14 @@ public class MenuPrincipal extends JFrame {
         JButton btnNewButton_2 = new JButton("Limpar campo");
         btnNewButton_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                limparCamposquiosque();
+            	limparCamposquiosque();
             }
         });
         btnNewButton_2.setBounds(245, 353, 113, 23);
         criarQuiosquePanel.add(btnNewButton_2);
+
+        // Adicionar o painel ao contentPane
+        contentPane.add(criarQuiosquePanel, "criarQuiosquePanel");
     }
 
     private void limparCamposquiosque() {
@@ -708,11 +743,11 @@ public class MenuPrincipal extends JFrame {
         tableModel.addColumn("Número");
         tableModel.addColumn("Localização");
         tableModel.addColumn("Disponivel");
-
         List<QuiosqueEntity> quiosques = quiosqueController.findAll();
         if (quiosques != null) {
             for (QuiosqueEntity quiosque : quiosques) {
-                Object[] rowData = {quiosque.getId(), quiosque.getNumero(), quiosque.getLocalidade(), quiosque.getDisponibilidadeStatus()};
+                String disponibilidade = quiosque.getDisponibilidadeStatus() ? "Disponível" : "Ocupado";
+                Object[] rowData = {quiosque.getId(), quiosque.getNumero(), quiosque.getLocalidade(), disponibilidade};
                 tableModel.addRow(rowData);
             }
         }
@@ -771,15 +806,15 @@ public class MenuPrincipal extends JFrame {
                 List<QuiosqueEntity> quiosques = quiosqueController.findAll();
                 if (quiosques != null) {
                     for (QuiosqueEntity quiosque : quiosques) {
-                        Object[] rowData = {quiosque.getId(), quiosque.getNumero(), quiosque.getLocalidade()};
+                        String disponibilidade = quiosque.getDisponibilidadeStatus() ? "Disponível" : "Ocupado";
+                        Object[] rowData = {quiosque.getId(), quiosque.getNumero(), quiosque.getLocalidade(), disponibilidade};
                         tableModel.addRow(rowData);
                     }
                 }
             }
         });
 
-        // Adicionar o painel ao contentPane
-        contentPane.add(gerenciarQuiosquePanel, "gerenciarQuiosquePanel");
+       
 
         // Botão Editar
         JButton btnEditar = new JButton("Editar");
@@ -848,7 +883,8 @@ public class MenuPrincipal extends JFrame {
                 }
             }
         });
-
+        // Adicionar o painel ao contentPane
+        contentPane.add(gerenciarQuiosquePanel, "gerenciarQuiosquePanel");
 
     }
 
@@ -959,8 +995,6 @@ public class MenuPrincipal extends JFrame {
         lblCriarCliente.setBounds(374, 24, 200, 14);
         criarClientePanel.add(lblCriarCliente);
 
-        contentPane.add(criarClientePanel, "criarClientePanel");
-
         JLabel lblNome = new JLabel("Nome");
         lblNome.setBounds(266, 99, 46, 14);
         criarClientePanel.add(lblNome);
@@ -1017,6 +1051,14 @@ public class MenuPrincipal extends JFrame {
 
                 boolean userStatus = "Ativo".equals(statusCliente);
 
+                // Verifica se já existe um cliente com o mesmo CPF
+                boolean cpfExists = clientesController.verificarClientePorCPF(cpfCliente);
+
+                if (cpfExists) {
+                    JOptionPane.showMessageDialog(null, "Já existe um cliente com o mesmo CPF.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    return; // Não continua com a criação do cliente
+                }
+
                 ClientesEntity novoCliente = new ClientesEntity();
                 novoCliente.setNome(nomeCliente);
                 novoCliente.setTelefone(telefoneCliente);
@@ -1028,7 +1070,7 @@ public class MenuPrincipal extends JFrame {
                     if (!em.getTransaction().isActive()) {
                         em.getTransaction().begin();
                     }
-                    clientesController.createCliente(novoCliente);
+                    clientesController.createCliente(novoCliente); // Certifique-se de que createCliente está disponível
                     em.getTransaction().commit();
                     JOptionPane.showMessageDialog(null, "Novo Cliente criado com sucesso.");
                     limparCamposCliente();
@@ -1037,10 +1079,13 @@ public class MenuPrincipal extends JFrame {
                     if (em.getTransaction().isActive()) {
                         em.getTransaction().rollback();
                     }
-                    JOptionPane.showMessageDialog(null, "Erro ao criar novo Cliente");
+                    JOptionPane.showMessageDialog(null, "Erro ao criar novo Cliente", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+
+
+
         btnSalvar.setBounds(432, 353, 105, 23);
         criarClientePanel.add(btnSalvar);
 
@@ -1052,6 +1097,9 @@ public class MenuPrincipal extends JFrame {
         });
         btnLimpar.setBounds(245, 353, 113, 23);
         criarClientePanel.add(btnLimpar);
+        
+        // Adicionar o painel ao contentPane
+        contentPane.add(criarClientePanel, "criarClientePanel");
     }
 
     private void limparCamposCliente() {
@@ -1065,184 +1113,458 @@ public class MenuPrincipal extends JFrame {
 
     
     private void gerenciarClientePanel() {
-    	 JPanel gerenciarClientePanel = new JPanel();
-    	 gerenciarClientePanel.setBackground(new Color(255, 255, 255));
-    	 gerenciarClientePanel.setLayout(null);
+        JPanel gerenciarClientePanel = new JPanel();
+        gerenciarClientePanel.setBackground(new Color(255, 255, 255));
+        gerenciarClientePanel.setLayout(null);
 
-         JLabel lblListarQuiosques = new JLabel("Lista de Clientes");
-         lblListarQuiosques.setFont(new Font("Tahoma", Font.PLAIN, 17));
-         lblListarQuiosques.setBounds(343, 11, 200, 20);
-         gerenciarClientePanel.add(lblListarQuiosques);
+        JLabel lblListarClientes = new JLabel("Lista de Clientes");
+        lblListarClientes.setFont(new Font("Tahoma", Font.PLAIN, 17));
+        lblListarClientes.setBounds(343, 11, 200, 20);
+        gerenciarClientePanel.add(lblListarClientes);
 
-         // Criar o modelo da tabela com colunas definidas
-         DefaultTableModel tableModel = new DefaultTableModel();
-         tableModel.addColumn("ID");
-         tableModel.addColumn("Nome");
-         tableModel.addColumn("Contato");
-         tableModel.addColumn("Status");
+        // Criar o modelo da tabela com colunas definidas
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.addColumn("ID");
+        tableModel.addColumn("Nome");
+        tableModel.addColumn("Contato");
+        tableModel.addColumn("Status");
 
-         List<ClientesEntity> clientes = clientesController.findAll();
-         if (clientes != null) {
-             for (ClientesEntity cliente : clientes) {
-                 Object[] rowData = {
-                     cliente.getId(), 
-                     cliente.getNome(), 
-                     cliente.getTelefone(), 
-                     cliente.getUserStatus() ? "Ativo" : "Desativado"
-                 };
-                 tableModel.addRow(rowData);
-             }
-         }
+        List<ClientesEntity> clientes = clientesController.getAllClientes();
+        if (clientes != null) {
+            for (ClientesEntity cliente : clientes) {
+                Object[] rowData = {
+                    cliente.getId(),
+                    cliente.getNome(),
+                    cliente.getTelefone(),
+                    cliente.getUserStatus() ? "Ativo" : "Desativado"
+                };
+                tableModel.addRow(rowData);
+            }
+        }
 
-         // Criar a tabela com o modelo criado
-         JTable table = new JTable(tableModel);
+        // Criar a tabela com o modelo criado
+        JTable table = new JTable(tableModel);
 
-         // Configurar tamanho e posição da tabela dentro do JScrollPane
-         JScrollPane scrollPane = new JScrollPane(table);
-         scrollPane.setBounds(50, 85, 880, 300);
-         gerenciarClientePanel.add(scrollPane);
+        // Configurar tamanho e posição da tabela dentro do JScrollPane
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(50, 85, 880, 300);
+        gerenciarClientePanel.add(scrollPane);
 
-         JTextField txtId = new JTextField();
-         txtId.setBounds(50, 50, 620, 23);
-         gerenciarClientePanel.add(txtId);
-         txtId.setColumns(10);
+        JTextField txtId = new JTextField();
+        txtId.setBounds(50, 50, 620, 23);
+        gerenciarClientePanel.add(txtId);
+        txtId.setColumns(10);
 
-         // Botão para buscar por ID
-         JButton btnBuscarPorId = new JButton("Buscar por ID");
-         btnBuscarPorId.setBackground(new Color(183, 219, 219));
-         btnBuscarPorId.setBounds(680, 50, 120, 23);
-         gerenciarClientePanel.add(btnBuscarPorId);
-         btnBuscarPorId.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                 // Ação ao clicar no botão buscar
-                 String idStr = txtId.getText().trim();
-                 if (!idStr.isEmpty()) {
-                     try {
-                         Long id = Long.parseLong(idStr);
-                         ClientesEntity cliente = clientesController.findClienteById(id);
-                         if (cliente != null) {
-                             // Limpar a tabela antes de adicionar o resultado da busca
-                             tableModel.setRowCount(0);
-                             // Adicionar o quiosque encontrado à tabela
-                             Object[] rowData = {cliente.getId(), cliente.getNome(),  cliente.getTelefone(),  cliente.getUserStatus()};
-                             tableModel.addRow(rowData);
-                         } else {
-                             JOptionPane.showMessageDialog(null, "Nenhum quiosque encontrado com o ID informado.");
-                         }
-                     } catch (NumberFormatException ex) {
-                         JOptionPane.showMessageDialog(null, "ID deve ser um número válido.");
-                     }
-                 } else {
-                     JOptionPane.showMessageDialog(null, "Por favor, informe um ID para buscar.");
-                 }
-             }
-         });
+        // Botão para buscar por ID
+        JButton btnBuscarPorId = new JButton("Buscar por ID");
+        btnBuscarPorId.setBackground(new Color(183, 219, 219));
+        btnBuscarPorId.setBounds(680, 50, 120, 23);
+        gerenciarClientePanel.add(btnBuscarPorId);
+        btnBuscarPorId.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Ação ao clicar no botão buscar
+                String idStr = txtId.getText().trim();
+                if (!idStr.isEmpty()) {
+                    try {
+                        Long id = Long.parseLong(idStr);
+                        ClientesEntity cliente = clientesController.getClienteById(id);
+                        if (cliente != null) {
+                            // Limpar a tabela antes de adicionar o resultado da busca
+                            tableModel.setRowCount(0);
+                            // Adicionar o cliente encontrado à tabela
+                            Object[] rowData = {cliente.getId(), cliente.getNome(), cliente.getTelefone(), cliente.getUserStatus() ? "Ativo" : "Desativado"};
+                            tableModel.addRow(rowData);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Nenhum cliente encontrado com o ID informado.");
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "ID deve ser um número válido.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Por favor, informe um ID para buscar.");
+                }
+            }
+        });
 
-         JButton btnListarTodos = new JButton("Atualizar");
-         btnListarTodos.setBackground(new Color(183, 219, 219));
-         btnListarTodos.setBounds(810, 50, 120, 23);
-         gerenciarClientePanel.add(btnListarTodos);
-         btnListarTodos.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                 tableModel.setRowCount(0);
-                 List<ClientesEntity> clientes = clientesController.findAll();
-                 if (clientes != null) {
-                     for (ClientesEntity cliente : clientes) {
-                         Object[] rowData = {cliente.getId(), cliente.getNome(),  cliente.getTelefone(),  cliente.getUserStatus()};
-                         tableModel.addRow(rowData);
-                     }
-                 }
-             }
-         });
+        JButton btnListarTodos = new JButton("Atualizar");
+        btnListarTodos.setBackground(new Color(183, 219, 219));
+        btnListarTodos.setBounds(810, 50, 120, 23);
+        gerenciarClientePanel.add(btnListarTodos);
+        btnListarTodos.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Atualizar a tabela com todos os clientes
+                tableModel.setRowCount(0);
+                List<ClientesEntity> clientes = clientesController.getAllClientes();
+                if (clientes != null) {
+                    for (ClientesEntity cliente : clientes) {
+                        Object[] rowData = {cliente.getId(), cliente.getNome(), cliente.getTelefone(), cliente.getUserStatus() ? "Ativo" : "Desativado"};
+                        tableModel.addRow(rowData);
+                    }
+                }
+            }
+        });
 
-         // Adicionar o painel ao contentPane
-         contentPane.add(gerenciarClientePanel, "gerenciarClientePanel");
+        // Botão Editar
+        JButton btnEditar = new JButton("Editar");
+        btnEditar.setBackground(new Color(183, 219, 219));
+        btnEditar.setBounds(240, 404, 120, 23);
+        gerenciarClientePanel.add(btnEditar);
+        btnEditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Verificar se uma linha da tabela está selecionada
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Selecione um cliente para editar.");
+                    return;
+                }
 
-         // Botão Editar
-         JButton btnEditar = new JButton("Editar");
-         btnEditar.setBackground(new Color(183, 219, 219));
-         btnEditar.setBounds(240, 404, 120, 23);
-         gerenciarClientePanel.add(btnEditar);
-         btnEditar.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                 // Verificar se uma linha da tabela está selecionada
-                 int selectedRow = table.getSelectedRow();
-                 if (selectedRow == -1) {
-                     JOptionPane.showMessageDialog(null, "Selecione um quiosque para editar.");
-                     return;
-                 }
+                // Obter o ID do cliente selecionado
+                Long id = (Long) table.getValueAt(selectedRow, 0);
 
-                 // Obter o ID do quiosque selecionado
-                 Long id = (Long) table.getValueAt(selectedRow, 0);
+                // Chamar método para abrir a janela de edição com o ID
+                editarCliente(id);
+            }
+        });
 
-                 // Chamar método para abrir a janela de edição com o ID
-                 editarQuiosque(id);
-             }
-         });
+        // Botão Excluir
+        JButton btnExcluir = new JButton("Excluir");
+        btnExcluir.setBackground(new Color(183, 219, 219));
+        btnExcluir.setBounds(414, 404, 120, 23);
+        gerenciarClientePanel.add(btnExcluir);
+        btnExcluir.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Verificar se alguma linha está selecionada na tabela
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(gerenciarClientePanel, "Por favor, selecione um cliente para excluir.");
+                    return;
+                }
 
-      // Botão Excluir
-         JButton btnExcluir = new JButton("Excluir");
-         btnExcluir.setBackground(new Color(183, 219, 219));
-         btnExcluir.setBounds(414, 404, 120, 23);
-         gerenciarClientePanel.add(btnExcluir);
-         btnExcluir.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-                 // Verificar se alguma linha está selecionada na tabela
-                 int selectedRow = table.getSelectedRow();
-                 if (selectedRow == -1) {
-                     JOptionPane.showMessageDialog(gerenciarClientePanel, "Por favor, selecione um Quiosque para excluir.");
-                     return;
-                 }
+                // Obter o ID do cliente selecionado
+                Long id = (Long) table.getValueAt(selectedRow, 0);
 
-                 // Obter o ID do quiosque selecionado
-                 Long id = (Long) table.getValueAt(selectedRow, 0);
+                // Confirmar a exclusão com o usuário
+                int option = JOptionPane.showConfirmDialog(gerenciarClientePanel, "Tem certeza que deseja excluir este cliente?",
+                        "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
+                if (option != JOptionPane.YES_OPTION) {
+                    return;
+                }
 
-                 // Confirmar a exclusão com o usuário
-                 int option = JOptionPane.showConfirmDialog(gerenciarClientePanel, "Tem certeza que deseja excluir este Quiosque?",
-                                                            "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
-                 if (option != JOptionPane.YES_OPTION) {
-                     return;
-                 }
+                try {
+                    if (!em.getTransaction().isActive()) {
+                        em.getTransaction().begin();
+                    }
 
-                 try {
-                     if (!em.getTransaction().isActive()) {
-                         em.getTransaction().begin();
-                     }
+                    // Excluir o cliente usando o controlador
+                    clientesController.deleteCliente(id);
+                    em.getTransaction().commit();
+                    JOptionPane.showMessageDialog(null, "Cliente excluído com sucesso.");
 
-                     // Excluir o quiosque usando o controlador
-                     quiosqueController.deleteQuiosque(id);
-                     em.getTransaction().commit();
-                     JOptionPane.showMessageDialog(null, "Quiosque excluído com sucesso.");
+                    // Atualizar a tabela após a exclusão
+                    tableModel.removeRow(selectedRow);
+                } catch (Exception ex) {
+                    ex.printStackTrace(); // Log do stack trace para debug
+                    if (em.getTransaction().isActive()) {
+                        em.getTransaction().rollback();
+                    }
+                    JOptionPane.showMessageDialog(null, "Erro ao excluir o cliente: " + ex.getMessage());
+                }
+            }
+        });
 
-                     // Atualizar a tabela após a exclusão
-                     tableModel.removeRow(selectedRow);
-                 } catch (Exception ex) {
-                     ex.printStackTrace(); // Log do stack trace para debug
-                     if (em.getTransaction().isActive()) {
-                         em.getTransaction().rollback();
-                     }
-                     JOptionPane.showMessageDialog(null, "Erro ao excluir o Quiosque: " + ex.getMessage());
-                 }
-             }
-         });
-
-    	
+        // Adicionar o painel ao contentPane
+        contentPane.add(gerenciarClientePanel, "gerenciarClientePanel");
     }
-  
+
+    private void editarCliente(long id) {
+        // Buscar o cliente pelo ID
+        ClientesEntity cliente = clientesController.getClienteById(id);
+
+        if (cliente != null) {
+            // Criar um novo JDialog para a janela de edição
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Editar Cliente");
+            dialog.setSize(400, 300);
+            dialog.setModal(true); // Tornar o diálogo modal para bloquear interações com outras janelas
+
+            JPanel editarPanel = new JPanel();
+            editarPanel.setLayout(null);
+
+            JLabel lblEditarCliente = new JLabel("Editar Cliente");
+            lblEditarCliente.setBounds(50, 20, 200, 14);
+            editarPanel.add(lblEditarCliente);
+
+            JLabel lblNome = new JLabel("Nome:");
+            lblNome.setBounds(50, 50, 80, 14);
+            editarPanel.add(lblNome);
+
+            JTextField txtNomeEdit = new JTextField(cliente.getNome());
+            txtNomeEdit.setBounds(140, 47, 200, 20);
+            editarPanel.add(txtNomeEdit);
+
+            JLabel lblTelefone = new JLabel("Telefone:");
+            lblTelefone.setBounds(50, 80, 80, 14);
+            editarPanel.add(lblTelefone);
+
+            JTextField txtTelefoneEdit = new JTextField(cliente.getTelefone());
+            txtTelefoneEdit.setBounds(140, 77, 200, 20);
+            editarPanel.add(txtTelefoneEdit);
+
+            JLabel lblCpf = new JLabel("CPF:");
+            lblCpf.setBounds(50, 110, 80, 14);
+            editarPanel.add(lblCpf);
+
+            JTextField txtCpfEdit = new JTextField(cliente.getCpf());
+            txtCpfEdit.setBounds(140, 107, 200, 20);
+            editarPanel.add(txtCpfEdit);
+
+            JLabel lblStatus = new JLabel("Status:");
+            lblStatus.setBounds(50, 140, 80, 14);
+            editarPanel.add(lblStatus);
+
+            // Criar um JComboBox com os valores de status
+            JComboBox<String> cbStatusEdit = new JComboBox<>(new String[]{"Ativo", "Desativado"});
+            cbStatusEdit.setSelectedItem(cliente.getUserStatus() ? "Ativo" : "Desativado");
+            cbStatusEdit.setBounds(140, 137, 200, 20);
+            editarPanel.add(cbStatusEdit);
+
+            JButton btnSalvar = new JButton("Salvar");
+            btnSalvar.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    // Atualizar os dados do cliente com os novos valores
+                    cliente.setNome(txtNomeEdit.getText());
+                    cliente.setTelefone(txtTelefoneEdit.getText());
+                    cliente.setCpf(txtCpfEdit.getText());
+
+                    // Atualizar o status com base no item selecionado no JComboBox
+                    boolean novoStatus = "Ativo".equals(cbStatusEdit.getSelectedItem());
+                    cliente.setUserStatus(novoStatus);
+
+                    // Chamar o método do controlador para atualizar no banco de dados
+                    try {
+                        if (!em.getTransaction().isActive()) {
+                            em.getTransaction().begin();
+                        }
+                        clientesController.updateCliente(cliente);
+                        em.getTransaction().commit();
+                        JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso.");
+                        dialog.dispose(); // Fechar o dialog após salvar
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        if (em.getTransaction().isActive()) {
+                            em.getTransaction().rollback();
+                        }
+                        JOptionPane.showMessageDialog(null, "Erro ao atualizar cliente: " + ex.getMessage());
+                    }
+                }
+            });
+
+            btnSalvar.setBounds(50, 200, 100, 23);
+            editarPanel.add(btnSalvar);
+
+            JButton btnCancelar = new JButton("Cancelar");
+            btnCancelar.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    dialog.dispose(); // Fechar o dialog ao cancelar
+                }
+            });
+            btnCancelar.setBounds(160, 200, 100, 23);
+            editarPanel.add(btnCancelar);
+
+            // Adicionar o painel de edição ao dialog
+            dialog.getContentPane().add(editarPanel);
+            // Exibir o dialog
+            dialog.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente não encontrado.");
+        }
+    }
+
+
   //============================ RESERVAS   =====================================================================================================
+
     private void fazerReservaPanel() {
         JPanel fazerReservaPanel = new JPanel();
+        fazerReservaPanel.setBackground(new Color(43, 85, 85));
         fazerReservaPanel.setLayout(null);
 
         JLabel lblFazerReserva = new JLabel("Fazer Reserva");
-        lblFazerReserva.setBounds(351, 11, 200, 14);
+        lblFazerReserva.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        lblFazerReserva.setForeground(new Color(255, 255, 255));
+        lblFazerReserva.setBounds(365, 11, 200, 24);
         fazerReservaPanel.add(lblFazerReserva);
 
         contentPane.add(fazerReservaPanel, "fazerReservaPanel");
+
+        JPanel panel = new JPanel();
+        panel.setBounds(105, 46, 752, 420);
+        fazerReservaPanel.add(panel);
+        panel.setLayout(null);
+
+        JLabel lblInicio = new JLabel("Inicio");
+        lblInicio.setBounds(81, 53, 46, 14);
+        panel.add(lblInicio);
+
+        JDateChooser dateChooserInicio = new JDateChooser();
+        dateChooserInicio.setBounds(137, 47, 146, 20);
+        panel.add(dateChooserInicio);
+
+        JLabel lblFim = new JLabel("Fim");
+        lblFim.setBounds(425, 53, 46, 14);
+        panel.add(lblFim);
+
+        JDateChooser dateChooserFim = new JDateChooser();
+        dateChooserFim.setBounds(481, 47, 146, 20);
+        panel.add(dateChooserFim);
+
+        JLabel lblQuiosque = new JLabel("Quiosque");
+        lblQuiosque.setBounds(81, 112, 100, 14);
+        panel.add(lblQuiosque);
+
+        comboBoxQuiosque = new JComboBox<>();
+        comboBoxQuiosque.setBounds(137, 108, 149, 22);
+        panel.add(comboBoxQuiosque);
+
+        JLabel lblCliente = new JLabel("Cliente");
+        lblCliente.setBounds(81, 170, 100, 14);
+        panel.add(lblCliente);
+
+        comboBoxCliente = new JComboBox<>();
+        comboBoxCliente.setBounds(136, 166, 149, 22);
+        panel.add(comboBoxCliente);
+
+        JLabel lblDiaria = new JLabel("Diaria");
+        lblDiaria.setBounds(81, 227, 45, 14);
+        panel.add(lblDiaria);
+
+        txtDiaria = new JTextField();
+        txtDiaria.setBounds(136, 224, 150, 20);
+        panel.add(txtDiaria);
+        txtDiaria.setColumns(10);
+
+        JLabel lblTotal = new JLabel("Total");
+        lblTotal.setBounds(457, 227, 46, 14);
+        panel.add(lblTotal);
+
+        txtTotal = new JTextField();
+        txtTotal.setColumns(10);
+        txtTotal.setBounds(539, 224, 117, 20);
+        txtTotal.setEditable(false);
+        panel.add(txtTotal);
+
+        JButton btnCadastrar = new JButton("Cadastrar");
+        btnCadastrar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                LocalDate inicio = dateChooserInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate fim = dateChooserFim.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                String quiosqueNome = (String) comboBoxQuiosque.getSelectedItem();
+                String clienteNome = (String) comboBoxCliente.getSelectedItem();
+                String diariaStr = txtDiaria.getText();
+                String totalStr = txtTotal.getText();
+                
+                // Obter o número do quiosque selecionado
+                Integer numeroQuiosque = Integer.parseInt(quiosqueNome); // Supondo que o nome é na verdade o número do quiosque
+
+                // Obter o QuiosqueEntity correto pelo número
+                QuiosqueEntity quiosque = quiosqueController.encontrarQuiosquePorNumero(numeroQuiosque);
+
+                // Obter o ClientesEntity correto
+                ClientesEntity cliente = clientesController.encontrarClientePorNome(clienteNome);
+                
+                // Converter String para BigDecimal
+                BigDecimal diaria = new BigDecimal(diariaStr);
+                BigDecimal total = new BigDecimal(totalStr);
+                
+                // Criar uma nova reserva
+                ReservasEntity novaReserva = new ReservasEntity();
+                novaReserva.setDataInicio(inicio);
+                novaReserva.setDataFim(fim);
+                novaReserva.setQuiosque(quiosque);
+                novaReserva.setCliente(cliente);
+                novaReserva.setPrecoDiaria(diaria);
+                novaReserva.setValorTotal(total);
+                
+                try {
+                    if (!em.getTransaction().isActive()) {
+                        reservaController.criarReserva(novaReserva);
+                        JOptionPane.showMessageDialog(null, "Reserva criada com sucesso.");
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    if (em.getTransaction().isActive()) {
+                        em.getTransaction().rollback();
+                    }
+                    JOptionPane.showMessageDialog(null, "Erro ao criar reserva: " + ex.getMessage());
+                }
+            }
+        });
+
+        btnCadastrar.setBounds(629, 386, 89, 23);
+        panel.add(btnCadastrar);
+
+        JButton btnLimparCampos = new JButton("Limpar campos");
+        btnLimparCampos.setBounds(502, 386, 104, 23);
+        panel.add(btnLimparCampos);
+
+        comboBoxQuiosque.addItem("");
+        comboBoxCliente.addItem("");
+        carregarDados();
+
+        // Adicionar DocumentListener ao campo txtDiaria para calcular o total automaticamente
+        txtDiaria.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                calcularTotal();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                calcularTotal();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                calcularTotal();
+            }
+
+            private void calcularTotal() {
+                try {
+                    LocalDate inicio = dateChooserInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate fim = dateChooserFim.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    long dias = ChronoUnit.DAYS.between(inicio, fim) + 1; // Incluindo o primeiro dia
+                    double diaria = Double.parseDouble(txtDiaria.getText());
+                    double total = dias * diaria;
+                    txtTotal.setText(String.valueOf(total));
+                } catch (Exception ex) {
+                    txtTotal.setText("");
+                }
+            }
+        });
     }
 
+    private void carregarDados() {
+        // Carregar clientes ativos
+        List<ClientesEntity> clientes = clientesController.findClientesByUserStatus(true);
+
+        comboBoxCliente.removeAllItems();
+        comboBoxCliente.addItem(""); // Adicionar um item vazio opcionalmente
+
+        for (ClientesEntity cliente : clientes) {
+            comboBoxCliente.addItem(cliente.getNome());
+        }
+
+        // Carregar quiósgues disponíveis
+        List<QuiosqueEntity> quiosques = quiosqueController.findQuiosquesByDisponibilidadeStatus(true);
+
+        comboBoxQuiosque.removeAllItems();
+        comboBoxQuiosque.addItem(""); // Adicionar um item vazio opcionalmente
+
+        for (QuiosqueEntity quiosque : quiosques) {
+            comboBoxQuiosque.addItem(String.valueOf(quiosque.getNumero()));
+        }
+    }
+
+
+
+
+
     private void listarReservaPanel() {
-        JPanel listarReservaPanel = new JPanel();
+     /*   JPanel listarReservaPanel = new JPanel();
         listarReservaPanel.setLayout(null);
 
         JLabel lblListarReserva = new JLabel("Listar Reservas");
@@ -1250,7 +1572,7 @@ public class MenuPrincipal extends JFrame {
         listarReservaPanel.add(lblListarReserva);
 
 
-        contentPane.add(listarReservaPanel, "listarReservaPanel");
+        contentPane.add(listarReservaPanel, "listarReservaPanel");*/
     }
 }
  

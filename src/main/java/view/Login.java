@@ -20,104 +20,112 @@ import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class Login extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JTextField textField;
-    private JTextField textField_1;
+    private JTextField txtnome;
+    private JTextField txtSenha;
     private FuncionariosRepository funcionariosRepository;
 
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
-    	 try {
-             UIManager.setLookAndFeel(new FlatLightLaf());
-         } catch (UnsupportedLookAndFeelException ex) {
-             ex.printStackTrace();
-         }
-
-         // Executar a aplicação
-         SwingUtilities.invokeLater(new Runnable() {
-             public void run() {
-                 new Login().setVisible(true);
-             }
-         });
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new FlatLightLaf());
+            } catch (UnsupportedLookAndFeelException ex) {
+                ex.printStackTrace();
+            }
+            new Login().setVisible(true);
+        });
     }
-
     /**
      * Create the frame.
      */
     public Login() {
-
         funcionariosRepository = new FuncionariosRepository();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1050, 624);
         contentPane = new JPanel();
-        contentPane.setBackground(new Color(179, 217, 255));
+        contentPane.setBackground(new Color(0x82A69C));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(255, 255, 255));
-        panel.setBounds(266, 57, 414, 448);
+        JLabel lblNewLabel_1_2 = new JLabel("Login");
+        lblNewLabel_1_2.setFont(new Font("Constantia", Font.PLAIN, 28));
+        lblNewLabel_1_2.setBounds(294, 100, 136, 64);
+        contentPane.add(lblNewLabel_1_2);
+        
+        JLabel lblNewLabel = new JLabel("");
+        lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\Tablet login-cuate (1).png"));
+        lblNewLabel.setBounds(551, 133, 483, 416);
+        contentPane.add(lblNewLabel);
+
+     // Crie um TransparentPanel com bordas arredondadas e transparência
+        TransparentTextField panel = new TransparentTextField(0.8f); // 50% de transparência
+        panel.setBackground(new Color(0xDBDDB6)); // Cor de fundo #F3EFDE
+        panel.setBounds(176, 79, 695, 421);
         contentPane.add(panel);
         panel.setLayout(null);
+        panel.setBorder(null); // Remove a borda do JPanel
+        panel.setOpaque(false); // Torna o fundo do JPanel transparente
         
-                JLabel lblNewLabel = new JLabel("");
-                lblNewLabel.setBounds(123, 0, 138, 142);
-                panel.add(lblNewLabel);
-                lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\recorrer (3).png"));
-                
-                        textField = new JTextField();
-                        textField.setBounds(67, 189, 268, 34);
-                        panel.add(textField);
-                        textField.setBackground(new Color(119, 187, 255));
-                        textField.setColumns(10);
-                        
-                                JLabel lblNewLabel_1 = new JLabel("Nome:");
-                                lblNewLabel_1.setBounds(67, 160, 46, 14);
-                                panel.add(lblNewLabel_1);
-                                
-                                        textField_1 = new JTextField();
-                                        textField_1.setBounds(67, 275, 268, 34);
-                                        panel.add(textField_1);
-                                        textField_1.setColumns(10);
-                                        textField_1.setBackground(new Color(119, 187, 255));
-                                        
-                                                JLabel lblNewLabel_1_1 = new JLabel("Senha");
-                                                lblNewLabel_1_1.setBounds(67, 250, 46, 14);
-                                                panel.add(lblNewLabel_1_1);
-                                                
-                                                        JButton btnNewButton = new JButton("Entrar");
-                                                        btnNewButton.setBounds(138, 377, 157, 34);
-                                                        panel.add(btnNewButton);
-                                                        btnNewButton.addActionListener(new ActionListener() {
-                                                            public void actionPerformed(ActionEvent e) {
-                                                                String nome = textField.getText();
-                                                                String senha = textField_1.getText(); // Corrected to get text from textField_1
+        JLabel lbNome = new JLabel("Nome:");
+        lbNome.setBounds(67, 102, 46, 14);
+        panel.add(lbNome);
+        
+        txtnome = new JTextField();
+        txtnome.setForeground(new Color(0, 0, 0));
+        txtnome.setBounds(67, 127, 268, 34);
+        panel.add(txtnome);
+        txtnome.setBackground(new Color(237, 228, 228));
+        txtnome.setColumns(10);
 
-                                                                FuncionariosEntity funcionario = funcionariosRepository.login(nome, senha);
+    
+        JLabel lbSenha = new JLabel("Senha:");
+        lbSenha.setBounds(67, 201, 46, 14);
+        panel.add(lbSenha);
+        
+        txtSenha = new JTextField();
+        txtSenha.setBounds(67, 218, 268, 34);
+        panel.add(txtSenha);
+        txtSenha.setColumns(10);
+        txtSenha.setBackground(new Color(237, 228, 228));
 
-                                                                if (funcionario != null) {
-                                                                    new MenuPrincipal().setVisible(true);
-                                                                    dispose(); // fecha o login 
-                                                                } else {
-                                                                    JOptionPane.showMessageDialog(null, "Nome ou senha Invalidos.");
-                                                                    limparCampos();
-                                                                }
-                                                            }
-                                                        });
-                                                        btnNewButton.setBackground(new Color(248, 208, 73));
+       
+
+        JButton btnNewButton = new JButton("Entrar");
+        btnNewButton.setForeground(new Color(255, 255, 255));
+        btnNewButton.setBounds(116, 303, 157, 34);
+        panel.add(btnNewButton);
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String nome = txtnome.getText();
+                String senha = txtSenha.getText();
+
+                FuncionariosEntity funcionario = funcionariosRepository.login(nome, senha);
+
+                if (funcionario != null) {
+                    new MenuPrincipal().setVisible(true);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nome ou senha inválidos.");
+                    limparCampos();
+                }
+            }
+        });
+        btnNewButton.setBackground(new Color(33, 65, 65));
     }
+
     
     private void limparCampos() {
-    	textField.setText("");
-    	textField_1.setText("");
+    	txtnome.setText("");
+    	txtSenha.setText("");
     }
 }

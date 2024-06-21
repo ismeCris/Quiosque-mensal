@@ -1,108 +1,57 @@
 package model.repositories;
 
 
-import model.entities.ClientesEntity;
-import model.entities.QuiosqueEntity;
+
 import model.entities.ReservasEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ResevasRepository implements BasicCrud {
-    EntityManager em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
+public class ResevasRepository {
+    private EntityManager em;
 
-
-    @Override
-    public ReservasEntity create(Object object) {
-        ReservasEntity reservas1 = (ReservasEntity) object;
-
-        Query query = em.createQuery("SELECT r FROM ReservasEntity r WHERE r.dataInicio = :dataInicio AND r.dataFim = :dataFim");
-        query.setParameter("dataInicio", reservas1.getDataInicio());
-        query.setParameter("dataFim", reservas1.getDataFim());
-        List<ReservasEntity> reservasExistente = query.getResultList();
-
-        em.getTransaction().begin();
-        em.persist(reservas1);
-        em.getTransaction().commit();
-        return reservas1; // Retorna
+    public ResevasRepository() {
+        this.em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
     }
 
-    @Override
-    public Object update(Object object) {
-        ReservasEntity reservasUpDate = (ReservasEntity) object;
+    public ReservasEntity create(ReservasEntity reserva) {
         em.getTransaction().begin();
-        em.merge(reservasUpDate);
+        em.persist(reserva);
         em.getTransaction().commit();
-        return null;
+        return reserva;
     }
 
-    @Override
+    public ReservasEntity update(ReservasEntity reserva) {
+        em.getTransaction().begin();
+        ReservasEntity updatedReserva = em.merge(reserva);
+        em.getTransaction().commit();
+        return updatedReserva;
+    }
+
     public void delete(Long id) {
         em.getTransaction().begin();
-        var reserva = (ReservasEntity) findById(id);
-        em.remove(reserva);
+        ReservasEntity reserva = em.find(ReservasEntity.class, id);
+        if (reserva != null) {
+            em.remove(reserva);
+        }
         em.getTransaction().commit();
     }
-    public List<ReservasEntity> findAll(){
-        return em.createQuery("SELECT r FROM ReservasEntity r",ReservasEntity.class).getResultList();
+
+    public List<ReservasEntity> findAll() {
+        TypedQuery<ReservasEntity> query = em.createQuery("SELECT r FROM ReservasEntity r", ReservasEntity.class);
+        return query.getResultList();
     }
 
-
-    @Override
-    public Object findById(Object id) {
-        try {
-            ReservasEntity reservasInBd = em.find(ReservasEntity.class, id);
-            return reservasInBd;
-        } catch (Exception e) {
-
-        }
-        return null;
+    public ReservasEntity findById(Long id) {
+        return em.find(ReservasEntity.class, id);
     }
 
     public List<ReservasEntity> findByDate(LocalDate date) {
-        try {
-            String queryString = "SELECT r FROM ReservasEntity r WHERE :date BETWEEN r.dataInicio AND r.dataFim";
-            System.out.println("Query String: " + queryString); // Imprime a consulta SQL
-
-            List<ReservasEntity> result = em.createQuery(queryString, ReservasEntity.class)
-                    .setParameter("date", date)
-                    .getResultList();
-
-            System.out.println("Parâmetros da consulta:");
-            System.out.println("Date: " + date);
-
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        String queryString = "SELECT r FROM ReservasEntity r WHERE :date BETWEEN r.dataInicio AND r.dataFim";
+        TypedQuery<ReservasEntity> query = em.createQuery(queryString, ReservasEntity.class);
+        query.setParameter("date", date);
+        return query.getResultList();
     }
-
-    public List<ClientesEntity> getClientesAtivos() {
-        try {
-            return em.createQuery("SELECT c FROM ClientesEntity c WHERE c.UserStatus = true", ClientesEntity.class)
-                    .getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-    }
-    public List<QuiosqueEntity> getQuiosquesAtivos() {
-        try {
-            return em.createQuery("SELECT q FROM QuiosqueEntity q WHERE q.dispoStatus = true", QuiosqueEntity.class)
-                    .getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-
-    }
-
-
 }
-
-
-

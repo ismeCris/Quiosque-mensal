@@ -2,6 +2,7 @@ package model.service;
 
 import model.entities.ReservasEntity;
 import model.repositories.ResevasRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,12 +13,16 @@ public class ReservaService {
         this.reservaRepository = reservaRepository;
     }
 
-    public ReservaService() {
-        this.reservaRepository = new ResevasRepository();
+    public ReservasEntity criarReserva(ReservasEntity reserva) {
+        if (isQuiosqueDisponivel(reserva)) {
+            return reservaRepository.create(reserva);
+        } else {
+            throw new IllegalArgumentException("O quiosque não está disponível para as datas escolhidas.");
+        }
     }
 
     public ReservasEntity atualizarReserva(ReservasEntity reserva) {
-        return (ReservasEntity) reservaRepository.update(reserva);
+        return reservaRepository.update(reserva);
     }
 
     public void excluirReserva(Long id) {
@@ -27,33 +32,25 @@ public class ReservaService {
     public List<ReservasEntity> encontrarTodasReservas() {
         return reservaRepository.findAll();
     }
+
     public List<ReservasEntity> encontrarReservasPorData(LocalDate data) {
         return reservaRepository.findByDate(data);
     }
 
-    public ReservasEntity criarReserva(ReservasEntity reserva) {
-
-        if (isQuiosqueDisponivel(reserva)) {
-
-            return reservaRepository.create(reserva);
-        } else {
-            return null;
-        }
+    public ReservasEntity encontrarReservaPorId(Long id) {
+        return reservaRepository.findById(id);
     }
 
     private boolean isQuiosqueDisponivel(ReservasEntity novaReserva) {
-        List<ReservasEntity> reservasExistente = reservaRepository.findAll();
+        List<ReservasEntity> reservasExistentes = reservaRepository.findAll();
 
-        for (ReservasEntity reservaExistente : reservasExistente) {
-
+        for (ReservasEntity reservaExistente : reservasExistentes) {
             if (reservaExistente.getQuiosque().equals(novaReserva.getQuiosque()) &&
-                    isOverlapping(reservaExistente.getDataInicio(), reservaExistente.getDataFim(),
-                            novaReserva.getDataInicio(), novaReserva.getDataFim())) {
-
+                isOverlapping(reservaExistente.getDataInicio(), reservaExistente.getDataFim(),
+                               novaReserva.getDataInicio(), novaReserva.getDataFim())) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -61,9 +58,13 @@ public class ReservaService {
         return start1.isBefore(end2) && start2.isBefore(end1);
     }
 
-    public ReservasEntity encontrarReservaPorId(Long id) {
-        return (ReservasEntity) reservaRepository.findById(id);
+    public List<ReservasEntity> findReservasExpiradas(LocalDate data) {
+        List<ReservasEntity> reservas = reservaRepository.findAll();
+        reservas.removeIf(r -> !r.getDataFim().isBefore(data));
+        return reservas;
     }
 
-
+    public void removerReserva(ReservasEntity reserva) {
+        reservaRepository.delete(reserva.getId());
+    }
 }

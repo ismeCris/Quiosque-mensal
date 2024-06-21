@@ -3,11 +3,9 @@ package model.entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 @Entity
-@Table(name =  "reservas")
+@Table(name = "reservas")
 public class ReservasEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -17,7 +15,6 @@ public class ReservasEntity {
 
     @Column(name = "data_fim")
     private LocalDate dataFim;
-
 
     @ManyToOne
     @JoinColumn(name = "quiosque_id_fk")

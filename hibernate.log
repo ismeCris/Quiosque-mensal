@@ -32,3 +32,13 @@
 2024-06-18 21:12:55,014 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.componentes_has_qiosques' doesn't exist
 2024-06-19 09:55:55,201 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'user_status' cannot be null
 2024-06-19 09:58:24,350 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'user_status' cannot be null
+2024-06-19 10:33:19,594 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.reservas' doesn't exist
+2024-06-19 10:38:16,099 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.reservas' doesn't exist
+2024-06-19 10:39:42,887 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.reservas' doesn't exist
+2024-06-19 10:43:26,435 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Table 'projetoquiosque.reservas' doesn't exist
+2024-06-20 16:40:37,964 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown column 'quiosqueen0_.livre' in 'field list'
+2024-06-20 16:40:42,526 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown column 'quiosqueen0_.livre' in 'field list'
+2024-06-20 16:50:16,774 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown column 'quiosqueen0_.livre' in 'field list'
+2024-06-20 16:56:12,133 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown column 'quiosqueen0_.livre' in 'field list'
+2024-06-20 17:58:18,912 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unknown column 'quiosqueen0_.disponibilidadeStatus' in 'field list'
+2024-06-21 09:32:24,115 [AWT-EventQueue-0] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Column 'clientes_id_fk' cannot be null

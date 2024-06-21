@@ -3,6 +3,7 @@ package model.repositories;
 
 import model.entities.ClientesEntity;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.util.List;
@@ -11,60 +12,62 @@ import java.util.List;
 public class ClientesRepository implements  BasicCrud{
 
     EntityManager em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
+  
 
     @Override
     public Object create(Object object) {
-        ClientesEntity clientes1 = (ClientesEntity) object;
-
-        Query query = em.createQuery("SELECT c FROM ClientesEntity c WHERE c.cpf = :cpf");
-        query.setParameter("cpf", clientes1.getCpf());
-        List<ClientesEntity> clineteMsmCpf = query.getResultList();
-
-        if (!clineteMsmCpf.isEmpty()) {
-            System.out.println("Já existe um funcionário com o mesmo CPF.");
-
-            return null;
-        }
-
+        ClientesEntity cliente = (ClientesEntity) object;
         em.getTransaction().begin();
-        em.persist(clientes1);
+        em.persist(cliente);
         em.getTransaction().commit();
-        return findById(clientes1.getId());
+        return cliente;
     }
-
 
     @Override
     public Object update(Object object) {
-        ClientesEntity clientesUpdade = (ClientesEntity) object;
+        ClientesEntity cliente = (ClientesEntity) object;
         em.getTransaction().begin();
-        em.merge(clientesUpdade);
+        em.merge(cliente);
         em.getTransaction().commit();
-        return null;
+        return cliente;
     }
 
     @Override
     public void delete(Long id) {
         em.getTransaction().begin();
-        var cliente = (ClientesEntity) findById(id);
-        em.remove(cliente);
+        ClientesEntity cliente = em.find(ClientesEntity.class, id);
+        if (cliente != null) {
+            em.remove(cliente);
+        }
         em.getTransaction().commit();
+    }
+
+    @Override
+    public Object findById(Object id) {
+        try {
+            Long clientId = (Long) id;
+            ClientesEntity cliente = em.find(ClientesEntity.class, clientId);
+            return cliente;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<ClientesEntity> findAll() {
         return em.createQuery("SELECT c FROM ClientesEntity c", ClientesEntity.class).getResultList();
     }
 
-    @Override
-    public Object findById(Object id) {
+
+    public ClientesEntity getClienteByCPF(String cpf) {
         try {
-            ClientesEntity clientesInBD = em.find(ClientesEntity.class, id);
-            return clientesInBD;
-        } catch (Exception e) {
-
+            Query query = em.createQuery("SELECT c FROM ClientesEntity c WHERE c.cpf = :cpf");
+            query.setParameter("cpf", cpf);
+            return (ClientesEntity) query.getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Retorna null se não encontrar nenhum cliente com o CPF
         }
-        return null;
     }
-
 
 
 }

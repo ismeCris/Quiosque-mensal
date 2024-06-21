@@ -28,6 +28,10 @@ public class QuiosqueService {
         return quiosqueRepository.findAll();
     }
 
+    public List<QuiosqueEntity> buscarQuiosquesDisponiveis() {
+        return quiosqueRepository.buscarQuiosquesDisponiveis();
+    }
+    
     public void updateQuiosque(QuiosqueEntity quiosque) {
         quiosqueRepository.update(quiosque);
     }

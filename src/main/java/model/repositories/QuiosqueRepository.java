@@ -57,6 +57,14 @@ public class QuiosqueRepository implements  BasicCrud{
         return em.createQuery("SELECT q FROM QuiosqueEntity q",QuiosqueEntity.class).getResultList();
     }
 
+    public List<QuiosqueEntity> buscarQuiosquesDisponiveis() {
+        String jpql = "SELECT q FROM QuiosqueEntity q WHERE q.dispoStatus = true";
+        TypedQuery<QuiosqueEntity> query = em.createQuery(jpql, QuiosqueEntity.class);
+        return query.getResultList();
+    }
+
+
+    
     @Override
     public QuiosqueEntity findById(Object id) {
         try {
@@ -67,10 +75,5 @@ public class QuiosqueRepository implements  BasicCrud{
         }
         return null;
     }
-    
-    public List<QuiosqueEntity> buscarQuiosquesDisponiveis() {
-        String jpql = "SELECT q FROM QuiosqueEntity q WHERE q.dispoStatus = true";
-        TypedQuery<QuiosqueEntity> query = em.createQuery(jpql, QuiosqueEntity.class);
-        return query.getResultList();
-    }
+  
 }

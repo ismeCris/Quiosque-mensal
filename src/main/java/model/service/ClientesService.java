@@ -1,46 +1,38 @@
 package model.service;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import model.entities.ClientesEntity;
 import model.repositories.ClientesRepository;
 
+import java.util.List;
+
 public class ClientesService {
 
-    private ClientesRepository clientesRepository;
+    private ClientesRepository clientesRepository = new ClientesRepository();
 
-    public ClientesService() {
-        this.clientesRepository = new ClientesRepository();
-    }
-
-    public ClientesEntity findClienteById(Long id) {
-        return (ClientesEntity) clientesRepository.findById(id);
-    }
-
-    public ClientesEntity createCliente(ClientesEntity cliente) {
+    public ClientesEntity criarCliente(ClientesEntity cliente) throws Exception {
+        // Validações de negócio podem ser feitas aqui antes de chamar o repositório
         return (ClientesEntity) clientesRepository.create(cliente);
     }
 
-    public void updateCliente(ClientesEntity cliente) {
+    public void atualizarCliente(ClientesEntity cliente) throws Exception {
+        // Validações de negócio podem ser feitas aqui antes de chamar o repositório
         clientesRepository.update(cliente);
     }
 
-    public void deleteCliente(Long id) {
+    public void deletarCliente(Long id) throws Exception {
+        // Validações de negócio podem ser feitas aqui antes de chamar o repositório
         clientesRepository.delete(id);
     }
 
-    public List<ClientesEntity> findAll() {
+    public List<ClientesEntity> buscarTodosClientes() {
         return clientesRepository.findAll();
     }
 
-    public boolean VerficaIdade(LocalDate dataNasc) {
-        LocalDate dataAtual = LocalDate.now();
-        LocalDate dezoitoAnosAtras = dataAtual.minusYears(18);
-        return dataNasc.isBefore(dezoitoAnosAtras);
+    public ClientesEntity buscarClientePorId(Long id) {
+        return (ClientesEntity) clientesRepository.findById(id);
     }
 
-    public boolean verificaStatusCliente(boolean isClienteAtivo) {
-        return isClienteAtivo;
+    public ClientesEntity buscarClientePorCPF(String cpf) {
+        return clientesRepository.getClienteByCPF(cpf);
     }
 }
