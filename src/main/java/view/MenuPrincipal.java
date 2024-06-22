@@ -33,6 +33,7 @@ import model.entities.ClientesEntity;
 import model.entities.FuncionariosEntity;
 import model.entities.QuiosqueEntity;
 import model.entities.ReservasEntity;
+import model.repositories.ResevasRepository;
 import model.service.ReservaService;
 
 import javax.swing.JMenuBar;
@@ -53,6 +54,7 @@ import javax.swing.JTable;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JSpinner;
@@ -86,6 +88,8 @@ public class MenuPrincipal extends JFrame {
     private JTextField txtDiaria;
     private JTextField txtTotal;
     private Connection conn;
+    private JDateChooser dateChooserInicio;
+    private JDateChooser dateChooserFim;
     
  
 
@@ -115,6 +119,17 @@ public class MenuPrincipal extends JFrame {
     	funcionarioController = new FuncionarioController();
         quiosqueController = new QuiosqueController(em); 
         clientesController = new ClientesController(em);
+        
+        dateChooserInicio = new JDateChooser();
+        dateChooserFim = new JDateChooser();
+        comboBoxQuiosque = new JComboBox<>();
+        comboBoxCliente = new JComboBox<>();
+        txtDiaria = new JTextField();
+        txtTotal = new JTextField();
+      
+        ResevasRepository reservaRepository = new ResevasRepository(em);
+        ReservaService reservaService = new ReservaService(reservaRepository);
+        reservaController = new ReservasController(reservaService);
     
     	setBackground(new Color(255, 255, 255));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1110,8 +1125,6 @@ public class MenuPrincipal extends JFrame {
         // cbStatus.setSelectedIndex(0);
     }
 
-
-    
     private void gerenciarClientePanel() {
         JPanel gerenciarClientePanel = new JPanel();
         gerenciarClientePanel.setBackground(new Color(255, 255, 255));
@@ -1382,7 +1395,6 @@ public class MenuPrincipal extends JFrame {
 
 
   //============================ RESERVAS   =====================================================================================================
-
     private void fazerReservaPanel() {
         JPanel fazerReservaPanel = new JPanel();
         fazerReservaPanel.setBackground(new Color(43, 85, 85));
@@ -1401,7 +1413,7 @@ public class MenuPrincipal extends JFrame {
         fazerReservaPanel.add(panel);
         panel.setLayout(null);
 
-        JLabel lblInicio = new JLabel("Inicio");
+        JLabel lblInicio = new JLabel("Início");
         lblInicio.setBounds(81, 53, 46, 14);
         panel.add(lblInicio);
 
@@ -1433,7 +1445,7 @@ public class MenuPrincipal extends JFrame {
         comboBoxCliente.setBounds(136, 166, 149, 22);
         panel.add(comboBoxCliente);
 
-        JLabel lblDiaria = new JLabel("Diaria");
+        JLabel lblDiaria = new JLabel("Diária");
         lblDiaria.setBounds(81, 227, 45, 14);
         panel.add(lblDiaria);
 
@@ -1455,39 +1467,57 @@ public class MenuPrincipal extends JFrame {
         JButton btnCadastrar = new JButton("Cadastrar");
         btnCadastrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                LocalDate inicio = dateChooserInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate fim = dateChooserFim.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                String quiosqueNome = (String) comboBoxQuiosque.getSelectedItem();
-                String clienteNome = (String) comboBoxCliente.getSelectedItem();
-                String diariaStr = txtDiaria.getText();
-                String totalStr = txtTotal.getText();
-                
-                // Obter o número do quiosque selecionado
-                Integer numeroQuiosque = Integer.parseInt(quiosqueNome); // Supondo que o nome é na verdade o número do quiosque
-
-                // Obter o QuiosqueEntity correto pelo número
-                QuiosqueEntity quiosque = quiosqueController.encontrarQuiosquePorNumero(numeroQuiosque);
-
-                // Obter o ClientesEntity correto
-                ClientesEntity cliente = clientesController.encontrarClientePorNome(clienteNome);
-                
-                // Converter String para BigDecimal
-                BigDecimal diaria = new BigDecimal(diariaStr);
-                BigDecimal total = new BigDecimal(totalStr);
-                
-                // Criar uma nova reserva
-                ReservasEntity novaReserva = new ReservasEntity();
-                novaReserva.setDataInicio(inicio);
-                novaReserva.setDataFim(fim);
-                novaReserva.setQuiosque(quiosque);
-                novaReserva.setCliente(cliente);
-                novaReserva.setPrecoDiaria(diaria);
-                novaReserva.setValorTotal(total);
-                
                 try {
+                    LocalDate inicio = dateChooserInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate fim = dateChooserFim.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    String quiosqueNome = (String) comboBoxQuiosque.getSelectedItem();
+                    String clienteNome = (String) comboBoxCliente.getSelectedItem();
+                    String diariaStr = txtDiaria.getText();
+                    String totalStr = txtTotal.getText();
+
+                    if (quiosqueNome.isEmpty() || clienteNome.isEmpty() || diariaStr.isEmpty() || totalStr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Preencha todos os campos.");
+                        return;
+                    }
+
+                    // Obter o número do quiosque selecionado
+                    Integer numeroQuiosque = Integer.parseInt(quiosqueNome); // Supondo que o nome é na verdade o número do quiosque
+
+                    // Obter o QuiosqueEntity correto pelo número
+                    QuiosqueEntity quiosque = quiosqueController.encontrarQuiosquePorNumero(numeroQuiosque);
+
+                    // Verificar se o quiosque já está alugado na data
+                    if (reservaController.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim)) {
+                        JOptionPane.showMessageDialog(null, "Quiosque já está alugado no período selecionado.");
+                        return;
+                    }
+
+                    // Obter o ClientesEntity correto
+                    ClientesEntity cliente = clientesController.encontrarClientePorNome(clienteNome);
+
+                    // Converter String para BigDecimal
+                    BigDecimal diaria = new BigDecimal(diariaStr);
+                    BigDecimal total = new BigDecimal(totalStr);
+
+                    // Criar uma nova reserva
+                    ReservasEntity novaReserva = new ReservasEntity();
+                    novaReserva.setDataInicio(inicio);
+                    novaReserva.setDataFim(fim);
+                    novaReserva.setQuiosque(quiosque);
+                    novaReserva.setCliente(cliente);
+                    novaReserva.setPrecoDiaria(diaria);
+                    novaReserva.setValorTotal(total);
+
                     if (!em.getTransaction().isActive()) {
-                        reservaController.criarReserva(novaReserva);
+                        em.getTransaction().begin();
+
+                        // Suas operações dentro da transação
+                        em.persist(novaReserva); // Persistir a nova reserva
+                        em.getTransaction().commit();
                         JOptionPane.showMessageDialog(null, "Reserva criada com sucesso.");
+
+                        // Limpar campos após cadastro
+                        limparCampoReserva();
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -1503,11 +1533,19 @@ public class MenuPrincipal extends JFrame {
         panel.add(btnCadastrar);
 
         JButton btnLimparCampos = new JButton("Limpar campos");
+        btnLimparCampos.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                limparCampoReserva();
+            }
+        });
         btnLimparCampos.setBounds(502, 386, 104, 23);
         panel.add(btnLimparCampos);
 
+        // Adicionar itens vazios aos comboboxes
         comboBoxQuiosque.addItem("");
         comboBoxCliente.addItem("");
+
+        // Carregar dados iniciais dos comboboxes
         carregarDados();
 
         // Adicionar DocumentListener ao campo txtDiaria para calcular o total automaticamente
@@ -1515,26 +1553,50 @@ public class MenuPrincipal extends JFrame {
             public void changedUpdate(DocumentEvent e) {
                 calcularTotal();
             }
+
             public void removeUpdate(DocumentEvent e) {
                 calcularTotal();
             }
+
             public void insertUpdate(DocumentEvent e) {
                 calcularTotal();
             }
 
-            private void calcularTotal() {
-                try {
-                    LocalDate inicio = dateChooserInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    LocalDate fim = dateChooserFim.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    long dias = ChronoUnit.DAYS.between(inicio, fim) + 1; // Incluindo o primeiro dia
-                    double diaria = Double.parseDouble(txtDiaria.getText());
-                    double total = dias * diaria;
-                    txtTotal.setText(String.valueOf(total));
-                } catch (Exception ex) {
-                    txtTotal.setText("");
-                }
+  
+            	private void calcularTotal() {
+                    try {
+                        LocalDate inicio = dateChooserInicio.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        LocalDate fim = dateChooserFim.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        long dias = ChronoUnit.DAYS.between(inicio, fim) + 1; // Incluindo o primeiro dia
+                        double diaria = Double.parseDouble(txtDiaria.getText());
+                        double total = dias * diaria;
+                        txtTotal.setText(String.valueOf(total));
+                    } catch (Exception ex) {
+                        txtTotal.setText("");
+                    }
+                
             }
         });
+    }
+
+    // Adicione este método ao controlador de reservas (ReservasController)
+    public List<ReservasEntity> obterReservasPorQuiosque(QuiosqueEntity quiosque) {
+        TypedQuery<ReservasEntity> query = em.createQuery("SELECT r FROM ReservasEntity r WHERE r.quiosque = :quiosque", ReservasEntity.class);
+        query.setParameter("quiosque", quiosque);
+        return query.getResultList();
+    }
+    
+    private void limparCampoReserva() {
+        try {
+            dateChooserInicio.setDate(null);
+            dateChooserFim.setDate(null);
+            comboBoxQuiosque.setSelectedIndex(0);
+            comboBoxCliente.setSelectedIndex(0);
+            txtDiaria.setText("");
+            txtTotal.setText("");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void carregarDados() {
@@ -1548,7 +1610,7 @@ public class MenuPrincipal extends JFrame {
             comboBoxCliente.addItem(cliente.getNome());
         }
 
-        // Carregar quiósgues disponíveis
+        // Carregar quiosques disponíveis
         List<QuiosqueEntity> quiosques = quiosqueController.findQuiosquesByDisponibilidadeStatus(true);
 
         comboBoxQuiosque.removeAllItems();
@@ -1558,11 +1620,6 @@ public class MenuPrincipal extends JFrame {
             comboBoxQuiosque.addItem(String.valueOf(quiosque.getNumero()));
         }
     }
-
-
-
-
-
     private void listarReservaPanel() {
      /*   JPanel listarReservaPanel = new JPanel();
         listarReservaPanel.setLayout(null);

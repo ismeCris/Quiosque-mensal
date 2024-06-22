@@ -1,5 +1,6 @@
 package model.service;
 
+import model.entities.QuiosqueEntity;
 import model.entities.ReservasEntity;
 import model.repositories.ResevasRepository;
 
@@ -10,7 +11,7 @@ public class ReservaService {
     private final ResevasRepository reservaRepository;
 
     public ReservaService(ResevasRepository reservaRepository) {
-        this.reservaRepository = reservaRepository;
+    	this.reservaRepository = reservaRepository;
     }
 
     public ReservasEntity criarReserva(ReservasEntity reserva) {
@@ -67,4 +68,13 @@ public class ReservaService {
     public void removerReserva(ReservasEntity reserva) {
         reservaRepository.delete(reserva.getId());
     }
+    
+    public List<ReservasEntity> obterReservasPorQuiosque(QuiosqueEntity quiosque) {
+        return reservaRepository.obterReservasPorQuiosque(quiosque);
+    }
+
+    public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim) {
+        return reservaRepository.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim);
+    }
+    
 }

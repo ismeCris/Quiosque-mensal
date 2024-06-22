@@ -2,6 +2,7 @@ package model.repositories;
 
 
 
+import model.entities.QuiosqueEntity;
 import model.entities.ReservasEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
@@ -12,7 +13,7 @@ import java.util.List;
 public class ResevasRepository {
     private EntityManager em;
 
-    public ResevasRepository() {
+    public ResevasRepository(EntityManager em) {
         this.em = Persistence.createEntityManagerFactory("bancoQuiosque").createEntityManager();
     }
 
@@ -54,4 +55,20 @@ public class ResevasRepository {
         query.setParameter("date", date);
         return query.getResultList();
     }
+    
+    public List<ReservasEntity> obterReservasPorQuiosque(QuiosqueEntity quiosque) {
+        TypedQuery<ReservasEntity> query = em.createQuery("SELECT r FROM ReservasEntity r WHERE r.quiosque = :quiosque", ReservasEntity.class);
+        query.setParameter("quiosque", quiosque);
+        return query.getResultList();
+    }
+    public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim) {
+        List<ReservasEntity> reservas = obterReservasPorQuiosque(quiosque);
+        for (ReservasEntity reserva : reservas) {
+            if (!inicio.isAfter(reserva.getDataFim()) && !fim.isBefore(reserva.getDataInicio())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }

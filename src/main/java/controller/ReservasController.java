@@ -1,5 +1,6 @@
 package controller;
 
+import model.entities.QuiosqueEntity;
 import model.entities.ReservasEntity;
 import model.service.ReservaService;
 
@@ -44,4 +45,13 @@ public class ReservasController {
     public void removerReserva(ReservasEntity reserva) {
         reservaService.removerReserva(reserva);
     }
+    
+    public List<ReservasEntity> obterReservasPorQuiosque(QuiosqueEntity quiosque) {
+        return reservaService.obterReservasPorQuiosque(quiosque);
+    }
+
+    public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim) {
+        return reservaService.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim);
+    }
+
 }

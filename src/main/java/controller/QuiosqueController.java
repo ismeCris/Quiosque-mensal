@@ -61,6 +61,22 @@ public class QuiosqueController {
         return query.getResultList();
     }
 
+ // QuiosqueController.java
+
+        public void atualizarStatusQuiosque(Integer numero, boolean disponivel) {
+            // Supondo que você tem um método para encontrar o quiosque por número
+            QuiosqueEntity quiosque = encontrarQuiosquePorNumero(numero);
+            if (quiosque != null) {
+                quiosque.setDisponibilidadeStatus(disponivel);
+                // Salvar as mudanças no banco de dados
+                // Suponha que em é o EntityManager
+                em.getTransaction().begin();
+                em.merge(quiosque);
+                em.getTransaction().commit();
+            
+        }
+    }
+
 
    
     
