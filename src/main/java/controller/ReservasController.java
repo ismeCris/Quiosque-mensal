@@ -53,5 +53,7 @@ public class ReservasController {
     public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim) {
         return reservaService.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim);
     }
+    
+    
 
 }

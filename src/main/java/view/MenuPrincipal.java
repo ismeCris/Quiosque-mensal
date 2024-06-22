@@ -58,6 +58,7 @@ import javax.persistence.TypedQuery;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
 
 
 
@@ -1579,13 +1580,7 @@ public class MenuPrincipal extends JFrame {
         });
     }
 
-    // Adicione este método ao controlador de reservas (ReservasController)
-    public List<ReservasEntity> obterReservasPorQuiosque(QuiosqueEntity quiosque) {
-        TypedQuery<ReservasEntity> query = em.createQuery("SELECT r FROM ReservasEntity r WHERE r.quiosque = :quiosque", ReservasEntity.class);
-        query.setParameter("quiosque", quiosque);
-        return query.getResultList();
-    }
-    
+
     private void limparCampoReserva() {
         try {
             dateChooserInicio.setDate(null);
@@ -1621,15 +1616,31 @@ public class MenuPrincipal extends JFrame {
         }
     }
     private void listarReservaPanel() {
-     /*   JPanel listarReservaPanel = new JPanel();
+     JPanel listarReservaPanel = new JPanel();
         listarReservaPanel.setLayout(null);
 
-        JLabel lblListarReserva = new JLabel("Listar Reservas");
-        lblListarReserva.setBounds(289, 57, 200, 14);
+        JLabel lblListarReserva = new JLabel("Gestão de Reservas");
+        lblListarReserva.setBounds(356, 11, 200, 14);
         listarReservaPanel.add(lblListarReserva);
 
 
-        contentPane.add(listarReservaPanel, "listarReservaPanel");*/
+        contentPane.add(listarReservaPanel, "listarReservaPanel");
+        
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPane.setBounds(35, 92, 897, 295);
+        listarReservaPanel.add(tabbedPane);
+        
+        JButton btnNewButton_3 = new JButton("atualizar");
+        btnNewButton_3.setBounds(833, 62, 89, 23);
+        listarReservaPanel.add(btnNewButton_3);
+        
+        JButton btnNewButton_4 = new JButton("Editar");
+        btnNewButton_4.setBounds(506, 394, 89, 23);
+        listarReservaPanel.add(btnNewButton_4);
+        
+        JButton btnNewButton_4_1 = new JButton("Excluir ");
+        btnNewButton_4_1.setBounds(392, 398, 89, 23);
+        listarReservaPanel.add(btnNewButton_4_1);
     }
 }
  
