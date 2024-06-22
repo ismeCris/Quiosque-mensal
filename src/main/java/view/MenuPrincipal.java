@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -1615,32 +1616,138 @@ public class MenuPrincipal extends JFrame {
             comboBoxQuiosque.addItem(String.valueOf(quiosque.getNumero()));
         }
     }
+   
     private void listarReservaPanel() {
-     JPanel listarReservaPanel = new JPanel();
-        listarReservaPanel.setLayout(null);
+    	 JPanel listarReservaPanel = new JPanel();
+    	 listarReservaPanel.setBackground(new Color(255, 255, 255));
+    	 listarReservaPanel.setLayout(null);
 
-        JLabel lblListarReserva = new JLabel("Gestão de Reservas");
-        lblListarReserva.setBounds(356, 11, 200, 14);
-        listarReservaPanel.add(lblListarReserva);
+         JLabel lblListarUsuarios = new JLabel("Lista de Reservas");
+         lblListarUsuarios.setFont(new Font("Tahoma", Font.PLAIN, 17));
+         lblListarUsuarios.setBounds(343, 11, 200, 20);
+         listarReservaPanel.add(lblListarUsuarios);
+         
+      // Criar o modelo da tabela com colunas definidas
+         DefaultTableModel tableModel = new DefaultTableModel();
+         tableModel.addColumn("ID");
+         tableModel.addColumn("Inicio");
+         tableModel.addColumn("Fim");
+         tableModel.addColumn("Quiosque");
+         tableModel.addColumn("Cliente");
+         tableModel.addColumn("Total");
 
+         List<ReservasEntity> reservas = reservaController.encontrarTodasReservas();
+         if (reservas != null) {
+             for (ReservasEntity reserva : reservas) {
+            	 String quiosqueNumero = String.valueOf(reserva.getQuiosque().getNumero());
+                 String clienteNome = reserva.getCliente().getNome(); 
+                 Object[] rowData = {reserva.getId(), reserva.getDataInicio(), reserva.getDataFim(), quiosqueNumero, clienteNome, reserva.getValorTotal()};
+                 tableModel.addRow(rowData);
+             }
+         }
 
-        contentPane.add(listarReservaPanel, "listarReservaPanel");
+         // Criar a tabela com o modelo criado
+         JTable table = new JTable(tableModel);
+
+         // Configurar tamanho e posição da tabela dentro do JScrollPane
+         JScrollPane scrollPane = new JScrollPane(table);
+         scrollPane.setBounds(50, 85, 880, 300);
+         listarReservaPanel.add(scrollPane);
+
+         JTextField txtId = new JTextField();
+         txtId.setBounds(50, 50, 620, 23);
+         listarReservaPanel.add(txtId);
+         txtId.setColumns(10);
+         
+
+         JButton btnListarTodos = new JButton("Atualizar");
+         btnListarTodos.setBackground(new Color(183, 219, 219));
+         btnListarTodos.setBounds(810, 50, 120, 23);
+         listarReservaPanel.add(btnListarTodos);
+         btnListarTodos.addActionListener(new ActionListener() {
+             public void actionPerformed(ActionEvent e) {
+                 tableModel.setRowCount(0);
+                 List<ReservasEntity> reservas = reservaController.encontrarTodasReservas();
+                 if (reservas != null) {
+                	  for (ReservasEntity reserva : reservas) {
+                     	 String quiosqueNumero = String.valueOf(reserva.getQuiosque().getNumero());
+                          String clienteNome = reserva.getCliente().getNome(); 
+                          Object[] rowData = {reserva.getId(), reserva.getDataInicio(), reserva.getDataFim(), quiosqueNumero, clienteNome, reserva.getValorTotal()};
+                          tableModel.addRow(rowData);
+                      }
+                 }
+             }
+         });
+         
+         JButton btnEditar_1 = new JButton("Editar");
+         btnEditar_1.addActionListener(new ActionListener() {
+         	public void actionPerformed(ActionEvent e) {
+         		   // Verificar se uma linha da tabela está selecionada
+                 int selectedRow = table.getSelectedRow();
+                 if (selectedRow == -1) {
+                     JOptionPane.showMessageDialog(null, "Selecione um usuário para editar.");
+                     return;
+                 }
+
+                 // Obter o ID do usuário selecionado
+                 Long id = (Long) table.getValueAt(selectedRow, 0);
+
+                 // Chamar método para abrir a janela de edição com o ID
+                // abrirJanelaEdicao(id);
+         	}
+         });
+         btnEditar_1.setBackground(new Color(183, 219, 219));
+         btnEditar_1.setBounds(240, 404, 120, 23);
+         listarReservaPanel.add(btnEditar_1);
+         
+         JButton btnEditar_1_1 = new JButton("Excluir");
+         btnEditar_1_1.addActionListener(new ActionListener() {
+         	public void actionPerformed(ActionEvent e) {
+         		  // Verificar se alguma linha está selecionada na tabela
+                 int selectedRow = table.getSelectedRow();
+                 if (selectedRow == -1) {
+                     JOptionPane.showMessageDialog(listarReservaPanel, "Por favor, selecione uma reserva para excluir.");
+                     return;
+                 }
+
+                 // Obter o ID do usuário selecionado
+                 long userId = (long) table.getValueAt(selectedRow, 0);
+
+                 // Confirmar a exclusão com o usuário
+                 int option = JOptionPane.showConfirmDialog(listarReservaPanel, "Tem certeza que deseja excluir este reserva?",
+                                                            "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
+                 if (option != JOptionPane.YES_OPTION) {
+                     return;
+                 }
+
+                 // Tentar excluir o usuário
+                 try {
+                     reservaController.excluirReserva(userId);
+                     JOptionPane.showMessageDialog(listarReservaPanel, "reserva excluído com sucesso.");
+                     
+                     // Atualizar a lista de usuários na tabela após a exclusão
+                     tableModel.removeRow(selectedRow);
+                 } catch (Exception ex) {
+                     JOptionPane.showMessageDialog(listarReservaPanel, "Erro ao excluir reserva: " + ex.getMessage());
+                 }
+             }
+         });
+         btnEditar_1_1.setBackground(new Color(183, 219, 219));
+         btnEditar_1_1.setBounds(414, 404, 120, 23);
+         listarReservaPanel.add(btnEditar_1_1);
+         
+      // Adiciona o painel ao contentPane
+         contentPane.add(listarReservaPanel, "listarReservaPanel");
         
-        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.setBounds(35, 92, 897, 295);
-        listarReservaPanel.add(tabbedPane);
-        
-        JButton btnNewButton_3 = new JButton("atualizar");
-        btnNewButton_3.setBounds(833, 62, 89, 23);
-        listarReservaPanel.add(btnNewButton_3);
-        
-        JButton btnNewButton_4 = new JButton("Editar");
-        btnNewButton_4.setBounds(506, 394, 89, 23);
-        listarReservaPanel.add(btnNewButton_4);
-        
-        JButton btnNewButton_4_1 = new JButton("Excluir ");
-        btnNewButton_4_1.setBounds(392, 398, 89, 23);
-        listarReservaPanel.add(btnNewButton_4_1);
-    }
+     }
+
+     private void atualizarTabelaReservas(List<ReservasEntity> reservas) {
+         // Implemente aqui a lógica para atualizar a tabela de reservas no JTabbedPane
+         // Você precisará criar uma tabela ou outro componente para mostrar as reservas
+         // Pode considerar utilizar JTable, por exemplo.
+     }
+
+     
+
 }
  

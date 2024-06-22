@@ -22,6 +22,7 @@ public class ReservaService {
         }
     }
 
+
     public ReservasEntity atualizarReserva(ReservasEntity reserva) {
         return reservaRepository.update(reserva);
     }
@@ -34,8 +35,8 @@ public class ReservaService {
         return reservaRepository.findAll();
     }
 
-    public List<ReservasEntity> encontrarReservasPorData(LocalDate data) {
-        return reservaRepository.findByDate(data);
+    public List<ReservasEntity> encontrarReservasPorData(LocalDate inicio, LocalDate fim) {
+        return reservaRepository.findByDateRange(inicio, fim);
     }
 
     public ReservasEntity encontrarReservaPorId(Long id) {

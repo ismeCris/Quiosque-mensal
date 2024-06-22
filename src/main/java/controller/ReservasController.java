@@ -30,8 +30,8 @@ public class ReservasController {
         return reservaService.encontrarTodasReservas();
     }
 
-    public List<ReservasEntity> encontrarReservasPorData(LocalDate data) {
-        return reservaService.encontrarReservasPorData(data);
+    public List<ReservasEntity> encontrarReservasPorData(LocalDate inicio, LocalDate fim) {
+        return reservaService.encontrarReservasPorData(inicio, fim);
     }
 
     public ReservasEntity encontrarReservaPorId(Long id) {
@@ -54,6 +54,6 @@ public class ReservasController {
         return reservaService.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim);
     }
     
-    
+
 
 }

@@ -48,11 +48,14 @@ public class ResevasRepository {
     public ReservasEntity findById(Long id) {
         return em.find(ReservasEntity.class, id);
     }
-
-    public List<ReservasEntity> findByDate(LocalDate date) {
-        String queryString = "SELECT r FROM ReservasEntity r WHERE :date BETWEEN r.dataInicio AND r.dataFim";
-        TypedQuery<ReservasEntity> query = em.createQuery(queryString, ReservasEntity.class);
-        query.setParameter("date", date);
+   
+    public List<ReservasEntity> findByDateRange(LocalDate inicio, LocalDate fim) {
+        TypedQuery<ReservasEntity> query = em.createQuery(
+            "SELECT r FROM ReservasEntity r WHERE r.dataInicio >= :inicio AND r.dataFim <= :fim", 
+            ReservasEntity.class
+        );
+        query.setParameter("inicio", inicio);
+        query.setParameter("fim", fim);
         return query.getResultList();
     }
     
