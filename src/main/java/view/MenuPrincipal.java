@@ -2,6 +2,7 @@ package view;
 
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import com.formdev.flatlaf.FlatLightLaf;
 import com.toedter.calendar.JDateChooser;
 
@@ -60,6 +69,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import java.sql.Date;
 
 
 
@@ -260,18 +270,55 @@ public class MenuPrincipal extends JFrame {
         homePanel.setBackground(new Color(255, 255, 255));
         homePanel.setLayout(null);
 
-        contentPane.add(homePanel, "homePanel");
-        
+        getContentPane().add(homePanel, "homePanel");
+
+        // Adiciona um botão para sair
         JButton btnNewButton = new JButton("Sair");
-        btnNewButton.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		//chamar o login e fechar o frame menu
-        	}
+        btnNewButton.addActionListener(e -> {
+            // Adicione aqui a lógica para chamar o login e fechar o frame do menu
         });
         btnNewButton.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\sair.png"));
         btnNewButton.setBounds(846, 455, 98, 36);
         homePanel.add(btnNewButton);
+
+        // Adiciona o gráfico de barras
+        CategoryDataset dataset = createDataset();
+        JFreeChart chart = createChart(dataset);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(600, 400));
+        chartPanel.setBounds(150, 100, 600, 400); // Ajuste a posição e o tamanho conforme necessário
+        homePanel.add(chartPanel);
+
+        getContentPane().add(homePanel);
     }
+
+    // Método para criar o conjunto de dados para o gráfico
+    private CategoryDataset createDataset() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(10, "Reservas", "Janeiro");
+        dataset.addValue(15, "Reservas", "Fevereiro");
+        dataset.addValue(8, "Reservas", "Março");
+        dataset.addValue(12, "Reservas", "Abril");
+        dataset.addValue(18, "Reservas", "Maio");
+        return dataset;
+    }
+
+    // Método para criar o gráfico de barras
+    private JFreeChart createChart(CategoryDataset dataset) {
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Reservas por Mês",         // Título do gráfico
+                "Mês",                      // Rótulo do eixo X
+                "Quantidade",               // Rótulo do eixo Y
+                dataset,                    // Dados para o gráfico
+                PlotOrientation.VERTICAL,   // Orientação do gráfico
+                true,                       // Incluir legenda
+                true,                       // Incluir dicas de ferramentas
+                false                       // URLs?
+        );
+        chart.setBackgroundPaint(Color.white);
+        return chart;
+    }
+
 
   //============================ FUNCIONARIO   =====================================================================================================
     private void criarUsuarioPanel() {
@@ -1489,7 +1536,7 @@ public class MenuPrincipal extends JFrame {
                     QuiosqueEntity quiosque = quiosqueController.encontrarQuiosquePorNumero(numeroQuiosque);
 
                     // Verificar se o quiosque já está alugado na data
-                    if (reservaController.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim)) {
+                    if (reservaController.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim, null)) {
                         JOptionPane.showMessageDialog(null, "Quiosque já está alugado no período selecionado.");
                         return;
                     }
@@ -1530,6 +1577,7 @@ public class MenuPrincipal extends JFrame {
                 }
             }
         });
+
 
         btnCadastrar.setBounds(629, 386, 89, 23);
         panel.add(btnCadastrar);
@@ -1653,11 +1701,15 @@ public class MenuPrincipal extends JFrame {
          JScrollPane scrollPane = new JScrollPane(table);
          scrollPane.setBounds(50, 85, 880, 300);
          listarReservaPanel.add(scrollPane);
+         
+         JDateChooser dateChooserInicioFiltro = new JDateChooser();
+         dateChooserInicioFiltro.setBounds(105, 54, 150, 20);
+         listarReservaPanel.add(dateChooserInicioFiltro);
 
-         JTextField txtId = new JTextField();
-         txtId.setBounds(50, 50, 620, 23);
-         listarReservaPanel.add(txtId);
-         txtId.setColumns(10);
+         JDateChooser dateChooserFimFiltro = new JDateChooser();
+         dateChooserFimFiltro.setBounds(343, 54, 150, 20);
+         listarReservaPanel.add(dateChooserFimFiltro);
+
          
 
          JButton btnListarTodos = new JButton("Atualizar");
@@ -1693,7 +1745,7 @@ public class MenuPrincipal extends JFrame {
                  Long id = (Long) table.getValueAt(selectedRow, 0);
 
                  // Chamar método para abrir a janela de edição com o ID
-                // abrirJanelaEdicao(id);
+                 EdicaoReserva( id);
          	}
          });
          btnEditar_1.setBackground(new Color(183, 219, 219));
@@ -1738,16 +1790,172 @@ public class MenuPrincipal extends JFrame {
          
       // Adiciona o painel ao contentPane
          contentPane.add(listarReservaPanel, "listarReservaPanel");
+         
+         JButton btnBuscar = new JButton("Buscar");
+         btnBuscar.addActionListener(new ActionListener() {
+        	    public void actionPerformed(ActionEvent e) {
+        	        // Obter as datas dos JDateChooser
+        	        java.util.Date inicioUtil = dateChooserInicioFiltro.getDate();
+        	        java.util.Date fimUtil = dateChooserFimFiltro.getDate();
+
+        	        // Verificar se as datas são diferentes de null
+        	        if (inicioUtil == null || fimUtil == null) {
+        	            JOptionPane.showMessageDialog(listarReservaPanel, "Por favor, selecione uma data de início e uma data de fim.");
+        	            return; // Encerra o método caso alguma data seja nula
+        	        }
+
+        	        // Converter java.util.Date para java.sql.Date (se necessário)
+        	        java.sql.Date inicio = new java.sql.Date(inicioUtil.getTime());
+        	        java.sql.Date fim = new java.sql.Date(fimUtil.getTime());
+
+        	        // Limpar a tabela antes de preenchê-la novamente
+        	        tableModel.setRowCount(0);
+
+        	        // Buscar reservas no período selecionado
+        	        List<ReservasEntity> reservas = reservaController.encontrarReservasPorData(inicio.toLocalDate(), fim.toLocalDate());
+        	        if (reservas != null) {
+        	            for (ReservasEntity reserva : reservas) {
+        	                String quiosqueNumero = String.valueOf(reserva.getQuiosque().getNumero());
+        	                String clienteNome = reserva.getCliente().getNome();
+        	                Object[] rowData = {reserva.getId(), reserva.getDataInicio(), reserva.getDataFim(), quiosqueNumero, clienteNome, reserva.getValorTotal()};
+        	                tableModel.addRow(rowData);
+        	            }
+        	        }
+        	    }
+        	});
+
+
+         btnBuscar.setBackground(new Color(183, 219, 219));
+         btnBuscar.setBounds(503, 51, 120, 23);
+         listarReservaPanel.add(btnBuscar);
+         
+         JLabel lblNewLabel_1 = new JLabel("Inicio");
+         lblNewLabel_1.setBounds(49, 54, 46, 14);
+         listarReservaPanel.add(lblNewLabel_1);
+         
+         JLabel lblNewLabel_1_1 = new JLabel("fim");
+         lblNewLabel_1_1.setBounds(287, 60, 46, 14);
+         listarReservaPanel.add(lblNewLabel_1_1);
         
      }
+    
+    private void EdicaoReserva(Long id) {
+        ReservasEntity reserva = reservaController.encontrarReservaPorId(id);
+        if (reserva != null) {
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Editar Reserva");
+            dialog.setSize(400, 300);
+            dialog.setModal(true);
 
-     private void atualizarTabelaReservas(List<ReservasEntity> reservas) {
-         // Implemente aqui a lógica para atualizar a tabela de reservas no JTabbedPane
-         // Você precisará criar uma tabela ou outro componente para mostrar as reservas
-         // Pode considerar utilizar JTable, por exemplo.
-     }
+            JPanel editarPanel = new JPanel();
+            editarPanel.setLayout(null);
 
-     
+            JLabel lblEditarReserva = new JLabel("Editar Reserva");
+            lblEditarReserva.setBounds(50, 20, 200, 14);
+            editarPanel.add(lblEditarReserva);
+
+            JLabel lblQuiosque = new JLabel("Quiosque:");
+            lblQuiosque.setBounds(50, 50, 80, 14);
+            editarPanel.add(lblQuiosque);
+
+            JComboBox<String> cbQuiosqueEdit = new JComboBox<>();
+            for (QuiosqueEntity quiosque : quiosqueController.findQuiosquesByDisponibilidadeStatus(true)) {
+                cbQuiosqueEdit.addItem(String.valueOf(quiosque.getNumero()));
+            }
+            cbQuiosqueEdit.setSelectedItem(String.valueOf(reserva.getQuiosque().getNumero()));
+            cbQuiosqueEdit.setBounds(140, 47, 200, 20);
+            editarPanel.add(cbQuiosqueEdit);
+
+            JLabel lblCliente = new JLabel("Cliente:");
+            lblCliente.setBounds(50, 80, 80, 14);
+            editarPanel.add(lblCliente);
+
+            JComboBox<String> cbClienteEdit = new JComboBox<>();
+            for (ClientesEntity cliente : clientesController.findClientesByUserStatus(true)) {
+                cbClienteEdit.addItem(cliente.getNome());
+            }
+            cbClienteEdit.setSelectedItem(reserva.getCliente().getNome());
+            cbClienteEdit.setBounds(140, 77, 200, 20);
+            editarPanel.add(cbClienteEdit);
+
+            JLabel lblDataInicio = new JLabel("Data Início:");
+            lblDataInicio.setBounds(50, 110, 80, 14);
+            editarPanel.add(lblDataInicio);
+
+            JDateChooser dateChooserInicioEdit = new JDateChooser(Date.from(reserva.getDataInicio().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            dateChooserInicioEdit.setBounds(140, 107, 200, 20);
+            editarPanel.add(dateChooserInicioEdit);
+
+            JLabel lblDataFim = new JLabel("Data Fim:");
+            lblDataFim.setBounds(50, 140, 80, 14);
+            editarPanel.add(lblDataFim);
+
+            JDateChooser dateChooserFimEdit = new JDateChooser(Date.from(reserva.getDataFim().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            dateChooserFimEdit.setBounds(140, 137, 200, 20);
+            editarPanel.add(dateChooserFimEdit);
+
+            JLabel lblValorTotal = new JLabel("Valor Total:");
+            lblValorTotal.setBounds(50, 170, 80, 14);
+            editarPanel.add(lblValorTotal);
+
+            JTextField txtValorTotalEdit = new JTextField(reserva.getValorTotal().toString());
+            txtValorTotalEdit.setBounds(140, 167, 200, 20);
+            editarPanel.add(txtValorTotalEdit);
+
+            JButton btnSalvar = new JButton("Salvar");
+            btnSalvar.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        reserva.setQuiosque(quiosqueController.encontrarQuiosquePorNumero(Integer.parseInt((String) cbQuiosqueEdit.getSelectedItem())));
+                        reserva.setCliente(clientesController.encontrarClientePorNome((String) cbClienteEdit.getSelectedItem()));
+
+                        java.util.Date dataInicioUtilDate = dateChooserInicioEdit.getDate();
+                        java.sql.Date dataInicioSqlDate = new java.sql.Date(dataInicioUtilDate.getTime());
+                        reserva.setDataInicio(dataInicioSqlDate.toLocalDate());
+
+                        java.util.Date dataFimUtilDate = dateChooserFimEdit.getDate();
+                        java.sql.Date dataFimSqlDate = new java.sql.Date(dataFimUtilDate.getTime());
+                        reserva.setDataFim(dataFimSqlDate.toLocalDate());
+
+                        BigDecimal valorTotal = new BigDecimal(txtValorTotalEdit.getText());
+                        reserva.setValorTotal(valorTotal);
+
+                        QuiosqueEntity quiosque = reserva.getQuiosque();
+                        LocalDate inicio = reserva.getDataInicio();
+                        LocalDate fim = reserva.getDataFim();
+
+                        if (reservaController.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim, reserva.getId())) {
+                            JOptionPane.showMessageDialog(null, "Quiosque já está alugado no período selecionado.");
+                            return;
+                        }
+
+                        reservaController.atualizarReserva(reserva);
+                        JOptionPane.showMessageDialog(null, "Reserva atualizada com sucesso.");
+                        dialog.dispose();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Erro ao atualizar reserva: " + ex.getMessage());
+                    }
+                }
+            });
+            btnSalvar.setBounds(50, 200, 100, 23);
+            editarPanel.add(btnSalvar);
+
+            JButton btnCancelar = new JButton("Cancelar");
+            btnCancelar.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    dialog.dispose();
+                }
+            });
+            btnCancelar.setBounds(160, 200, 100, 23);
+            editarPanel.add(btnCancelar);
+
+            dialog.getContentPane().add(editarPanel);
+            dialog.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Reserva não encontrada.");
+        }
+    }
+
 
 }
  

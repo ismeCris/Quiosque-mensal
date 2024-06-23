@@ -64,14 +64,28 @@ public class ResevasRepository {
         query.setParameter("quiosque", quiosque);
         return query.getResultList();
     }
-    public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim) {
-        List<ReservasEntity> reservas = obterReservasPorQuiosque(quiosque);
-        for (ReservasEntity reserva : reservas) {
-            if (!inicio.isAfter(reserva.getDataFim()) && !fim.isBefore(reserva.getDataInicio())) {
-                return true;
-            }
-        }
-        return false;
+    
+    public List<ReservasEntity> obterReservasPorQuiosque(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim, Long reservaIdAtual) {
+        TypedQuery<ReservasEntity> query = em.createQuery(
+            "SELECT r FROM ReservasEntity r WHERE r.quiosque = :quiosque " +
+            "AND NOT (:inicio > r.dataFim OR :fim < r.dataInicio) " +
+            "AND (r.id != :reservaIdAtual OR :reservaIdAtual IS NULL)", 
+            ReservasEntity.class
+        );
+        query.setParameter("quiosque", quiosque);
+        query.setParameter("inicio", inicio);
+        query.setParameter("fim", fim);
+        query.setParameter("reservaIdAtual", reservaIdAtual);
+        return query.getResultList();
     }
+    public List<ReservasEntity> obterReservasPorPeriodo(LocalDate inicio, LocalDate fim) {
+        TypedQuery<ReservasEntity> query = em.createQuery("SELECT r FROM ReservasEntity r WHERE r.dataInicio >= :inicio AND r.dataFim <= :fim", ReservasEntity.class);
+        query.setParameter("inicio", inicio);
+        query.setParameter("fim", fim);
+        return query.getResultList();
+    }
+
+
+
     
 }

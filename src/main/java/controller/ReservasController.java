@@ -49,11 +49,13 @@ public class ReservasController {
     public List<ReservasEntity> obterReservasPorQuiosque(QuiosqueEntity quiosque) {
         return reservaService.obterReservasPorQuiosque(quiosque);
     }
-
-    public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim) {
-        return reservaService.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim);
+    public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim, Long reservaIdAtual) {
+        return reservaService.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim, reservaIdAtual);
     }
     
 
+    public List<ReservasEntity> encontrarReservasPorPeriodo(LocalDate inicio, LocalDate fim) {
+        return reservaService.encontrarReservasPorData(inicio, fim);
+    }
 
 }

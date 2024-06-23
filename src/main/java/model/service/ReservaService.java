@@ -74,8 +74,13 @@ public class ReservaService {
         return reservaRepository.obterReservasPorQuiosque(quiosque);
     }
 
-    public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim) {
-        return reservaRepository.isQuiosqueAlugadoNoPeriodo(quiosque, inicio, fim);
+    public boolean isQuiosqueAlugadoNoPeriodo(QuiosqueEntity quiosque, LocalDate inicio, LocalDate fim, Long reservaIdAtual) {
+        List<ReservasEntity> reservasConflitantes = reservaRepository.obterReservasPorQuiosque(quiosque, inicio, fim, reservaIdAtual);
+        return !reservasConflitantes.isEmpty();
+    }
+    
+    public List<ReservasEntity> encontrarReservasPorPeriodo(LocalDate inicio, LocalDate fim) {
+        return reservaRepository.obterReservasPorPeriodo(inicio, fim);
     }
     
 }
