@@ -40,6 +40,7 @@ public class ResevasRepository {
         em.getTransaction().commit();
     }
 
+
     public List<ReservasEntity> findAll() {
         TypedQuery<ReservasEntity> query = em.createQuery("SELECT r FROM ReservasEntity r", ReservasEntity.class);
         return query.getResultList();

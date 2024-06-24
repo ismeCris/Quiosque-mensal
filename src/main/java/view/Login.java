@@ -52,7 +52,7 @@ public class Login extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1050, 624);
         contentPane = new JPanel();
-        contentPane.setBackground(new Color(0x82A69C));
+        contentPane.setBackground(new Color(207, 224, 233));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
@@ -69,8 +69,8 @@ public class Login extends JFrame {
 
      // Crie um TransparentPanel com bordas arredondadas e transparência
         TransparentTextField panel = new TransparentTextField(0.8f); // 50% de transparência
-        panel.setBackground(new Color(0xDBDDB6)); // Cor de fundo #F3EFDE
-        panel.setBounds(176, 79, 695, 421);
+        panel.setBackground(new Color(61, 106, 131)); // Cor de fundo #F3EFDE
+        panel.setBounds(167, 79, 704, 421);
         contentPane.add(panel);
         panel.setLayout(null);
         panel.setBorder(null); // Remove a borda do JPanel
@@ -84,7 +84,7 @@ public class Login extends JFrame {
         txtnome.setForeground(new Color(0, 0, 0));
         txtnome.setBounds(67, 127, 268, 34);
         panel.add(txtnome);
-        txtnome.setBackground(new Color(237, 228, 228));
+        txtnome.setBackground(new Color(255, 245, 240));
         txtnome.setColumns(10);
 
     
@@ -96,7 +96,7 @@ public class Login extends JFrame {
         txtSenha.setBounds(67, 218, 268, 34);
         panel.add(txtSenha);
         txtSenha.setColumns(10);
-        txtSenha.setBackground(new Color(237, 228, 228));
+        txtSenha.setBackground(new Color(255, 245, 240));
 
        
 
@@ -120,7 +120,7 @@ public class Login extends JFrame {
                 }
             }
         });
-        btnNewButton.setBackground(new Color(33, 65, 65));
+        btnNewButton.setBackground(new Color(43, 85, 85));
     }
 
     

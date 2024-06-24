@@ -29,6 +29,7 @@ public class ReservasEntity {
 
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
+    
 
     public ReservasEntity() {
 
@@ -98,6 +99,7 @@ public class ReservasEntity {
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
+
 
 }
 

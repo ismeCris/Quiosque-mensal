@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
@@ -149,10 +151,9 @@ public class MenuPrincipal extends JFrame {
      
 
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(new Color(215, 235, 255));
+        menuBar.setBackground(new Color(61, 106, 131));
         setJMenuBar(menuBar);
 
-        // Add "Home" button to the menu bar
         JButton btnHome = new JButton("Inicio");
         btnHome.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\lar.png"));
         menuBar.add(btnHome);
@@ -267,63 +268,84 @@ public class MenuPrincipal extends JFrame {
 
     private void homePanel() {
         JPanel homePanel = new JPanel();
-        homePanel.setBackground(new Color(255, 255, 255));
+        homePanel.setBackground(new Color(207, 224, 233));
         homePanel.setLayout(null);
 
         getContentPane().add(homePanel, "homePanel");
 
-        // Adiciona um botão para sair
+        // Add a button to exit
         JButton btnNewButton = new JButton("Sair");
+        btnNewButton.setBackground(new Color(43, 85, 85));
         btnNewButton.addActionListener(e -> {
-            // Adicione aqui a lógica para chamar o login e fechar o frame do menu
+            // Add logic to call the login and close the menu frame
         });
         btnNewButton.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\sair.png"));
         btnNewButton.setBounds(846, 455, 98, 36);
         homePanel.add(btnNewButton);
 
-        // Adiciona o gráfico de barras
+        // Add the bar chart
         CategoryDataset dataset = createDataset();
         JFreeChart chart = createChart(dataset);
         ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setBackground(new Color(61, 106, 131));
         chartPanel.setPreferredSize(new Dimension(600, 400));
-        chartPanel.setBounds(150, 100, 600, 400); // Ajuste a posição e o tamanho conforme necessário
+        chartPanel.setBounds(150, 100, 600, 400); // Adjust the position and size as necessary
         homePanel.add(chartPanel);
 
-        getContentPane().add(homePanel);
+        contentPane.add(homePanel, "homePanel");
     }
 
-    // Método para criar o conjunto de dados para o gráfico
+    // Method to create the dataset for the chart
     private CategoryDataset createDataset() {
+        List<ReservasEntity> reservas = fetchReservasFromDatabase();
+        return createDatasetFromReservas(reservas);
+    }
+
+    // Method to fetch reservations from the database
+    private List<ReservasEntity> fetchReservasFromDatabase() {
+        return em.createQuery("SELECT r FROM ReservasEntity r", ReservasEntity.class).getResultList();
+    }
+
+    // Method to create the dataset from reservations
+    private CategoryDataset createDatasetFromReservas(List<ReservasEntity> reservas) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(10, "Reservas", "Janeiro");
-        dataset.addValue(15, "Reservas", "Fevereiro");
-        dataset.addValue(8, "Reservas", "Março");
-        dataset.addValue(12, "Reservas", "Abril");
-        dataset.addValue(18, "Reservas", "Maio");
+        int[] monthlyReservations = new int[12];
+
+        for (ReservasEntity reserva : reservas) {
+            int month = reserva.getDataInicio().getMonthValue() - 1; // Assuming getDataInicio returns a LocalDate
+            if (month >= 0 && month < 12) {
+                monthlyReservations[month]++;
+            }
+        }
+
+        String[] months = { "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" };
+
+        for (int i = 0; i < monthlyReservations.length; i++) {
+            dataset.addValue(monthlyReservations[i], "Reservas", months[i]);
+        }
+
         return dataset;
     }
 
-    // Método para criar o gráfico de barras
+    // Method to create the bar chart
     private JFreeChart createChart(CategoryDataset dataset) {
         JFreeChart chart = ChartFactory.createBarChart(
-                "Reservas por Mês",         // Título do gráfico
-                "Mês",                      // Rótulo do eixo X
-                "Quantidade",               // Rótulo do eixo Y
-                dataset,                    // Dados para o gráfico
-                PlotOrientation.VERTICAL,   // Orientação do gráfico
-                true,                       // Incluir legenda
-                true,                       // Incluir dicas de ferramentas
+                "Reservas por Mês",         // Chart title
+                "Mês",                      // X-axis label
+                "Quantidade",               // Y-axis label
+                dataset,                    // Data for the chart
+                PlotOrientation.VERTICAL,   // Chart orientation
+                true,                       // Include legend
+                true,                       // Include tooltips
                 false                       // URLs?
         );
         chart.setBackgroundPaint(Color.white);
         return chart;
     }
-
-
   //============================ FUNCIONARIO   =====================================================================================================
     private void criarUsuarioPanel() {
         JPanel criarUsuarioPanel = new JPanel();
-        criarUsuarioPanel.setBackground(new Color(31, 61, 61));
+        criarUsuarioPanel.setBackground(new Color(207, 224, 233));
         criarUsuarioPanel.setLayout(null);
 
         JLabel lblNome = new JLabel("Nome:");
@@ -331,6 +353,7 @@ public class MenuPrincipal extends JFrame {
         criarUsuarioPanel.add(lblNome);
 
         txtNome = new JTextField();
+        txtNome.setBackground(new Color(255, 245, 240));
         txtNome.setBounds(370, 147, 200, 20);
         criarUsuarioPanel.add(txtNome);
         txtNome.setColumns(10);
@@ -340,6 +363,7 @@ public class MenuPrincipal extends JFrame {
         criarUsuarioPanel.add(lblEmail);
 
         txtEmail = new JTextField();
+        txtEmail.setBackground(new Color(255, 245, 240));
         txtEmail.setBounds(370, 189, 200, 20);
         criarUsuarioPanel.add(txtEmail);
         txtEmail.setColumns(10);
@@ -349,6 +373,7 @@ public class MenuPrincipal extends JFrame {
         criarUsuarioPanel.add(lblSenha);
 
         txtSenha = new JTextField();
+        txtSenha.setBackground(new Color(255, 245, 240));
         txtSenha.setBounds(370, 226, 200, 20);
         criarUsuarioPanel.add(txtSenha);
         txtSenha.setColumns(10);
@@ -358,6 +383,7 @@ public class MenuPrincipal extends JFrame {
         criarUsuarioPanel.add(lblTelefone);
 
         txtTelefone = new JTextField();
+        txtTelefone.setBackground(new Color(255, 245, 240));
         txtTelefone.setBounds(370, 268, 200, 20);
         criarUsuarioPanel.add(txtTelefone);
         txtTelefone.setColumns(10);
@@ -367,13 +393,14 @@ public class MenuPrincipal extends JFrame {
         criarUsuarioPanel.add(lblCargo);
 
         JComboBox<String> cbCargo = new JComboBox<>();
+        cbCargo.setBackground(new Color(255, 245, 240));
         cbCargo.setModel(new DefaultComboBoxModel<String>(new String[]{"Caixa", "Atendente","Administrador"}));
         cbCargo.setBounds(370, 319, 200, 22);
         criarUsuarioPanel.add(cbCargo);
 
         JButton btnSalvar = new JButton("Salvar"); 
-        btnSalvar.setBackground(new Color(49, 98, 98));
-        btnSalvar.setBounds(454, 423, 100, 30); 
+        btnSalvar.setBackground(new Color(61, 106, 131));
+        btnSalvar.setBounds(470, 423, 100, 30); 
         criarUsuarioPanel.add(btnSalvar);
         btnSalvar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -411,7 +438,7 @@ public class MenuPrincipal extends JFrame {
         contentPane.add(criarUsuarioPanel, "criarUsuarioPanel");
         
         JButton btnLimparCampos = new JButton("Limpar Campos");
-        btnLimparCampos.setBackground(new Color(49, 98, 98));
+        btnLimparCampos.setBackground(new Color(61, 106, 131));
         btnLimparCampos.setBounds(300, 423, 100, 30); 
         criarUsuarioPanel.add(btnLimparCampos);
         btnLimparCampos.addActionListener(new ActionListener() {
@@ -728,7 +755,7 @@ public class MenuPrincipal extends JFrame {
         criarQuiosquePanel.add(lblStatus);
 
         JComboBox<String> cbStatus = new JComboBox<>();
-        cbStatus.setModel(new DefaultComboBoxModel<>(new String[]{"livre", "ocupado"}));
+        cbStatus.setModel(new DefaultComboBoxModel<>(new String[]{"Ativo", "Desativado"}));
         cbStatus.setBounds(337, 229, 188, 22);
         criarQuiosquePanel.add(cbStatus);
 
@@ -870,7 +897,7 @@ public class MenuPrincipal extends JFrame {
                 List<QuiosqueEntity> quiosques = quiosqueController.findAll();
                 if (quiosques != null) {
                     for (QuiosqueEntity quiosque : quiosques) {
-                        String disponibilidade = quiosque.getDisponibilidadeStatus() ? "Disponível" : "Ocupado";
+                        String disponibilidade = quiosque.getDisponibilidadeStatus() ? "Ativo" : "Desativado";
                         Object[] rowData = {quiosque.getId(), quiosque.getNumero(), quiosque.getLocalidade(), disponibilidade};
                         tableModel.addRow(rowData);
                     }
@@ -996,7 +1023,7 @@ public class MenuPrincipal extends JFrame {
             lblStatus.setBounds(50, 140, 80, 14);
             editarPanel.add(lblStatus);
 
-            JComboBox<String> cbStatusEdit = new JComboBox<>(new String[]{"livre", "ocupado"});
+            JComboBox<String> cbStatusEdit = new JComboBox<>(new String[]{"Ativo", "Desativado"});
             cbStatusEdit.setSelectedItem(quiosque.getDisponibilidadeStatus());
             cbStatusEdit.setBounds(140, 137, 200, 20);
             editarPanel.add(cbStatusEdit);
@@ -1596,7 +1623,7 @@ public class MenuPrincipal extends JFrame {
         comboBoxCliente.addItem("");
 
         // Carregar dados iniciais dos comboboxes
-        carregarDados();
+        carregarDados(comboBoxQuiosque, comboBoxCliente);
 
         // Adicionar DocumentListener ao campo txtDiaria para calcular o total automaticamente
         txtDiaria.getDocument().addDocumentListener(new DocumentListener() {
@@ -1627,6 +1654,14 @@ public class MenuPrincipal extends JFrame {
                 
             }
         });
+        
+        fazerReservaPanel.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+            	carregarDados(comboBoxQuiosque, comboBoxCliente); // Atualizar dados ao exibir o painel
+            }
+        });
+
     }
 
 
@@ -1643,27 +1678,36 @@ public class MenuPrincipal extends JFrame {
         }
     }
 
-    private void carregarDados() {
-        // Carregar clientes ativos
-        List<ClientesEntity> clientes = clientesController.findClientesByUserStatus(true);
+    private void carregarDados(JComboBox<String> comboBoxQuiosque, JComboBox<String> comboBoxCliente) {
+        try {
+            // Carregar clientes ativos
+            List<ClientesEntity> clientes = clientesController.findClientesByUserStatus(true);
 
-        comboBoxCliente.removeAllItems();
-        comboBoxCliente.addItem(""); // Adicionar um item vazio opcionalmente
+            SwingUtilities.invokeLater(() -> {
+                comboBoxCliente.removeAllItems();
+                comboBoxCliente.addItem(""); // Adicionar um item vazio opcionalmente
+                for (ClientesEntity cliente : clientes) {
+                    comboBoxCliente.addItem(cliente.getNome());
+                }
+            });
 
-        for (ClientesEntity cliente : clientes) {
-            comboBoxCliente.addItem(cliente.getNome());
-        }
+            // Carregar quiosques disponíveis
+            List<QuiosqueEntity> quiosques = quiosqueController.findQuiosquesByDisponibilidadeStatus(true);
 
-        // Carregar quiosques disponíveis
-        List<QuiosqueEntity> quiosques = quiosqueController.findQuiosquesByDisponibilidadeStatus(true);
+            SwingUtilities.invokeLater(() -> {
+                comboBoxQuiosque.removeAllItems();
+                comboBoxQuiosque.addItem(""); // Adicionar um item vazio opcionalmente
+                for (QuiosqueEntity quiosque : quiosques) {
+                    comboBoxQuiosque.addItem(String.valueOf(quiosque.getNumero()));
+                }
+            });
 
-        comboBoxQuiosque.removeAllItems();
-        comboBoxQuiosque.addItem(""); // Adicionar um item vazio opcionalmente
-
-        for (QuiosqueEntity quiosque : quiosques) {
-            comboBoxQuiosque.addItem(String.valueOf(quiosque.getNumero()));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro ao carregar dados: " + ex.getMessage());
         }
     }
+
    
     private void listarReservaPanel() {
     	 JPanel listarReservaPanel = new JPanel();
