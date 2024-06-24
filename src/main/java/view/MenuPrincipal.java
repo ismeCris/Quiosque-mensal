@@ -277,7 +277,8 @@ public class MenuPrincipal extends JFrame {
         JButton btnNewButton = new JButton("Sair");
         btnNewButton.setBackground(new Color(43, 85, 85));
         btnNewButton.addActionListener(e -> {
-            // Add logic to call the login and close the menu frame
+        	  Login loginForm = new Login();
+              loginForm.setVisible(true);
         });
         btnNewButton.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\sair.png"));
         btnNewButton.setBounds(846, 455, 98, 36);
@@ -463,7 +464,7 @@ public class MenuPrincipal extends JFrame {
   
     private void listarUsuarioPanel() {
         JPanel listarUsuarioPanel = new JPanel();
-        listarUsuarioPanel.setBackground(new Color(255, 255, 255));
+        listarUsuarioPanel.setBackground(new Color(207, 224, 233));
         listarUsuarioPanel.setLayout(null);
 
         JLabel lblListarUsuarios = new JLabel("Lista de Usuários");
@@ -496,13 +497,14 @@ public class MenuPrincipal extends JFrame {
         listarUsuarioPanel.add(scrollPane);
 
         JTextField txtId = new JTextField();
+        txtId.setBackground(new Color(255, 245, 240));
         txtId.setBounds(50, 50, 620, 23);
         listarUsuarioPanel.add(txtId);
         txtId.setColumns(10);
 
         // Botão para buscar por ID
         JButton btnBuscarPorId = new JButton("Buscar por ID");
-        btnBuscarPorId.setBackground(new Color(183, 219, 219));
+        btnBuscarPorId.setBackground(new Color(61, 106, 131));
         btnBuscarPorId.setBounds(680, 50, 120, 23);
         listarUsuarioPanel.add(btnBuscarPorId);
         btnBuscarPorId.addActionListener(new ActionListener() {
@@ -533,7 +535,7 @@ public class MenuPrincipal extends JFrame {
 
 
         JButton btnListarTodos = new JButton("Atualizar");
-        btnListarTodos.setBackground(new Color(183, 219, 219));
+        btnListarTodos.setBackground(new Color(61, 106, 131));
         btnListarTodos.setBounds(810, 50, 120, 23);
         listarUsuarioPanel.add(btnListarTodos);
         btnListarTodos.addActionListener(new ActionListener() {
@@ -569,7 +571,7 @@ public class MenuPrincipal extends JFrame {
                 abrirJanelaEdicao(id);
         	}
         });
-        btnEditar_1.setBackground(new Color(183, 219, 219));
+        btnEditar_1.setBackground(new Color(61, 106, 131));
         btnEditar_1.setBounds(240, 404, 120, 23);
         listarUsuarioPanel.add(btnEditar_1);
         
@@ -605,7 +607,7 @@ public class MenuPrincipal extends JFrame {
                 }
             }
         });
-        btnEditar_1_1.setBackground(new Color(183, 219, 219));
+        btnEditar_1_1.setBackground(new Color(61, 106, 131));
         btnEditar_1_1.setBounds(414, 404, 120, 23);
         listarUsuarioPanel.add(btnEditar_1_1);
     }
@@ -716,6 +718,7 @@ public class MenuPrincipal extends JFrame {
 
     private void criarQuiosquePanel() {
         JPanel criarQuiosquePanel = new JPanel();
+        criarQuiosquePanel.setBackground(new Color(207, 224, 233));
         criarQuiosquePanel.setLayout(null);
 
         JLabel lblCriarQuiosque = new JLabel("Criar Quiosque");
@@ -729,6 +732,7 @@ public class MenuPrincipal extends JFrame {
         criarQuiosquePanel.add(Lbnum);
 
         num = new JTextField();
+        num.setBackground(new Color(255, 245, 240));
         num.setBounds(337, 96, 188, 20);
         criarQuiosquePanel.add(num);
         num.setColumns(10);
@@ -738,6 +742,7 @@ public class MenuPrincipal extends JFrame {
         criarQuiosquePanel.add(lbLocalidade);
 
         local = new JTextField();
+        local.setBackground(new Color(255, 245, 240));
         local.setBounds(337, 143, 188, 20);
         criarQuiosquePanel.add(local);
         local.setColumns(10);
@@ -747,6 +752,7 @@ public class MenuPrincipal extends JFrame {
         criarQuiosquePanel.add(lbcapacidade);
 
         JSpinner capacidade = new JSpinner();
+        capacidade.setBackground(new Color(255, 245, 240));
         capacidade.setBounds(337, 185, 188, 20);
         criarQuiosquePanel.add(capacidade);
 
@@ -755,11 +761,13 @@ public class MenuPrincipal extends JFrame {
         criarQuiosquePanel.add(lblStatus);
 
         JComboBox<String> cbStatus = new JComboBox<>();
+        cbStatus.setBackground(new Color(255, 245, 240));
         cbStatus.setModel(new DefaultComboBoxModel<>(new String[]{"Ativo", "Desativado"}));
         cbStatus.setBounds(337, 229, 188, 22);
         criarQuiosquePanel.add(cbStatus);
 
         JButton btnNewButton_1 = new JButton("Salvar");
+        btnNewButton_1.setBackground(new Color(61, 106, 131));
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String numero = num.getText();
@@ -801,6 +809,7 @@ public class MenuPrincipal extends JFrame {
         criarQuiosquePanel.add(btnNewButton_1);
 
         JButton btnNewButton_2 = new JButton("Limpar campo");
+        btnNewButton_2.setBackground(new Color(61, 106, 131));
         btnNewButton_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	limparCamposquiosque();
@@ -820,7 +829,7 @@ public class MenuPrincipal extends JFrame {
 
     private void gerenciarQuiosquePanel() {
         JPanel gerenciarQuiosquePanel = new JPanel();
-        gerenciarQuiosquePanel.setBackground(new Color(255, 255, 255));
+        gerenciarQuiosquePanel.setBackground(new Color(207, 224, 233));
         gerenciarQuiosquePanel.setLayout(null);
 
         JLabel lblListarQuiosques = new JLabel("Lista de Quiosques");
@@ -852,13 +861,14 @@ public class MenuPrincipal extends JFrame {
         gerenciarQuiosquePanel.add(scrollPane);
 
         JTextField txtId = new JTextField();
+        txtId.setBackground(new Color(255, 245, 240));
         txtId.setBounds(50, 50, 620, 23);
         gerenciarQuiosquePanel.add(txtId);
         txtId.setColumns(10);
 
         // Botão para buscar por ID
         JButton btnBuscarPorId = new JButton("Buscar por ID");
-        btnBuscarPorId.setBackground(new Color(183, 219, 219));
+        btnBuscarPorId.setBackground(new Color(61, 106, 131));
         btnBuscarPorId.setBounds(680, 50, 120, 23);
         gerenciarQuiosquePanel.add(btnBuscarPorId);
         btnBuscarPorId.addActionListener(new ActionListener() {
@@ -888,7 +898,7 @@ public class MenuPrincipal extends JFrame {
         });
 
         JButton btnListarTodos = new JButton("Atualizar");
-        btnListarTodos.setBackground(new Color(183, 219, 219));
+        btnListarTodos.setBackground(new Color(61, 106, 131));
         btnListarTodos.setBounds(810, 50, 120, 23);
         gerenciarQuiosquePanel.add(btnListarTodos);
         btnListarTodos.addActionListener(new ActionListener() {
@@ -909,7 +919,7 @@ public class MenuPrincipal extends JFrame {
 
         // Botão Editar
         JButton btnEditar = new JButton("Editar");
-        btnEditar.setBackground(new Color(183, 219, 219));
+        btnEditar.setBackground(new Color(61, 106, 131));
         btnEditar.setBounds(240, 404, 120, 23);
         gerenciarQuiosquePanel.add(btnEditar);
         btnEditar.addActionListener(new ActionListener() {
@@ -931,7 +941,7 @@ public class MenuPrincipal extends JFrame {
 
      // Botão Excluir
         JButton btnExcluir = new JButton("Excluir");
-        btnExcluir.setBackground(new Color(183, 219, 219));
+        btnExcluir.setBackground(new Color(61, 106, 131));
         btnExcluir.setBounds(414, 404, 120, 23);
         gerenciarQuiosquePanel.add(btnExcluir);
         btnExcluir.addActionListener(new ActionListener() {
@@ -1080,6 +1090,7 @@ public class MenuPrincipal extends JFrame {
   //============================ Clientes   =====================================================================================================
     private void criarClientePanel() {
         JPanel criarClientePanel = new JPanel();
+        criarClientePanel.setBackground(new Color(207, 224, 233));
         criarClientePanel.setLayout(null);
 
         JLabel lblCriarCliente = new JLabel("Criar Cliente");
@@ -1091,6 +1102,7 @@ public class MenuPrincipal extends JFrame {
         criarClientePanel.add(lblNome);
 
         JTextField nome = new JTextField();
+        nome.setBackground(new Color(255, 245, 240));
         nome.setBounds(337, 96, 188, 20);
         criarClientePanel.add(nome);
         nome.setColumns(10);
@@ -1100,6 +1112,7 @@ public class MenuPrincipal extends JFrame {
         criarClientePanel.add(lblTelefone);
 
         JTextField telefone = new JTextField();
+        telefone.setBackground(new Color(255, 245, 240));
         telefone.setBounds(337, 143, 188, 20);
         criarClientePanel.add(telefone);
         telefone.setColumns(10);
@@ -1109,6 +1122,7 @@ public class MenuPrincipal extends JFrame {
         criarClientePanel.add(lblCpf);
 
         JTextField cpf = new JTextField();
+        cpf.setBackground(new Color(255, 245, 240));
         cpf.setBounds(337, 185, 188, 20);
         criarClientePanel.add(cpf);
         cpf.setColumns(10);
@@ -1118,6 +1132,7 @@ public class MenuPrincipal extends JFrame {
         criarClientePanel.add(lblEmail);
 
         JTextField email = new JTextField();
+        email.setBackground(new Color(255, 245, 240));
         email.setBounds(337, 231, 188, 20);
         criarClientePanel.add(email);
         email.setColumns(10);
@@ -1127,11 +1142,13 @@ public class MenuPrincipal extends JFrame {
         criarClientePanel.add(lblStatus);
 
         JComboBox<String> cbStatus = new JComboBox<>();
+        cbStatus.setBackground(new Color(255, 245, 240));
         cbStatus.setModel(new DefaultComboBoxModel<>(new String[]{"Ativo", "Desativado"}));
         cbStatus.setBounds(337, 272, 188, 22);
         criarClientePanel.add(cbStatus);
 
         JButton btnSalvar = new JButton("Salvar");
+        btnSalvar.setBackground(new Color(61, 106, 131));
         btnSalvar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nomeCliente = nome.getText();
@@ -1181,6 +1198,7 @@ public class MenuPrincipal extends JFrame {
         criarClientePanel.add(btnSalvar);
 
         JButton btnLimpar = new JButton("Limpar campo");
+        btnLimpar.setBackground(new Color(61, 106, 131));
         btnLimpar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 limparCamposCliente();
@@ -1203,7 +1221,7 @@ public class MenuPrincipal extends JFrame {
 
     private void gerenciarClientePanel() {
         JPanel gerenciarClientePanel = new JPanel();
-        gerenciarClientePanel.setBackground(new Color(255, 255, 255));
+        gerenciarClientePanel.setBackground(new Color(207, 224, 233));
         gerenciarClientePanel.setLayout(null);
 
         JLabel lblListarClientes = new JLabel("Lista de Clientes");
@@ -1240,13 +1258,14 @@ public class MenuPrincipal extends JFrame {
         gerenciarClientePanel.add(scrollPane);
 
         JTextField txtId = new JTextField();
+        txtId.setBackground(new Color(255, 245, 240));
         txtId.setBounds(50, 50, 620, 23);
         gerenciarClientePanel.add(txtId);
         txtId.setColumns(10);
 
         // Botão para buscar por ID
         JButton btnBuscarPorId = new JButton("Buscar por ID");
-        btnBuscarPorId.setBackground(new Color(183, 219, 219));
+        btnBuscarPorId.setBackground(new Color(61, 106, 131));
         btnBuscarPorId.setBounds(680, 50, 120, 23);
         gerenciarClientePanel.add(btnBuscarPorId);
         btnBuscarPorId.addActionListener(new ActionListener() {
@@ -1276,7 +1295,7 @@ public class MenuPrincipal extends JFrame {
         });
 
         JButton btnListarTodos = new JButton("Atualizar");
-        btnListarTodos.setBackground(new Color(183, 219, 219));
+        btnListarTodos.setBackground(new Color(61, 106, 131));
         btnListarTodos.setBounds(810, 50, 120, 23);
         gerenciarClientePanel.add(btnListarTodos);
         btnListarTodos.addActionListener(new ActionListener() {
@@ -1295,7 +1314,7 @@ public class MenuPrincipal extends JFrame {
 
         // Botão Editar
         JButton btnEditar = new JButton("Editar");
-        btnEditar.setBackground(new Color(183, 219, 219));
+        btnEditar.setBackground(new Color(61, 106, 131));
         btnEditar.setBounds(240, 404, 120, 23);
         gerenciarClientePanel.add(btnEditar);
         btnEditar.addActionListener(new ActionListener() {
@@ -1317,7 +1336,7 @@ public class MenuPrincipal extends JFrame {
 
         // Botão Excluir
         JButton btnExcluir = new JButton("Excluir");
-        btnExcluir.setBackground(new Color(183, 219, 219));
+        btnExcluir.setBackground(new Color(61, 106, 131));
         btnExcluir.setBounds(414, 404, 120, 23);
         gerenciarClientePanel.add(btnExcluir);
         btnExcluir.addActionListener(new ActionListener() {
@@ -1473,7 +1492,7 @@ public class MenuPrincipal extends JFrame {
   //============================ RESERVAS   =====================================================================================================
     private void fazerReservaPanel() {
         JPanel fazerReservaPanel = new JPanel();
-        fazerReservaPanel.setBackground(new Color(43, 85, 85));
+        fazerReservaPanel.setBackground(new Color(61, 106, 131));
         fazerReservaPanel.setLayout(null);
 
         JLabel lblFazerReserva = new JLabel("Fazer Reserva");
@@ -1485,6 +1504,7 @@ public class MenuPrincipal extends JFrame {
         contentPane.add(fazerReservaPanel, "fazerReservaPanel");
 
         JPanel panel = new JPanel();
+        panel.setBackground(new Color(207, 224, 233));
         panel.setBounds(105, 46, 752, 420);
         fazerReservaPanel.add(panel);
         panel.setLayout(null);
@@ -1510,6 +1530,7 @@ public class MenuPrincipal extends JFrame {
         panel.add(lblQuiosque);
 
         comboBoxQuiosque = new JComboBox<>();
+        comboBoxQuiosque.setBackground(new Color(255, 245, 240));
         comboBoxQuiosque.setBounds(137, 108, 149, 22);
         panel.add(comboBoxQuiosque);
 
@@ -1518,6 +1539,7 @@ public class MenuPrincipal extends JFrame {
         panel.add(lblCliente);
 
         comboBoxCliente = new JComboBox<>();
+        comboBoxCliente.setBackground(new Color(255, 245, 240));
         comboBoxCliente.setBounds(136, 166, 149, 22);
         panel.add(comboBoxCliente);
 
@@ -1526,6 +1548,7 @@ public class MenuPrincipal extends JFrame {
         panel.add(lblDiaria);
 
         txtDiaria = new JTextField();
+        txtDiaria.setBackground(new Color(255, 245, 240));
         txtDiaria.setBounds(136, 224, 150, 20);
         panel.add(txtDiaria);
         txtDiaria.setColumns(10);
@@ -1535,12 +1558,14 @@ public class MenuPrincipal extends JFrame {
         panel.add(lblTotal);
 
         txtTotal = new JTextField();
+        txtTotal.setBackground(new Color(255, 245, 240));
         txtTotal.setColumns(10);
         txtTotal.setBounds(539, 224, 117, 20);
         txtTotal.setEditable(false);
         panel.add(txtTotal);
 
         JButton btnCadastrar = new JButton("Cadastrar");
+        btnCadastrar.setBackground(new Color(61, 106, 131));
         btnCadastrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -1610,6 +1635,7 @@ public class MenuPrincipal extends JFrame {
         panel.add(btnCadastrar);
 
         JButton btnLimparCampos = new JButton("Limpar campos");
+        btnLimparCampos.setBackground(new Color(61, 106, 131));
         btnLimparCampos.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 limparCampoReserva();
@@ -1711,7 +1737,7 @@ public class MenuPrincipal extends JFrame {
    
     private void listarReservaPanel() {
     	 JPanel listarReservaPanel = new JPanel();
-    	 listarReservaPanel.setBackground(new Color(255, 255, 255));
+    	 listarReservaPanel.setBackground(new Color(207, 224, 233));
     	 listarReservaPanel.setLayout(null);
 
          JLabel lblListarUsuarios = new JLabel("Lista de Reservas");
@@ -1757,7 +1783,7 @@ public class MenuPrincipal extends JFrame {
          
 
          JButton btnListarTodos = new JButton("Atualizar");
-         btnListarTodos.setBackground(new Color(183, 219, 219));
+         btnListarTodos.setBackground(new Color(61, 106, 131));
          btnListarTodos.setBounds(810, 50, 120, 23);
          listarReservaPanel.add(btnListarTodos);
          btnListarTodos.addActionListener(new ActionListener() {
@@ -1792,7 +1818,7 @@ public class MenuPrincipal extends JFrame {
                  EdicaoReserva( id);
          	}
          });
-         btnEditar_1.setBackground(new Color(183, 219, 219));
+         btnEditar_1.setBackground(new Color(61, 106, 131));
          btnEditar_1.setBounds(240, 404, 120, 23);
          listarReservaPanel.add(btnEditar_1);
          
@@ -1828,7 +1854,7 @@ public class MenuPrincipal extends JFrame {
                  }
              }
          });
-         btnEditar_1_1.setBackground(new Color(183, 219, 219));
+         btnEditar_1_1.setBackground(new Color(61, 106, 131));
          btnEditar_1_1.setBounds(414, 404, 120, 23);
          listarReservaPanel.add(btnEditar_1_1);
          
@@ -1869,7 +1895,7 @@ public class MenuPrincipal extends JFrame {
         	});
 
 
-         btnBuscar.setBackground(new Color(183, 219, 219));
+         btnBuscar.setBackground(new Color(61, 106, 131));
          btnBuscar.setBounds(503, 51, 120, 23);
          listarReservaPanel.add(btnBuscar);
          
