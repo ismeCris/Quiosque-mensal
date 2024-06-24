@@ -30,7 +30,9 @@ import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -248,7 +250,7 @@ public class MenuPrincipal extends JFrame {
         contentPane.setLayout(cardLayout);
         setContentPane(contentPane);
 
-        homePanel(); // Initialize Home Panel
+        homePanel(); 
 
         criarUsuarioPanel();
         listarUsuarioPanel();  
@@ -273,7 +275,7 @@ public class MenuPrincipal extends JFrame {
 
         getContentPane().add(homePanel, "homePanel");
 
-        // Add a button to exit
+      
         JButton btnNewButton = new JButton("Sair");
         btnNewButton.setBackground(new Color(43, 85, 85));
         btnNewButton.addActionListener(e -> {
@@ -284,36 +286,36 @@ public class MenuPrincipal extends JFrame {
         btnNewButton.setBounds(846, 455, 98, 36);
         homePanel.add(btnNewButton);
 
-        // Add the bar chart
+        
         CategoryDataset dataset = createDataset();
         JFreeChart chart = createChart(dataset);
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBackground(new Color(61, 106, 131));
         chartPanel.setPreferredSize(new Dimension(600, 400));
-        chartPanel.setBounds(150, 100, 600, 400); // Adjust the position and size as necessary
+        chartPanel.setBounds(150, 100, 600, 400);
         homePanel.add(chartPanel);
 
         contentPane.add(homePanel, "homePanel");
     }
 
-    // Method to create the dataset for the chart
+   
     private CategoryDataset createDataset() {
         List<ReservasEntity> reservas = fetchReservasFromDatabase();
         return createDatasetFromReservas(reservas);
     }
 
-    // Method to fetch reservations from the database
+    
     private List<ReservasEntity> fetchReservasFromDatabase() {
         return em.createQuery("SELECT r FROM ReservasEntity r", ReservasEntity.class).getResultList();
     }
 
-    // Method to create the dataset from reservations
+   
     private CategoryDataset createDatasetFromReservas(List<ReservasEntity> reservas) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         int[] monthlyReservations = new int[12];
 
         for (ReservasEntity reserva : reservas) {
-            int month = reserva.getDataInicio().getMonthValue() - 1; // Assuming getDataInicio returns a LocalDate
+            int month = reserva.getDataInicio().getMonthValue() - 1; 
             if (month >= 0 && month < 12) {
                 monthlyReservations[month]++;
             }
@@ -328,19 +330,24 @@ public class MenuPrincipal extends JFrame {
         return dataset;
     }
 
-    // Method to create the bar chart
+   
     private JFreeChart createChart(CategoryDataset dataset) {
         JFreeChart chart = ChartFactory.createBarChart(
-                "Reservas por Mês",         // Chart title
-                "Mês",                      // X-axis label
-                "Quantidade",               // Y-axis label
-                dataset,                    // Data for the chart
-                PlotOrientation.VERTICAL,   // Chart orientation
-                true,                       // Include legend
-                true,                       // Include tooltips
-                false                       // URLs?
+                "Reservas por Mês",        
+                "Mês",                      
+                "Quantidade",               
+                dataset,                    
+                PlotOrientation.VERTICAL,   
+                true,                       
+                true,                       
+                false                       
         );
-        chart.setBackgroundPaint(Color.white);
+      
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+          
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, new Color(61, 106, 131)); // Set bar color (blue)
+
         return chart;
     }
   //============================ FUNCIONARIO   =====================================================================================================
