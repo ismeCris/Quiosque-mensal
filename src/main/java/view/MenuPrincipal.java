@@ -292,7 +292,7 @@ public class MenuPrincipal extends JFrame {
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBackground(new Color(61, 106, 131));
         chartPanel.setPreferredSize(new Dimension(600, 400));
-        chartPanel.setBounds(150, 100, 600, 400);
+        chartPanel.setBounds(141, 38, 600, 400);
         homePanel.add(chartPanel);
 
         contentPane.add(homePanel, "homePanel");
@@ -356,110 +356,121 @@ public class MenuPrincipal extends JFrame {
         criarUsuarioPanel.setBackground(new Color(207, 224, 233));
         criarUsuarioPanel.setLayout(null);
 
-        JLabel lblNome = new JLabel("Nome:");
-        lblNome.setBounds(280, 150, 80, 14);
-        criarUsuarioPanel.add(lblNome);
-
-        txtNome = new JTextField();
-        txtNome.setBackground(new Color(255, 245, 240));
-        txtNome.setBounds(370, 147, 200, 20);
-        criarUsuarioPanel.add(txtNome);
-        txtNome.setColumns(10);
-
-        JLabel lblEmail = new JLabel("Email:");
-        lblEmail.setBounds(280, 192, 80, 14);
-        criarUsuarioPanel.add(lblEmail);
-
-        txtEmail = new JTextField();
-        txtEmail.setBackground(new Color(255, 245, 240));
-        txtEmail.setBounds(370, 189, 200, 20);
-        criarUsuarioPanel.add(txtEmail);
-        txtEmail.setColumns(10);
-
-        JLabel lblSenha = new JLabel("Senha:");
-        lblSenha.setBounds(280, 229, 80, 14);
-        criarUsuarioPanel.add(lblSenha);
-
-        txtSenha = new JTextField();
-        txtSenha.setBackground(new Color(255, 245, 240));
-        txtSenha.setBounds(370, 226, 200, 20);
-        criarUsuarioPanel.add(txtSenha);
-        txtSenha.setColumns(10);
-
-        JLabel lblTelefone = new JLabel("Telefone:");
-        lblTelefone.setBounds(280, 271, 80, 14);
-        criarUsuarioPanel.add(lblTelefone);
-
-        txtTelefone = new JTextField();
-        txtTelefone.setBackground(new Color(255, 245, 240));
-        txtTelefone.setBounds(370, 268, 200, 20);
-        criarUsuarioPanel.add(txtTelefone);
-        txtTelefone.setColumns(10);
-
-        JLabel lblCargo = new JLabel("Cargo:");
-        lblCargo.setBounds(280, 323, 80, 14);
-        criarUsuarioPanel.add(lblCargo);
-
-        JComboBox<String> cbCargo = new JComboBox<>();
-        cbCargo.setBackground(new Color(255, 245, 240));
-        cbCargo.setModel(new DefaultComboBoxModel<String>(new String[]{"Caixa", "Atendente","Administrador"}));
-        cbCargo.setBounds(370, 319, 200, 22);
-        criarUsuarioPanel.add(cbCargo);
-
-        JButton btnSalvar = new JButton("Salvar"); 
-        btnSalvar.setBackground(new Color(61, 106, 131));
-        btnSalvar.setBounds(470, 423, 100, 30); 
-        criarUsuarioPanel.add(btnSalvar);
-        btnSalvar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	String nome = txtNome.getText();
-            	String email = txtEmail.getText();
-            	String senha = txtSenha.getText();
-            	String telefone = txtTelefone.getText();
-            	 String cargo = (String) cbCargo.getSelectedItem();  
-            	 
-            	FuncionariosEntity novofuncionario = new FuncionariosEntity();
-            	
-            	novofuncionario.setNome(nome);
-            	novofuncionario.setEmail(email);
-            	novofuncionario.setSenha(senha);
-            	novofuncionario.setTelefone(telefone);
-            	novofuncionario.setCargo(cargo);
-            	
-            	try {
-            		if(!em.getTransaction().isActive()) {
-            			funcionarioController.createFuncionario(novofuncionario);
-            			
-            			JOptionPane.showMessageDialog(null, "Novo usuário criado com sucesso.");
-            		}
-            		
-            	}catch (Exception ex) {
-            		 ex.printStackTrace(); // Log the stack trace
-                     if (em.getTransaction().isActive()) {
-                         em.getTransaction().rollback();
-                     }
-                     JOptionPane.showMessageDialog(null, "Erro ao criar novo usuário: " + ex.getMessage());
-				}
-            }
-        });
-
         contentPane.add(criarUsuarioPanel, "criarUsuarioPanel");
-        
-        JButton btnLimparCampos = new JButton("Limpar Campos");
-        btnLimparCampos.setBackground(new Color(61, 106, 131));
-        btnLimparCampos.setBounds(300, 423, 100, 30); 
-        criarUsuarioPanel.add(btnLimparCampos);
-        btnLimparCampos.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                limparCampos();
-            }
-        });
     
         
         JLabel lblNewLabel = new JLabel("Cadastrar Novo Usuario");
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-        lblNewLabel.setBounds(338, 54, 239, 14);
+        lblNewLabel.setBounds(167, 25, 239, 14);
         criarUsuarioPanel.add(lblNewLabel);
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(255, 255, 255));
+        panel.setBounds(54, 86, 390, 334);
+        criarUsuarioPanel.add(panel);
+                panel.setLayout(null);
+        
+                JButton btnSalvar = new JButton("Salvar"); 
+                btnSalvar.setBounds(266, 287, 75, 23);
+                panel.add(btnSalvar);
+                btnSalvar.setBackground(new Color(183, 247, 192));
+                
+                JButton btnLimparCampos = new JButton("Limpar Campos");
+                btnLimparCampos.setBounds(35, 287, 116, 23);
+                panel.add(btnLimparCampos);
+                btnLimparCampos.setBackground(new Color(183, 247, 192));
+                
+                        JLabel lblNome = new JLabel("Nome:");
+                        lblNome.setBounds(24, 25, 80, 14);
+                        panel.add(lblNome);
+                        
+                                JLabel lblEmail = new JLabel("Email:");
+                                lblEmail.setBounds(24, 67, 80, 14);
+                                panel.add(lblEmail);
+                                
+                                        JLabel lblSenha = new JLabel("Senha:");
+                                        lblSenha.setBounds(24, 104, 80, 14);
+                                        panel.add(lblSenha);
+                                        
+                                                JLabel lblTelefone = new JLabel("Telefone:");
+                                                lblTelefone.setBounds(24, 146, 80, 14);
+                                                panel.add(lblTelefone);
+                                                
+                                                        JLabel lblCargo = new JLabel("Cargo:");
+                                                        lblCargo.setBounds(24, 198, 80, 14);
+                                                        panel.add(lblCargo);
+                                                        
+                                                                JComboBox<String> cbCargo = new JComboBox<>();
+                                                                cbCargo.setBounds(114, 194, 227, 22);
+                                                                panel.add(cbCargo);
+                                                                cbCargo.setBackground(new Color(255, 245, 240));
+                                                                cbCargo.setModel(new DefaultComboBoxModel<String>(new String[]{"Caixa", "Atendente","Administrador"}));
+                                                                
+                                                                        txtTelefone = new JTextField();
+                                                                        txtTelefone.setBounds(114, 143, 227, 20);
+                                                                        panel.add(txtTelefone);
+                                                                        txtTelefone.setBackground(new Color(255, 245, 240));
+                                                                        txtTelefone.setColumns(10);
+                                                                        
+                                                                                txtSenha = new JTextField();
+                                                                                txtSenha.setBounds(114, 101, 227, 20);
+                                                                                panel.add(txtSenha);
+                                                                                txtSenha.setBackground(new Color(255, 245, 240));
+                                                                                txtSenha.setColumns(10);
+                                                                                
+                                                                                        txtEmail = new JTextField();
+                                                                                        txtEmail.setBounds(114, 64, 227, 20);
+                                                                                        panel.add(txtEmail);
+                                                                                        txtEmail.setBackground(new Color(255, 245, 240));
+                                                                                        txtEmail.setColumns(10);
+                                                                                        
+                                                                                                txtNome = new JTextField();
+                                                                                                txtNome.setBounds(114, 22, 227, 20);
+                                                                                                panel.add(txtNome);
+                                                                                                txtNome.setBackground(new Color(255, 245, 240));
+                                                                                                txtNome.setColumns(10);
+                
+                JLabel lblNewLabel_5 = new JLabel("");
+                lblNewLabel_5.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\Reset password-cuate (1).png"));
+                lblNewLabel_5.setBounds(416, 25, 495, 501);
+                criarUsuarioPanel.add(lblNewLabel_5);
+                btnLimparCampos.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        limparCampos();
+                    }
+                });
+                btnSalvar.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                    	String nome = txtNome.getText();
+                    	String email = txtEmail.getText();
+                    	String senha = txtSenha.getText();
+                    	String telefone = txtTelefone.getText();
+                    	 String cargo = (String) cbCargo.getSelectedItem();  
+                    	 
+                    	FuncionariosEntity novofuncionario = new FuncionariosEntity();
+                    	
+                    	novofuncionario.setNome(nome);
+                    	novofuncionario.setEmail(email);
+                    	novofuncionario.setSenha(senha);
+                    	novofuncionario.setTelefone(telefone);
+                    	novofuncionario.setCargo(cargo);
+                    	
+                    	try {
+                    		if(!em.getTransaction().isActive()) {
+                    			funcionarioController.createFuncionario(novofuncionario);
+                    			
+                    			JOptionPane.showMessageDialog(null, "Novo usuário criado com sucesso.");
+                    		}
+                    		
+                    	}catch (Exception ex) {
+                    		 ex.printStackTrace(); // Log the stack trace
+                             if (em.getTransaction().isActive()) {
+                                 em.getTransaction().rollback();
+                             }
+                             JOptionPane.showMessageDialog(null, "Erro ao criar novo usuário: " + ex.getMessage());
+				}
+                    }
+                });
     }
 
     protected void limparCampos() {
@@ -504,14 +515,14 @@ public class MenuPrincipal extends JFrame {
         listarUsuarioPanel.add(scrollPane);
 
         JTextField txtId = new JTextField();
-        txtId.setBackground(new Color(255, 245, 240));
+        txtId.setBackground(new Color(255, 255, 255));
         txtId.setBounds(50, 50, 620, 23);
         listarUsuarioPanel.add(txtId);
         txtId.setColumns(10);
 
         // Botão para buscar por ID
         JButton btnBuscarPorId = new JButton("Buscar por ID");
-        btnBuscarPorId.setBackground(new Color(61, 106, 131));
+        btnBuscarPorId.setBackground(new Color(183, 247, 192));
         btnBuscarPorId.setBounds(680, 50, 120, 23);
         listarUsuarioPanel.add(btnBuscarPorId);
         btnBuscarPorId.addActionListener(new ActionListener() {
@@ -542,7 +553,7 @@ public class MenuPrincipal extends JFrame {
 
 
         JButton btnListarTodos = new JButton("Atualizar");
-        btnListarTodos.setBackground(new Color(61, 106, 131));
+        btnListarTodos.setBackground(new Color(183, 247, 192));
         btnListarTodos.setBounds(810, 50, 120, 23);
         listarUsuarioPanel.add(btnListarTodos);
         btnListarTodos.addActionListener(new ActionListener() {
@@ -578,8 +589,8 @@ public class MenuPrincipal extends JFrame {
                 abrirJanelaEdicao(id);
         	}
         });
-        btnEditar_1.setBackground(new Color(61, 106, 131));
-        btnEditar_1.setBounds(240, 404, 120, 23);
+        btnEditar_1.setBackground(new Color(183, 247, 192));
+        btnEditar_1.setBounds(343, 404, 120, 23);
         listarUsuarioPanel.add(btnEditar_1);
         
         JButton btnEditar_1_1 = new JButton("Excluir");
@@ -614,8 +625,8 @@ public class MenuPrincipal extends JFrame {
                 }
             }
         });
-        btnEditar_1_1.setBackground(new Color(61, 106, 131));
-        btnEditar_1_1.setBounds(414, 404, 120, 23);
+        btnEditar_1_1.setBackground(new Color(183, 247, 192));
+        btnEditar_1_1.setBounds(550, 404, 120, 23);
         listarUsuarioPanel.add(btnEditar_1_1);
     }
    
@@ -729,104 +740,116 @@ public class MenuPrincipal extends JFrame {
         criarQuiosquePanel.setLayout(null);
 
         JLabel lblCriarQuiosque = new JLabel("Criar Quiosque");
-        lblCriarQuiosque.setBounds(337, 25, 200, 14);
+        lblCriarQuiosque.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        lblCriarQuiosque.setBounds(204, 26, 200, 25);
         criarQuiosquePanel.add(lblCriarQuiosque);
 
         contentPane.add(criarQuiosquePanel, "criarQuiosquePanel");
 
-        JLabel Lbnum = new JLabel("Numero");
-        Lbnum.setBounds(266, 99, 46, 14);
-        criarQuiosquePanel.add(Lbnum);
-
-        num = new JTextField();
-        num.setBackground(new Color(255, 245, 240));
-        num.setBounds(337, 96, 188, 20);
-        criarQuiosquePanel.add(num);
-        num.setColumns(10);
-
-        JLabel lbLocalidade = new JLabel("Localidade");
-        lbLocalidade.setBounds(266, 146, 96, 14);
-        criarQuiosquePanel.add(lbLocalidade);
-
-        local = new JTextField();
-        local.setBackground(new Color(255, 245, 240));
-        local.setBounds(337, 143, 188, 20);
-        criarQuiosquePanel.add(local);
-        local.setColumns(10);
-
-        JLabel lbcapacidade = new JLabel("capacidade");
-        lbcapacidade.setBounds(265, 188, 86, 14);
-        criarQuiosquePanel.add(lbcapacidade);
-
-        JSpinner capacidade = new JSpinner();
-        capacidade.setBackground(new Color(255, 245, 240));
-        capacidade.setBounds(337, 185, 188, 20);
-        criarQuiosquePanel.add(capacidade);
-
-        JLabel lblStatus = new JLabel("Status");
-        lblStatus.setBounds(265, 233, 86, 14);
-        criarQuiosquePanel.add(lblStatus);
-
-        JComboBox<String> cbStatus = new JComboBox<>();
-        cbStatus.setBackground(new Color(255, 245, 240));
-        cbStatus.setModel(new DefaultComboBoxModel<>(new String[]{"Ativo", "Desativado"}));
-        cbStatus.setBounds(337, 229, 188, 22);
-        criarQuiosquePanel.add(cbStatus);
-
-        JButton btnNewButton_1 = new JButton("Salvar");
-        btnNewButton_1.setBackground(new Color(61, 106, 131));
-        btnNewButton_1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String numero = num.getText();
-                String localidade = local.getText();
-                int capacidadeValor = (Integer) capacidade.getValue();
-                String status = (String) cbStatus.getSelectedItem();
-
-                Boolean disponibilidadeStatus = null;
-                if (status.equals("livre")) {
-                    disponibilidadeStatus = true;
-                } else if (status.equals("ocupado")) {
-                    disponibilidadeStatus = false;
-                }
-
-                QuiosqueEntity novoQuiosque = new QuiosqueEntity();
-                novoQuiosque.setNumero(Integer.parseInt(numero));
-                novoQuiosque.setLocalidade(localidade);
-                novoQuiosque.setCapacidade(capacidadeValor);
-                novoQuiosque.setDisponibilidadeStatus(disponibilidadeStatus);
-
-                try {
-                    if (!em.getTransaction().isActive()) {
-                        em.getTransaction().begin();
-                    }
-                    quiosqueController.createQuiosque(novoQuiosque);
-                    em.getTransaction().commit();
-                    JOptionPane.showMessageDialog(null, "Novo Quiosque criado com sucesso.");
-                    limparCamposquiosque();
-                } catch (Exception ex) {
-                    ex.printStackTrace(); // Log the stack trace
-                    if (em.getTransaction().isActive()) {
-                        em.getTransaction().rollback();
-                    }
-                    JOptionPane.showMessageDialog(null, "Erro ao criar novo Quiosque");
-                }
-            }
-        });
-        btnNewButton_1.setBounds(432, 353, 105, 23);
-        criarQuiosquePanel.add(btnNewButton_1);
-
-        JButton btnNewButton_2 = new JButton("Limpar campo");
-        btnNewButton_2.setBackground(new Color(61, 106, 131));
-        btnNewButton_2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	limparCamposquiosque();
-            }
-        });
-        btnNewButton_2.setBounds(245, 353, 113, 23);
-        criarQuiosquePanel.add(btnNewButton_2);
-
         // Adicionar o painel ao contentPane
         contentPane.add(criarQuiosquePanel, "criarQuiosquePanel");
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(255, 255, 255));
+        panel.setBounds(97, 78, 402, 352);
+        criarQuiosquePanel.add(panel);
+        panel.setLayout(null);
+        
+                JLabel Lbnum = new JLabel("Numero");
+                Lbnum.setBounds(43, 55, 46, 14);
+                panel.add(Lbnum);
+                
+                        JLabel lbLocalidade = new JLabel("Localidade");
+                        lbLocalidade.setBounds(43, 102, 96, 14);
+                        panel.add(lbLocalidade);
+                        
+                                JLabel lbcapacidade = new JLabel("capacidade");
+                                lbcapacidade.setBounds(42, 144, 86, 14);
+                                panel.add(lbcapacidade);
+                                
+                                        JLabel lblStatus = new JLabel("Status");
+                                        lblStatus.setBounds(42, 189, 86, 14);
+                                        panel.add(lblStatus);
+                                        
+                                                JComboBox<String> cbStatus = new JComboBox<>();
+                                                cbStatus.setBounds(114, 185, 231, 22);
+                                                panel.add(cbStatus);
+                                                cbStatus.setBackground(new Color(255, 245, 240));
+                                                cbStatus.setModel(new DefaultComboBoxModel<>(new String[]{"Ativo", "Desativado"}));
+                                                
+                                                        JSpinner capacidade = new JSpinner();
+                                                        capacidade.setBounds(114, 141, 231, 20);
+                                                        panel.add(capacidade);
+                                                        capacidade.setBackground(new Color(255, 245, 240));
+                                                        
+                                                                local = new JTextField();
+                                                                local.setBounds(114, 99, 231, 20);
+                                                                panel.add(local);
+                                                                local.setBackground(new Color(255, 245, 240));
+                                                                local.setColumns(10);
+                                                                
+                                                                        num = new JTextField();
+                                                                        num.setBounds(114, 52, 231, 20);
+                                                                        panel.add(num);
+                                                                        num.setBackground(new Color(255, 245, 240));
+                                                                        num.setColumns(10);
+                                                                        
+                                                                                JButton btnNewButton_2 = new JButton("Limpar campo");
+                                                                                btnNewButton_2.setBounds(43, 297, 113, 23);
+                                                                                panel.add(btnNewButton_2);
+                                                                                btnNewButton_2.setBackground(new Color(183, 247, 192));
+                                                                                
+                                                                                        JButton btnNewButton_1 = new JButton("Salvar");
+                                                                                        btnNewButton_1.setBounds(240, 297, 105, 23);
+                                                                                        panel.add(btnNewButton_1);
+                                                                                        btnNewButton_1.setBackground(new Color(183, 247, 192));
+                                                                                        
+                                                                                        JLabel lblNewLabel_3 = new JLabel("");
+                                                                                        lblNewLabel_3.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\beach house-amico (1).png"));
+                                                                                        lblNewLabel_3.setBounds(446, 25, 565, 507);
+                                                                                        criarQuiosquePanel.add(lblNewLabel_3);
+                                                                                        btnNewButton_1.addActionListener(new ActionListener() {
+                                                                                            public void actionPerformed(ActionEvent e) {
+                                                                                                String numero = num.getText();
+                                                                                                String localidade = local.getText();
+                                                                                                int capacidadeValor = (Integer) capacidade.getValue();
+                                                                                                String status = (String) cbStatus.getSelectedItem();
+
+                                                                                                Boolean disponibilidadeStatus = null;
+                                                                                                if (status.equals("livre")) {
+                                                                                                    disponibilidadeStatus = true;
+                                                                                                } else if (status.equals("ocupado")) {
+                                                                                                    disponibilidadeStatus = false;
+                                                                                                }
+
+                                                                                                QuiosqueEntity novoQuiosque = new QuiosqueEntity();
+                                                                                                novoQuiosque.setNumero(Integer.parseInt(numero));
+                                                                                                novoQuiosque.setLocalidade(localidade);
+                                                                                                novoQuiosque.setCapacidade(capacidadeValor);
+                                                                                                novoQuiosque.setDisponibilidadeStatus(disponibilidadeStatus);
+
+                                                                                                try {
+                                                                                                    if (!em.getTransaction().isActive()) {
+                                                                                                        em.getTransaction().begin();
+                                                                                                    }
+                                                                                                    quiosqueController.createQuiosque(novoQuiosque);
+                                                                                                    em.getTransaction().commit();
+                                                                                                    JOptionPane.showMessageDialog(null, "Novo Quiosque criado com sucesso.");
+                                                                                                    limparCamposquiosque();
+                                                                                                } catch (Exception ex) {
+                                                                                                    ex.printStackTrace(); // Log the stack trace
+                                                                                                    if (em.getTransaction().isActive()) {
+                                                                                                        em.getTransaction().rollback();
+                                                                                                    }
+                                                                                                    JOptionPane.showMessageDialog(null, "Erro ao criar novo Quiosque");
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                                                                btnNewButton_2.addActionListener(new ActionListener() {
+                                                                                    public void actionPerformed(ActionEvent e) {
+                                                                                    	limparCamposquiosque();
+                                                                                    }
+                                                                                });
     }
 
     private void limparCamposquiosque() {
@@ -875,7 +898,7 @@ public class MenuPrincipal extends JFrame {
 
         // Botão para buscar por ID
         JButton btnBuscarPorId = new JButton("Buscar por ID");
-        btnBuscarPorId.setBackground(new Color(61, 106, 131));
+        btnBuscarPorId.setBackground(new Color(183, 247, 192));
         btnBuscarPorId.setBounds(680, 50, 120, 23);
         gerenciarQuiosquePanel.add(btnBuscarPorId);
         btnBuscarPorId.addActionListener(new ActionListener() {
@@ -905,7 +928,7 @@ public class MenuPrincipal extends JFrame {
         });
 
         JButton btnListarTodos = new JButton("Atualizar");
-        btnListarTodos.setBackground(new Color(61, 106, 131));
+        btnListarTodos.setBackground(new Color(183, 247, 192));
         btnListarTodos.setBounds(810, 50, 120, 23);
         gerenciarQuiosquePanel.add(btnListarTodos);
         btnListarTodos.addActionListener(new ActionListener() {
@@ -926,8 +949,8 @@ public class MenuPrincipal extends JFrame {
 
         // Botão Editar
         JButton btnEditar = new JButton("Editar");
-        btnEditar.setBackground(new Color(61, 106, 131));
-        btnEditar.setBounds(240, 404, 120, 23);
+        btnEditar.setBackground(new Color(183, 247, 192));
+        btnEditar.setBounds(364, 404, 120, 23);
         gerenciarQuiosquePanel.add(btnEditar);
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -948,8 +971,8 @@ public class MenuPrincipal extends JFrame {
 
      // Botão Excluir
         JButton btnExcluir = new JButton("Excluir");
-        btnExcluir.setBackground(new Color(61, 106, 131));
-        btnExcluir.setBounds(414, 404, 120, 23);
+        btnExcluir.setBackground(new Color(183, 247, 192));
+        btnExcluir.setBounds(534, 404, 120, 23);
         gerenciarQuiosquePanel.add(btnExcluir);
         btnExcluir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1101,121 +1124,130 @@ public class MenuPrincipal extends JFrame {
         criarClientePanel.setLayout(null);
 
         JLabel lblCriarCliente = new JLabel("Criar Cliente");
-        lblCriarCliente.setBounds(374, 24, 200, 14);
+        lblCriarCliente.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        lblCriarCliente.setBounds(240, 11, 200, 28);
         criarClientePanel.add(lblCriarCliente);
-
-        JLabel lblNome = new JLabel("Nome");
-        lblNome.setBounds(266, 99, 46, 14);
-        criarClientePanel.add(lblNome);
-
-        JTextField nome = new JTextField();
-        nome.setBackground(new Color(255, 245, 240));
-        nome.setBounds(337, 96, 188, 20);
-        criarClientePanel.add(nome);
-        nome.setColumns(10);
-
-        JLabel lblTelefone = new JLabel("Telefone");
-        lblTelefone.setBounds(266, 146, 96, 14);
-        criarClientePanel.add(lblTelefone);
-
-        JTextField telefone = new JTextField();
-        telefone.setBackground(new Color(255, 245, 240));
-        telefone.setBounds(337, 143, 188, 20);
-        criarClientePanel.add(telefone);
-        telefone.setColumns(10);
-
-        JLabel lblCpf = new JLabel("CPF");
-        lblCpf.setBounds(266, 188, 86, 14);
-        criarClientePanel.add(lblCpf);
-
-        JTextField cpf = new JTextField();
-        cpf.setBackground(new Color(255, 245, 240));
-        cpf.setBounds(337, 185, 188, 20);
-        criarClientePanel.add(cpf);
-        cpf.setColumns(10);
-
-        JLabel lblEmail = new JLabel("Email");
-        lblEmail.setBounds(266, 233, 86, 14);
-        criarClientePanel.add(lblEmail);
-
-        JTextField email = new JTextField();
-        email.setBackground(new Color(255, 245, 240));
-        email.setBounds(337, 231, 188, 20);
-        criarClientePanel.add(email);
-        email.setColumns(10);
-
-        JLabel lblStatus = new JLabel("Status");
-        lblStatus.setBounds(266, 276, 86, 14);
-        criarClientePanel.add(lblStatus);
-
-        JComboBox<String> cbStatus = new JComboBox<>();
-        cbStatus.setBackground(new Color(255, 245, 240));
-        cbStatus.setModel(new DefaultComboBoxModel<>(new String[]{"Ativo", "Desativado"}));
-        cbStatus.setBounds(337, 272, 188, 22);
-        criarClientePanel.add(cbStatus);
-
-        JButton btnSalvar = new JButton("Salvar");
-        btnSalvar.setBackground(new Color(61, 106, 131));
-        btnSalvar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String nomeCliente = nome.getText();
-                String telefoneCliente = telefone.getText();
-                String cpfCliente = cpf.getText();
-                String emailCliente = email.getText();
-                String statusCliente = (String) cbStatus.getSelectedItem();
-
-                boolean userStatus = "Ativo".equals(statusCliente);
-
-                // Verifica se já existe um cliente com o mesmo CPF
-                boolean cpfExists = clientesController.verificarClientePorCPF(cpfCliente);
-
-                if (cpfExists) {
-                    JOptionPane.showMessageDialog(null, "Já existe um cliente com o mesmo CPF.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    return; // Não continua com a criação do cliente
-                }
-
-                ClientesEntity novoCliente = new ClientesEntity();
-                novoCliente.setNome(nomeCliente);
-                novoCliente.setTelefone(telefoneCliente);
-                novoCliente.setCpf(cpfCliente);
-                novoCliente.setEmail(emailCliente);
-                novoCliente.setUserStatus(userStatus);
-
-                try {
-                    if (!em.getTransaction().isActive()) {
-                        em.getTransaction().begin();
-                    }
-                    clientesController.createCliente(novoCliente); // Certifique-se de que createCliente está disponível
-                    em.getTransaction().commit();
-                    JOptionPane.showMessageDialog(null, "Novo Cliente criado com sucesso.");
-                    limparCamposCliente();
-                } catch (Exception ex) {
-                    ex.printStackTrace(); // Log the stack trace
-                    if (em.getTransaction().isActive()) {
-                        em.getTransaction().rollback();
-                    }
-                    JOptionPane.showMessageDialog(null, "Erro ao criar novo Cliente", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-
-
-        btnSalvar.setBounds(432, 353, 105, 23);
-        criarClientePanel.add(btnSalvar);
-
-        JButton btnLimpar = new JButton("Limpar campo");
-        btnLimpar.setBackground(new Color(61, 106, 131));
-        btnLimpar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                limparCamposCliente();
-            }
-        });
-        btnLimpar.setBounds(245, 353, 113, 23);
-        criarClientePanel.add(btnLimpar);
         
         // Adicionar o painel ao contentPane
         contentPane.add(criarClientePanel, "criarClientePanel");
+        
+        JLabel lblNewLabel_2 = new JLabel("");
+        lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\Online resume-cuate (1) (1).png"));
+        lblNewLabel_2.setBounds(488, 49, 552, 453);
+        criarClientePanel.add(lblNewLabel_2);
+        
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(255, 255, 255));
+        panel.setBounds(93, 63, 421, 340);
+        criarClientePanel.add(panel);
+                panel.setLayout(null);
+        
+                JLabel lblNome = new JLabel("Nome");
+                lblNome.setBounds(37, 32, 51, 14);
+                panel.add(lblNome);
+                
+                        JLabel lblStatus = new JLabel("Status");
+                        lblStatus.setBounds(37, 218, 86, 14);
+                        panel.add(lblStatus);
+                        
+                                JLabel lblTelefone = new JLabel("Telefone");
+                                lblTelefone.setBounds(37, 85, 96, 14);
+                                panel.add(lblTelefone);
+                                
+                                        JLabel lblCpf = new JLabel("CPF");
+                                        lblCpf.setBounds(37, 126, 86, 14);
+                                        panel.add(lblCpf);
+                                        
+                                                JLabel lblEmail = new JLabel("Email");
+                                                lblEmail.setBounds(37, 172, 86, 14);
+                                                panel.add(lblEmail);
+                                                
+                                                        JTextField nome = new JTextField();
+                                                        nome.setBounds(115, 29, 230, 20);
+                                                        panel.add(nome);
+                                                        nome.setBackground(new Color(255, 245, 240));
+                                                        nome.setColumns(10);
+                                                        
+                                                                JTextField telefone = new JTextField();
+                                                                telefone.setBounds(115, 82, 230, 20);
+                                                                panel.add(telefone);
+                                                                telefone.setBackground(new Color(255, 245, 240));
+                                                                telefone.setColumns(10);
+                                                                
+                                                                        JTextField cpf = new JTextField();
+                                                                        cpf.setBounds(115, 123, 230, 20);
+                                                                        panel.add(cpf);
+                                                                        cpf.setBackground(new Color(255, 245, 240));
+                                                                        cpf.setColumns(10);
+                                                                        
+                                                                                JTextField email = new JTextField();
+                                                                                email.setBounds(115, 169, 230, 20);
+                                                                                panel.add(email);
+                                                                                email.setBackground(new Color(255, 245, 240));
+                                                                                email.setColumns(10);
+                                                                                
+                                                                                        JComboBox<String> cbStatus = new JComboBox<>();
+                                                                                        cbStatus.setBounds(115, 214, 230, 22);
+                                                                                        panel.add(cbStatus);
+                                                                                        cbStatus.setBackground(new Color(255, 245, 240));
+                                                                                        cbStatus.setModel(new DefaultComboBoxModel<>(new String[]{"Ativo", "Desativado"}));
+                                                                                        
+                                                                                                JButton btnLimpar = new JButton("Limpar campo");
+                                                                                                btnLimpar.setBounds(37, 306, 113, 23);
+                                                                                                panel.add(btnLimpar);
+                                                                                                btnLimpar.setBackground(new Color(183, 247, 192));
+                                                                                                
+                                                                                                        JButton btnSalvar = new JButton("Salvar");
+                                                                                                        btnSalvar.setBounds(281, 306, 105, 23);
+                                                                                                        panel.add(btnSalvar);
+                                                                                                        btnSalvar.setBackground(new Color(183, 247, 192));
+                                                                                                        btnSalvar.addActionListener(new ActionListener() {
+                                                                                                            public void actionPerformed(ActionEvent e) {
+                                                                                                                String nomeCliente = nome.getText();
+                                                                                                                String telefoneCliente = telefone.getText();
+                                                                                                                String cpfCliente = cpf.getText();
+                                                                                                                String emailCliente = email.getText();
+                                                                                                                String statusCliente = (String) cbStatus.getSelectedItem();
+
+                                                                                                                boolean userStatus = "Ativo".equals(statusCliente);
+
+                                                                                                                // Verifica se já existe um cliente com o mesmo CPF
+                                                                                                                boolean cpfExists = clientesController.verificarClientePorCPF(cpfCliente);
+
+                                                                                                                if (cpfExists) {
+                                                                                                                    JOptionPane.showMessageDialog(null, "Já existe um cliente com o mesmo CPF.", "Erro", JOptionPane.ERROR_MESSAGE);
+                                                                                                                    return; // Não continua com a criação do cliente
+                                                                                                                }
+
+                                                                                                                ClientesEntity novoCliente = new ClientesEntity();
+                                                                                                                novoCliente.setNome(nomeCliente);
+                                                                                                                novoCliente.setTelefone(telefoneCliente);
+                                                                                                                novoCliente.setCpf(cpfCliente);
+                                                                                                                novoCliente.setEmail(emailCliente);
+                                                                                                                novoCliente.setUserStatus(userStatus);
+
+                                                                                                                try {
+                                                                                                                    if (!em.getTransaction().isActive()) {
+                                                                                                                        em.getTransaction().begin();
+                                                                                                                    }
+                                                                                                                    clientesController.createCliente(novoCliente); // Certifique-se de que createCliente está disponível
+                                                                                                                    em.getTransaction().commit();
+                                                                                                                    JOptionPane.showMessageDialog(null, "Novo Cliente criado com sucesso.");
+                                                                                                                    limparCamposCliente();
+                                                                                                                } catch (Exception ex) {
+                                                                                                                    ex.printStackTrace(); // Log the stack trace
+                                                                                                                    if (em.getTransaction().isActive()) {
+                                                                                                                        em.getTransaction().rollback();
+                                                                                                                    }
+                                                                                                                    JOptionPane.showMessageDialog(null, "Erro ao criar novo Cliente", "Erro", JOptionPane.ERROR_MESSAGE);
+                                                                                                                }
+                                                                                                            }
+                                                                                                        });
+                                                                                                btnLimpar.addActionListener(new ActionListener() {
+                                                                                                    public void actionPerformed(ActionEvent e) {
+                                                                                                        limparCamposCliente();
+                                                                                                    }
+                                                                                                });
     }
 
     private void limparCamposCliente() {
@@ -1265,14 +1297,14 @@ public class MenuPrincipal extends JFrame {
         gerenciarClientePanel.add(scrollPane);
 
         JTextField txtId = new JTextField();
-        txtId.setBackground(new Color(255, 245, 240));
+        txtId.setBackground(new Color(255, 255, 255));
         txtId.setBounds(50, 50, 620, 23);
         gerenciarClientePanel.add(txtId);
         txtId.setColumns(10);
 
         // Botão para buscar por ID
         JButton btnBuscarPorId = new JButton("Buscar por ID");
-        btnBuscarPorId.setBackground(new Color(61, 106, 131));
+        btnBuscarPorId.setBackground(new Color(183, 247, 192));
         btnBuscarPorId.setBounds(680, 50, 120, 23);
         gerenciarClientePanel.add(btnBuscarPorId);
         btnBuscarPorId.addActionListener(new ActionListener() {
@@ -1302,7 +1334,7 @@ public class MenuPrincipal extends JFrame {
         });
 
         JButton btnListarTodos = new JButton("Atualizar");
-        btnListarTodos.setBackground(new Color(61, 106, 131));
+        btnListarTodos.setBackground(new Color(183, 247, 192));
         btnListarTodos.setBounds(810, 50, 120, 23);
         gerenciarClientePanel.add(btnListarTodos);
         btnListarTodos.addActionListener(new ActionListener() {
@@ -1321,8 +1353,8 @@ public class MenuPrincipal extends JFrame {
 
         // Botão Editar
         JButton btnEditar = new JButton("Editar");
-        btnEditar.setBackground(new Color(61, 106, 131));
-        btnEditar.setBounds(240, 404, 120, 23);
+        btnEditar.setBackground(new Color(183, 247, 192));
+        btnEditar.setBounds(360, 404, 120, 23);
         gerenciarClientePanel.add(btnEditar);
         btnEditar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1343,8 +1375,8 @@ public class MenuPrincipal extends JFrame {
 
         // Botão Excluir
         JButton btnExcluir = new JButton("Excluir");
-        btnExcluir.setBackground(new Color(61, 106, 131));
-        btnExcluir.setBounds(414, 404, 120, 23);
+        btnExcluir.setBackground(new Color(183, 247, 192));
+        btnExcluir.setBounds(550, 404, 120, 23);
         gerenciarClientePanel.add(btnExcluir);
         btnExcluir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -1499,80 +1531,81 @@ public class MenuPrincipal extends JFrame {
   //============================ RESERVAS   =====================================================================================================
     private void fazerReservaPanel() {
         JPanel fazerReservaPanel = new JPanel();
-        fazerReservaPanel.setBackground(new Color(61, 106, 131));
+        fazerReservaPanel.setBackground(new Color(207, 224, 233));
         fazerReservaPanel.setLayout(null);
 
         JLabel lblFazerReserva = new JLabel("Fazer Reserva");
+        lblFazerReserva.setBackground(new Color(0, 0, 0));
         lblFazerReserva.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblFazerReserva.setForeground(new Color(255, 255, 255));
-        lblFazerReserva.setBounds(365, 11, 200, 24);
+        lblFazerReserva.setForeground(new Color(0, 0, 0));
+        lblFazerReserva.setBounds(196, 11, 200, 24);
         fazerReservaPanel.add(lblFazerReserva);
 
         contentPane.add(fazerReservaPanel, "fazerReservaPanel");
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(207, 224, 233));
-        panel.setBounds(105, 46, 752, 420);
+        panel.setBackground(new Color(255, 255, 255));
+        panel.setBounds(33, 46, 532, 420);
         fazerReservaPanel.add(panel);
         panel.setLayout(null);
 
         JLabel lblInicio = new JLabel("Início");
-        lblInicio.setBounds(81, 53, 46, 14);
+        lblInicio.setBounds(30, 59, 46, 14);
         panel.add(lblInicio);
 
         JDateChooser dateChooserInicio = new JDateChooser();
-        dateChooserInicio.setBounds(137, 47, 146, 20);
+        dateChooserInicio.setBounds(86, 53, 146, 20);
         panel.add(dateChooserInicio);
 
         JLabel lblFim = new JLabel("Fim");
-        lblFim.setBounds(425, 53, 46, 14);
+        lblFim.setBounds(305, 59, 46, 14);
         panel.add(lblFim);
 
         JDateChooser dateChooserFim = new JDateChooser();
-        dateChooserFim.setBounds(481, 47, 146, 20);
+        dateChooserFim.setBounds(361, 53, 146, 20);
         panel.add(dateChooserFim);
 
         JLabel lblQuiosque = new JLabel("Quiosque");
-        lblQuiosque.setBounds(81, 112, 100, 14);
+        lblQuiosque.setBounds(30, 118, 100, 14);
         panel.add(lblQuiosque);
 
         comboBoxQuiosque = new JComboBox<>();
         comboBoxQuiosque.setBackground(new Color(255, 245, 240));
-        comboBoxQuiosque.setBounds(137, 108, 149, 22);
+        comboBoxQuiosque.setBounds(86, 114, 149, 22);
         panel.add(comboBoxQuiosque);
 
         JLabel lblCliente = new JLabel("Cliente");
-        lblCliente.setBounds(81, 170, 100, 14);
+        lblCliente.setBounds(30, 176, 100, 14);
         panel.add(lblCliente);
 
         comboBoxCliente = new JComboBox<>();
         comboBoxCliente.setBackground(new Color(255, 245, 240));
-        comboBoxCliente.setBounds(136, 166, 149, 22);
+        comboBoxCliente.setBounds(85, 172, 149, 22);
         panel.add(comboBoxCliente);
 
         JLabel lblDiaria = new JLabel("Diária");
-        lblDiaria.setBounds(81, 227, 45, 14);
+        lblDiaria.setBounds(30, 233, 45, 14);
         panel.add(lblDiaria);
 
         txtDiaria = new JTextField();
         txtDiaria.setBackground(new Color(255, 245, 240));
-        txtDiaria.setBounds(136, 224, 150, 20);
+        txtDiaria.setBounds(85, 230, 150, 20);
         panel.add(txtDiaria);
         txtDiaria.setColumns(10);
 
         JLabel lblTotal = new JLabel("Total");
-        lblTotal.setBounds(457, 227, 46, 14);
+        lblTotal.setBounds(305, 233, 46, 14);
         panel.add(lblTotal);
 
         txtTotal = new JTextField();
         txtTotal.setBackground(new Color(255, 245, 240));
         txtTotal.setColumns(10);
-        txtTotal.setBounds(539, 224, 117, 20);
+        txtTotal.setBounds(374, 230, 117, 20);
         txtTotal.setEditable(false);
         panel.add(txtTotal);
 
         JButton btnCadastrar = new JButton("Cadastrar");
-        btnCadastrar.setBackground(new Color(61, 106, 131));
+        btnCadastrar.setBackground(new Color(183, 247, 192));
         btnCadastrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -1638,17 +1671,17 @@ public class MenuPrincipal extends JFrame {
         });
 
 
-        btnCadastrar.setBounds(629, 386, 89, 23);
+        btnCadastrar.setBounds(320, 363, 89, 23);
         panel.add(btnCadastrar);
 
         JButton btnLimparCampos = new JButton("Limpar campos");
-        btnLimparCampos.setBackground(new Color(61, 106, 131));
+        btnLimparCampos.setBackground(new Color(183, 247, 192));
         btnLimparCampos.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 limparCampoReserva();
             }
         });
-        btnLimparCampos.setBounds(502, 386, 104, 23);
+        btnLimparCampos.setBounds(99, 363, 104, 23);
         panel.add(btnLimparCampos);
 
         // Adicionar itens vazios aos comboboxes
@@ -1657,6 +1690,11 @@ public class MenuPrincipal extends JFrame {
 
         // Carregar dados iniciais dos comboboxes
         carregarDados(comboBoxQuiosque, comboBoxCliente);
+        
+        JLabel lblNewLabel_4 = new JLabel("");
+        lblNewLabel_4.setIcon(new ImageIcon("C:\\Users\\Cristiely\\Downloads\\Tiny house-cuate (1).png"));
+        lblNewLabel_4.setBounds(473, 11, 486, 480);
+        fazerReservaPanel.add(lblNewLabel_4);
 
         // Adicionar DocumentListener ao campo txtDiaria para calcular o total automaticamente
         txtDiaria.getDocument().addDocumentListener(new DocumentListener() {
@@ -1790,7 +1828,7 @@ public class MenuPrincipal extends JFrame {
          
 
          JButton btnListarTodos = new JButton("Atualizar");
-         btnListarTodos.setBackground(new Color(61, 106, 131));
+         btnListarTodos.setBackground(new Color(183, 247, 192));
          btnListarTodos.setBounds(810, 50, 120, 23);
          listarReservaPanel.add(btnListarTodos);
          btnListarTodos.addActionListener(new ActionListener() {
@@ -1825,8 +1863,8 @@ public class MenuPrincipal extends JFrame {
                  EdicaoReserva( id);
          	}
          });
-         btnEditar_1.setBackground(new Color(61, 106, 131));
-         btnEditar_1.setBounds(240, 404, 120, 23);
+         btnEditar_1.setBackground(new Color(183, 247, 192));
+         btnEditar_1.setBounds(298, 404, 120, 23);
          listarReservaPanel.add(btnEditar_1);
          
          JButton btnEditar_1_1 = new JButton("Excluir");
@@ -1861,8 +1899,8 @@ public class MenuPrincipal extends JFrame {
                  }
              }
          });
-         btnEditar_1_1.setBackground(new Color(61, 106, 131));
-         btnEditar_1_1.setBounds(414, 404, 120, 23);
+         btnEditar_1_1.setBackground(new Color(183, 247, 192));
+         btnEditar_1_1.setBounds(482, 404, 120, 23);
          listarReservaPanel.add(btnEditar_1_1);
          
       // Adiciona o painel ao contentPane
@@ -1902,7 +1940,7 @@ public class MenuPrincipal extends JFrame {
         	});
 
 
-         btnBuscar.setBackground(new Color(61, 106, 131));
+         btnBuscar.setBackground(new Color(183, 247, 192));
          btnBuscar.setBounds(503, 51, 120, 23);
          listarReservaPanel.add(btnBuscar);
          
@@ -2032,7 +2070,5 @@ public class MenuPrincipal extends JFrame {
             JOptionPane.showMessageDialog(null, "Reserva não encontrada.");
         }
     }
-
-
 }
  
