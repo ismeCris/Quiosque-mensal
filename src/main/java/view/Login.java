@@ -67,9 +67,9 @@ public class Login extends JFrame {
         lblNewLabel.setBounds(551, 133, 483, 416);
         contentPane.add(lblNewLabel);
 
-     // Crie um TransparentPanel com bordas arredondadas e transparência
-        TransparentTextField panel = new TransparentTextField(0.8f); // 50% de transparência
-        panel.setBackground(new Color(61, 106, 131)); // Cor de fundo #F3EFDE
+     
+        TransparentTextField panel = new TransparentTextField(0.8f); 
+        panel.setBackground(new Color(61, 106, 131)); 
         panel.setBounds(167, 79, 704, 421);
         contentPane.add(panel);
         panel.setLayout(null);
